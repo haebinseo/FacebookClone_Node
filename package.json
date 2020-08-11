@@ -1,0 +1,19 @@
+{
+  "name": "facebook_clone",
+  "version": "0.0.1",
+  "description": "node.js를 이용한 facebook sns clone project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shb0107s/facebookClone_Node.git"
+  },
+  "author": "Haebin Seo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shb0107s/facebookClone_Node/issues"
+  },
+  "homepage": "https://github.com/shb0107s/facebookClone_Node#readme"
+}
