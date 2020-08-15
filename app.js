@@ -13,11 +13,9 @@ const indexRouter = require('./routes/index');
 // const authRouter = require('./routes/auth');
 // const postRouter = require('./routes/post');
 // const userRouter = require('./routes/user');
-const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
 const app = express();
-sequelize.sync();
 passportConfig(passport);
 
 app.set('views', path.join(__dirname, 'views'));
@@ -62,4 +60,4 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-app.listen(app.get('port'), () => console.log(app.get('port'), '번 포트에서 대기 중'));
+module.exports = app;

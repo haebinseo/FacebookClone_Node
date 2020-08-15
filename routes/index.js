@@ -1,15 +1,15 @@
 const express = require('express');
+
 const router = express.Router();
 const ctrl = require('./index.ctrl');
 
-router.get('/', ctrl.index);
-
-router.get('/:id', ctrl.show);
-
-router.delete('/:id', ctrl.destroy);
-
-router.post('/', ctrl.create);
-
-router.put('/:id', ctrl.update);
+router.get(
+  '/',
+  (req, res, next) => {
+    if (req.isAuthenticated()) next();
+    else res.render('login');
+  },
+  ctrl.main,
+);
 
 module.exports = router;
