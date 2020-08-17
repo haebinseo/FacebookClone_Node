@@ -1,15 +1,8 @@
-const express = require('express');
-
-const router = express.Router();
+const router = require('express').Router();
 const ctrl = require('./index.ctrl');
+const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 
-router.get(
-  '/',
-  (req, res, next) => {
-    if (req.isAuthenticated()) next();
-    else res.render('login');
-  },
-  ctrl.main,
-);
+router.get('/', isLoggedIn, ctrl.main);
+router.get('/unauth', isNotLoggedIn, ctrl.unauth);
 
 module.exports = router;

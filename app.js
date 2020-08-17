@@ -1,5 +1,3 @@
-'use strict'
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -22,7 +20,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.set('port', process.env.PORT || 8000);
 
-app.use(morgan('dev');
+app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
@@ -36,16 +34,13 @@ const sessionOption = {
     httpOnly: true,
     secure: false,
   },
-  store: 
 };
 app.use(session(sessionOption));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.use('/', indexRouter);
-
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
@@ -53,6 +48,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

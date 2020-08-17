@@ -1,9 +1,9 @@
 module.exports.isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) next();
-  else res.status(403).send('로그인 필요');
+  else res.redirect('/unauth', 303);
 };
 
 module.exports.isNotLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) next();
-  else res.redirect('/');
+  else res.redirect('/', 303);
 };
