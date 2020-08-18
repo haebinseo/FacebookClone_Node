@@ -6,11 +6,13 @@ const { User } = require('../models');
 
 describe('GET /는', () => {
   const users = [
-    { email: 'shb0107@gmail.com' },
-    { name: '서해빈' },
-    { password: 'goqls008?' },
-    { gender: 'mail' },
-    { birth: new Date(1994, 3, 7) },
+    {
+      email: 'shb0107@gmail.com',
+      name: '서해빈',
+      password: 'goqls008?',
+      gender: 'mail',
+      birth: new Date(1994, 3, 7),
+    },
   ];
   before(() => sequelize.sync({ force: true }));
   before(() => User.bulkCreate(users));
@@ -24,8 +26,9 @@ describe('GET /는', () => {
       request(app)
         .get('/')
         .end((err, res) => {
+          if (err) return done(err);
           res.should.be.html();
-          done();
+          return done();
         });
     });
   });

@@ -1,6 +1,6 @@
 const passport = require('passport');
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
+const { User } = require('../../models');
 
 const login = (req, res, next) => {
   passport.authenticate('local', (authError, user, info) => {
