@@ -90,6 +90,7 @@ header>div #loginBtn {
   font-weight: bold;
   font-size: 12px;
   color: #fff;
+  cursor: pointer;
 }
 header>div #loginBtn:hover {
   background-color: #2b5b98;

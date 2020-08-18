@@ -4,8 +4,8 @@
   "description": "node.js를 이용한 facebook sns clone project",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon bin/www",
+    "test": "NODE_ENV=test node_modules/.bin/mocha routes/auth/auth.spec.js -w"
   },
   "repository": {
     "type": "git",

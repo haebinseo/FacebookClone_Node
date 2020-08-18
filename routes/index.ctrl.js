@@ -10,7 +10,7 @@ const main = async (req, res, next) => {
       order: [['createdAt', 'DESC']],
     });
     res.render('main', {
-      title: 'facebook',
+      title: 'Facebook',
       posts,
       user: req.user,
       // loginError: req.flash('loginError'),
@@ -23,7 +23,7 @@ const main = async (req, res, next) => {
 
 const unauth = (req, res) => {
   res.render('login', {
-    title: '로그인/회원가입 - facebook',
+    title: 'Facebook - 로그인 또는 가입',
     loginError: req.flash('loginError'),
     joinError: req.flash('joinError'),
   });

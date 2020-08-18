@@ -23,7 +23,18 @@ const login = (req, res, next) => {
 };
 
 const join = async (req, res, next) => {
-  const { email, name, password, gender, birth } = req.body;
+  const {
+    email,
+    family_name: familyName,
+    first_name: firstName,
+    password,
+    gender,
+    year,
+    month,
+    day,
+  } = req.body;
+  const birth = new Date(year, parseInt(month[0], 10) - 1, day);
+  console.log('birth', year, month, day);
   try {
     const exUser = await User.findOne({ where: { email } });
     if (exUser) {
@@ -33,7 +44,7 @@ const join = async (req, res, next) => {
     const hash = await bcrypt.hash(password, 12);
     await User.create({
       email,
-      name,
+      name: familyName + firstName,
       password: hash,
       gender,
       birth,
