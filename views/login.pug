@@ -1,0 +1,252 @@
+extends layout
+
+block content
+  header
+    div
+      // This is Header area
+      // head logo box
+      div
+        a(href="#")
+          #logo
+      // head login box
+      form#form_login(action="#" method="post")
+        div
+          label(for="id_login") 이메일 또는 휴대폰
+          input#id_login(type="text" name="id")
+          div
+        div
+          label(for="pwd_login") 비밀번호
+          input#pwd_login(type="password" name="pwd")
+          div
+            a(href="#") 계정을 잊으셨나요?
+        div
+          a(href="#")
+            input#loginBtn(type="submit" value="로그인")
+  main
+    div
+      div
+        #noLoginHistory
+          p Facebook에서 전세계에 있는 친구, 가족, 지인들과 함께 이야기를 나눠보세요.
+          img(src="/images/login/worldmap_img.png" alt="세계지도 이미지")
+        #loginHistory
+          .head1 최근 로그인 기록
+          .head2 사진을 클릭하거나 계정을 추가하세요.
+          div
+            div
+              a#deleteHistoryBtn(href="#" role="button")
+                div
+              #tooltip 이 페이지에서 계정을 삭제합니다
+              span#alarmSpan(title="새 알립 76개") 76
+              #user1_img.userImage
+              #user1_name.userName 서해빈
+            div
+              #user_add_img.userImage
+                div
+              #user_add_name.userName 계정 추가
+      #signUp
+        .head1 새 계정 만들기
+        .head2 빠르고 쉽습니다.
+        form#form_signup(action="#" method="post")
+          div
+            input(type="text" name="last_name" placeholder="성(姓)")
+            input(type="text" name="first_name" placeholder="이름(성은 제외)")
+            input(type="text" name="id" placeholder="휴대폰 번호 또는 이메일")
+            input(type="password" name="pwd" placeholder="새 비밀번호")
+          div
+            .lableText 생일
+            select(name="year")
+              // 추후 javascript로 대체
+              option(value="") 연도
+              option 2020
+              option 2019
+              option 2018
+              option 2017
+              option 2016
+              option 2015
+              option 2014
+              option 2013
+              option 2012
+              option 2011
+              option 2010
+              option 2009
+              option 2008
+              option 2007
+              option 2006
+              option 2005
+              option 2004
+              option 2003
+              option 2002
+              option 2001
+              option 2000
+              option 1999
+              option 1998
+              option 1997
+              option 1996
+              option 1995
+              option 1994
+              option 1993
+              option 1992
+              option 1991
+              option 1990
+            select(name="month")
+              option(value="") 월
+              option 1월
+              option 2월
+              option 3월
+              option 4월
+              option 5월
+              option 6월
+              option 7월
+              option 8월
+              option 9월
+              option 10월
+              option 11월
+              option 12월
+            select(name="date")
+              option(value="") 일
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+              option 6
+              option 7
+              option 8
+              option 9
+              option 10
+              option 11
+              option 12
+              option 13
+              option 14
+              option 15
+              option 16
+              option 17
+              option 18
+              option 19
+              option 20
+              option 21
+              option 22
+              option 23
+              option 24
+              option 25
+              option 26
+              option 27
+              option 28
+              option 29
+              option 30
+              option 31
+            a.moreInfo(href="#" title="더 자세한 정보를 원하시면 여기를 클릭하세요") &#xe800
+          div
+            .lableText 성별
+            #gender
+              div
+                input#female(type="radio" name="gender" value="여성")
+                label(for="female") 여성
+              div
+                input#male(type="radio" name="gender" value="남성")
+                label(for="male") 남성
+              div
+                input#customSex(type="radio" name="gender" value="직접 지정")
+                label(for="customSex") 직접 지정
+              a.moreInfo(href="#" title="더 자세한 정보를 원하시면 여기를 클릭하세요") &#xe800
+          div
+            | 가입하기 버튼을 클릭하면 Facebook의 
+            a.invert_A_Deco(href="#") 약관
+            | , 
+            a.invert_A_Deco(href="#") 데이터 정책
+            |  및 
+            a.invert_A_Deco(href="#") 쿠키 정책
+            | 에 동의하게 됩니다. Facebook으로부터 SMS 알림을 받을 수 있으며 알림은 언제든지 옵트 아웃할 수 있습니다.
+          div
+            input#submitBtn(type="submit" value="가입하기")
+          div
+            | 유명인, 밴드, 비즈니스를 위한 
+            a.invert_A_Deco(href="#") 페이지 만들기
+  footer
+    div
+      ul
+        li 한국어
+        li
+          a.invert_A_Deco(href="#") English (US)
+        li
+          a(href="#") Tiếng Việt
+        li
+          a(href="#") Bahasa Indonesia
+        li
+          a(href="#") ภาษาไทย
+        li
+          a(href="#") Español
+        li
+          a(href="#") 中文(简体)
+        li
+          a(href="#") 日本語
+        li
+          a(href="#") Português (Brasil)
+        li
+          a(href="#") Français (France)
+        li
+          a(href="#") Deutsch
+        li
+          a#moreLang(href="#" title="더 많은 언어 표시하기")
+            div
+      .contentDivider
+      ul
+        li
+          a(href="#") 가입하기
+        li
+          a(href="#") 로그인
+        li
+          a(href="#") Messenger
+        li
+          a(href="#") Facebook Lite
+        li
+          a(href="#") Watch
+        li
+          a(href="#") 사람
+        li
+          a(href="#") 페이지
+        li
+          a(href="#") 페이지 카테고리
+        li
+          a(href="#") 장소
+        li
+          a(href="#") 게임
+        li
+          a(href="#") 위치
+        li
+          a(href="#") Marketplace
+        li
+          a(href="#") 그룹
+        li
+          a(href="#") Portal
+        li
+          a(href="#") Instagram
+        li
+          a(href="#") 지역
+        li
+          a(href="#") 기부 캠페인
+        li
+          a(href="#") 서비스
+        li
+          a(href="#") 회사소개
+        li
+          a(href="#") 광고 만들기
+        li
+          a(href="#") 페이지 만들기
+        li
+          a(href="#") 개발자
+        li
+          a(href="#") 채용 정보
+        li
+          a(href="#") 개인정보처리방침
+        li
+          a(href="#") 쿠키
+        li
+          a(href="#")
+            | AdChoices
+            div
+        li
+          a(href="#") 이용 약관
+        li
+          a(href="#") 고객 센터
+      div Facebook © 2020
