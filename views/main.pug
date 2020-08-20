@@ -7,7 +7,7 @@ block content
   div
     header
       #headerLeft
-        a(href="")
+        a(href="/")
           svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4(viewbox="0 0 36 36" fill="url(#jsc_c_2)" height="40" width="40")
             defs
               lineargradient#jsc_c_2(x1="50%" x2="50%" y1="97.0782153%" y2="0%")
@@ -45,7 +45,7 @@ block content
       #headerRight
         #user
           img(src="/images/main/mainLeft/user.jpg" alt="")
-          div 서해빈
+          div= user.name
         #create &#xe801
         #messenger
           svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="20" width="20")
@@ -195,94 +195,6 @@ block content
           | 개인정보처리방침  ·  약관  ·  광고  ·  AdChoices
           div
           |    ·  쿠키  ·  더 보기  ·  Facebook © 2020
-    #mainCenter
-      div
-        // 스토리
-        #storyArea
-          div
-            a(href="")
-              div
-                img#storyBgImg1(src="/images/main/mainCenter/test_storyBgImg1.jpg" alt="스토리 이미지 1")
-                #storyUserImg1.storyUserImg_exist
-                  img(src="/images/main/mainCenter/test_storyUserImg1.jpg" alt="스토리 유저 이미지 1")
-                #storyUserName1 유준호 페이지
-          div
-            a(href="")
-              div
-                img#storyBgImg2
-                #storyUserImg2
-                #storyUserName2
-          div
-            a(href="")
-              div
-                img#storyBgImg3
-                #storyUserImg3
-                #storyUserName3
-          div
-            a(href="")
-              div
-                img#storyBgImg4
-                #storyUserImg4
-                #storyUserName4
-          div
-            a(href="")
-              div
-                img#storyBgImg5
-                #storyUserImg5
-                #storyUserName5
-        #afterStory
-          // 무슨생각?
-          #newPostArea.postEffects
-            div
-              img(src="/images/login/profile_img.jpg" alt="로그인 유저 이미지")
-              a(href="")
-                div ...님, 무슨 생각을 하고 계신가요?
-            div
-            div
-              a(href="")
-                div
-                  img(src="/images/main/mainCenter/liveImage.png" alt="라이브 방송 이미지")
-                  div 라이브 방송
-              a(href="")
-                div
-                  img(src="/images/main/mainCenter/photo_videoImage.png" alt="사진/동영상 이미지")
-                  div 사진/동영상
-              a(href="")
-                div
-                  img(src="/images/main/mainCenter/feeling_acticity.png" alt="기분/활동 이미지")
-                  div 기분/활동
-          // 포스트
-          #postArea
-            .postEffects
-              // header
-              div
-                a(href="")
-                  div
-                    img(src="/images/main/mainCenter/anonymous_userImg.jpg" alt="")
-                div
-                  div Test User
-                  div 1시간
-                div
-                  img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
-              // main
-              div
-                | test post입니다.
-              // 좋아요 등등
-              div
-                a(href="")
-                  div
-                    img(src="/images/main/mainCenter/like.png" alt="")
-                    div 좋아요
-                a(href="")
-                  div
-                    div &#xe804
-                    div 댓글달기
-                a(href="")
-                  div
-                    img(src="/images/main/mainCenter/share.png" alt="")
-                    div 공유하기
-              // 댓글 파트
-              div
     div
       #mainRight.custom-scroll
         // 광고
@@ -336,3 +248,101 @@ block content
                 div
                   img(src="/images/main/mainRight/testuser.jpg" alt="테스트 그룹2")
                   div 테스트 그룹 2
+    #mainCenter
+      div
+        // 스토리
+        #storyArea
+          div
+            a(href="")
+              div
+                img#storyBgImg1(src="/images/main/mainCenter/test_storyBgImg1.jpg" alt="스토리 이미지 1")
+                #storyUserImg1.storyUserImg_exist
+                  img(src="/images/main/mainCenter/test_storyUserImg1.jpg" alt="스토리 유저 이미지 1")
+                #storyUserName1 유준호 페이지
+          div
+            a(href="")
+              div
+                img#storyBgImg2
+                #storyUserImg2
+                #storyUserName2
+          div
+            a(href="")
+              div
+                img#storyBgImg3
+                #storyUserImg3
+                #storyUserName3
+          div
+            a(href="")
+              div
+                img#storyBgImg4
+                #storyUserImg4
+                #storyUserName4
+          div
+            a(href="")
+              div
+                img#storyBgImg5
+                #storyUserImg5
+                #storyUserName5
+        #afterStory
+          // 무슨생각?
+          #newPostArea.postEffects
+            div
+              img(src="/images/login/profile_img.jpg" alt="로그인 유저 이미지")
+              div #{user.name}님, 무슨 생각을 하고 계신가요?
+            // 게시물 만들기 창
+            div#newPostTab
+              div
+              form(action="/post", method="post")
+                div 게시물 만들기
+                  img(src="" alt="x")
+                div
+                  div
+                  textarea(name="content", cols="30", rows="10")
+                div
+                  div
+                  button(type="submit") 게시
+            div
+              a(href="")
+                div
+                  img(src="/images/main/mainCenter/liveImage.png" alt="라이브 방송 이미지")
+                  div 라이브 방송
+              a(href="")
+                div
+                  img(src="/images/main/mainCenter/photo_videoImage.png" alt="사진/동영상 이미지")
+                  div 사진/동영상
+              a(href="")
+                div
+                  img(src="/images/main/mainCenter/feeling_acticity.png" alt="기분/활동 이미지")
+                  div 기분/활동
+          // 포스트
+          #postArea
+            .postEffects
+              // header
+              div
+                a(href="")
+                  div
+                    img(src="/images/main/mainCenter/anonymous_userImg.jpg" alt="")
+                div
+                  div Test User
+                  div 1시간
+                div
+                  img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
+              // main
+              div
+                | test post입니다.
+              // 좋아요 등등
+              div
+                a(href="")
+                  div
+                    img(src="/images/main/mainCenter/like.png" alt="")
+                    div 좋아요
+                a(href="")
+                  div
+                    div &#xe804
+                    div 댓글달기
+                a(href="")
+                  div
+                    img(src="/images/main/mainCenter/share.png" alt="")
+                    div 공유하기
+              // 댓글 파트
+              div

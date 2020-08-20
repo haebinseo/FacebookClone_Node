@@ -38,6 +38,14 @@ a {
     }
 }
 
+input, textarea {
+    outline: none;
+    
+    &:focus::placeholder {
+        color: rgba(0, 0, 0, 0.2);
+    }
+}
+
 body {
     display: grid;
     grid-template-rows: var(--header-height) 1fr;
@@ -53,7 +61,6 @@ body {
 header{
     position: fixed;
     width: 100%;
-    z-index: 1;
     box-shadow: 0 0 5px 1px rgba(0,0,0,.1);
     background-color: var(--surface-background);
 
@@ -70,6 +77,7 @@ header{
     top: 0;
     width: 112px;
     padding: 0 16px;
+    z-index: 1;
 
     &>a {
         margin-right: 8px;
@@ -183,6 +191,8 @@ header{
         height: 36px;
         border-radius: 18px;
         background-color: unset;
+        position: relative;
+        z-index: 1;
 
         &:hover {
             background-color: var(--hover-overlay);
@@ -242,6 +252,10 @@ main {
             flex-basis: 25%;
             min-width: 280px;
 
+            &:nth-of-type(2) {
+                order: 1;            
+            }
+
             &>div {
                 padding: 16px 8px 0 8px;
                 overflow-y: auto;
@@ -259,6 +273,8 @@ main {
                 height: 0;
             }
         }
+
+        
     }
 }
 
@@ -499,7 +515,7 @@ main {
                         margin-right: 8px;
                     }
 
-                    &>a {
+                    div {
                         border-radius: 20px;
                         background-color: var(--comment-background);
                         flex-grow: 1;
@@ -507,6 +523,11 @@ main {
                         display: flex;
                         align-items: center;
                         color: var(--secondary-text);
+                        cursor: pointer;
+
+                        &:hover {
+                            background-color: rgba(0, 0, 0, 0.1);
+                        }
                     }
                 }
 
@@ -538,6 +559,46 @@ main {
                     img {
                         margin-right: 8px;
                     }
+                }
+            }
+        }
+
+        #newPostTab {
+            &>div {
+                position: fixed;
+                top: 0px;
+                left 0px;
+                height 100vh;
+                width: 100vw;
+                background-color: rgba(255, 255, 255, .5);
+                // z-index: -1;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 500px;
+                min-height: 488px; 
+                transform: translate(-50%, -50%);
+                z-index: 1;
+
+                &>div {
+                    &:first-of-type {
+                        position: relative;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        height: 60px;
+
+                        img {
+                            position: absolute;
+                            top: 20px;
+                            right: 20px;
+                        }
+                    }    
                 }
             }
         }
