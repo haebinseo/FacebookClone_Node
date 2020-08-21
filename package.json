@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon bin/www",
-    "test": "NODE_ENV=test node_modules/.bin/mocha routes/auth/auth.spec.js -w"
+    "test": "NODE_ENV=test node_modules/.bin/mocha routes/post/post.spec.js -w"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "mysql2": "^2.1.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
