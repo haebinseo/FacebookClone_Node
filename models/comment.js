@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) =>
       bundleCreatedAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
+        allowNull: false,
       },
       depth: {
         type: DataTypes.STRING(200),

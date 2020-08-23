@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) =>
         type: DataTypes.DATEONLY,
         allowNull: true,
       },
+      profileImg: {
+        type: DataTypes.STRING(150),
+        allowNull: true,
+        defaultValue: '/images/main/mainCenter/anonymous_userImg.jpg',
+      },
     },
     {
       timestamps: true,

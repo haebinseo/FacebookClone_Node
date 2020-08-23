@@ -1,18 +1,30 @@
-const { Post, User } = require('../models');
+const { Post, User, Sequelize } = require('../models');
 
 const main = async (req, res, next) => {
   try {
     const posts = await Post.findAll({
       include: {
         model: User,
-        attributes: ['id', 'name'],
+        attributes: ['id', 'name', 'profileImg'],
       },
       order: [['createdAt', 'DESC']],
     });
+    let comments = [];
+    if (posts) {
+      comments = await Promise.all(
+        posts.map((post) => {
+          return post.getComments({
+            include: { model: User },
+            order: [[Sequelize.literal('bundleCreatedAt', 'createdAt'), 'ASC']],
+          });
+        }),
+      );
+    }
     res.render('main', {
       title: 'Facebook',
-      posts,
       user: req.user,
+      posts,
+      comments,
       // loginError: req.flash('loginError'),
     });
   } catch (error) {

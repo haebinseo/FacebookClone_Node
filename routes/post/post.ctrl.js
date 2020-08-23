@@ -1,4 +1,4 @@
-const { Post, Hashtag } = require('../../models');
+const { User, Post, Hashtag } = require('../../models');
 
 const img = (req, res) => {
   console.log(req.file);
@@ -23,11 +23,29 @@ const post = async (req, res, next) => {
       );
       await newPost.addHashtags(result.map((r) => r[0]));
     }
-    res.redirect('/');
+    res.redirect(303, '/');
   } catch (error) {
     console.error(error);
     next(error);
   }
 };
 
-module.exports = { img, post };
+const tagSearch = async (req, res, next) => {
+  const query = req.query.hashtag;
+  if (!query) return res.redirect('/');
+  try {
+    const hashtag = await Hashtag.findOne({ where: { title: query } });
+    let posts = [];
+    if (hashtag) posts = await hashtag.getPosts({ include: [{ model: User }] });
+    return res.render('main', {
+      title: `${query} | Facebook`,
+      user: req.user,
+      posts,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+module.exports = { img, post, tagSearch };

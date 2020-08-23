@@ -15,11 +15,11 @@ block content
       form#form_login(action="/auth/login" method="post")
         div
           label(for="id_login") 이메일
-          input#id_login(type="text" name="email")
+          input#id_login(type="text" name="email" required)
           div
         div
           label(for="pwd_login") 비밀번호
-          input#pwd_login(type="password" name="password")
+          input#pwd_login(type="password" name="password" required)
           div
             a(href="#") 계정을 잊으셨나요?
         div
@@ -50,13 +50,13 @@ block content
         .head2 빠르고 쉽습니다.
         form#form_signup(action="/auth/join" method="post")
           div
-            input(type="text" name="family_name" placeholder="성(姓)")
-            input(type="text" name="first_name" placeholder="이름(성은 제외)")
-            input(type="text" name="email" placeholder="이메일")
-            input(type="password" name="password" placeholder="새 비밀번호")
+            input(type="text" name="family_name" placeholder="성(姓)" required)
+            input(type="text" name="first_name" placeholder="이름(성은 제외)" required)
+            input(type="text" name="email" placeholder="이메일" required)
+            input(type="password" name="password" placeholder="새 비밀번호" required)
           div
             .lableText 생일
-            select(name="year")
+            select(name="year" required)
               // 추후 javascript로 대체
               option(value="") 연도
               option 2020
@@ -90,7 +90,7 @@ block content
               option 1992
               option 1991
               option 1990
-            select(name="month")
+            select(name="month" required)
               option(value="") 월
               option 1월
               option 2월
@@ -104,7 +104,7 @@ block content
               option 10월
               option 11월
               option 12월
-            select(name="day")
+            select(name="day" required)
               option(value="") 일
               option 1
               option 2

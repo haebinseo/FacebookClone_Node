@@ -17,7 +17,7 @@ const login = (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       }
-      return res.redirect('/', 303);
+      return res.redirect(303, '/');
     });
   })(req, res, next);
 };

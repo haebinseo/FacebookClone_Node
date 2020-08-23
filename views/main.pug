@@ -6,7 +6,7 @@ block css
 block content
   div
     div#headerCenter
-      a(href="")
+      a(href="/")
         #home.selected
           svg(viewbox="0 0 28 28" height="28" width="28")
             path(d="M25.825 12.29C25.824 12.289 25.823 12.288 25.821 12.286L15.027 2.937C14.752 2.675 14.392 2.527 13.989 2.521 13.608 2.527 13.248 2.675 13.001 2.912L2.175 12.29C1.756 12.658 1.629 13.245 1.868 13.759 2.079 14.215 2.567 14.479 3.069 14.479L5 14.479 5 23.729C5 24.695 5.784 25.479 6.75 25.479L11 25.479C11.552 25.479 12 25.031 12 24.479L12 18.309C12 18.126 12.148 17.979 12.33 17.979L15.67 17.979C15.852 17.979 16 18.126 16 18.309L16 24.479C16 25.031 16.448 25.479 17 25.479L21.25 25.479C22.217 25.479 23 24.695 23 23.729L23 14.479 24.931 14.479C25.433 14.479 25.921 14.215 26.132 13.759 26.371 13.245 26.244 12.658 25.825 12.29")
@@ -40,10 +40,11 @@ block content
           path(d="M15 35.8C6.5 34.3 0 26.9 0 18 0 8.1 8.1 0 18 0s18 8.1 18 18c0 8.9-6.5 16.3-15 17.8l-1-.8h-4l-1 .8z")
           path.p361ku9c(d="M25 23l.8-5H21v-3.5c0-1.4.5-2.5 2.7-2.5H26V7.4c-1.3-.2-2.7-.4-4-.4-4.1 0-7 2.5-7 7v4h-4.5v5H15v12.7c1 .2 2 .3 3 .3s2-.1 3-.3V23h4z")
       div &#xe802
-      input(type="text" placeholder="Facebook 검색")
+      form(action="/post/hashtag")
+        input(type="text" name="hashtag" placeholder="Facebook 검색")
     div#headerRight
       #user
-        img(src="/images/main/mainLeft/user.jpg" alt="")
+        img(src=user.profileImg alt="")
         div= user.name
       #create &#xe801
       #messenger
@@ -60,7 +61,7 @@ block content
           li
             a(href="")
               div
-                img#mainLeftUserImg(src="/images/main/mainLeft/user.jpg" alt="userImage")
+                img#mainLeftUserImg(src=user.profileImg alt="userImage")
                 div 서해빈
           div
             li
@@ -233,7 +234,7 @@ block content
           // 무슨생각?
           #newPostArea.postEffects
             div
-              img(src="/images/login/profile_img.jpg" alt="로그인 유저 이미지")
+              img(src=user.profileImg alt="로그인 유저 이미지")
               div#newPostTabBtn #{user.name}님, 무슨 생각을 하고 계신가요?
             // 게시물 만들기 창
             div#newPostTab.invisible
@@ -244,7 +245,7 @@ block content
                     div
                 div
                   div
-                    img(src="/images/login/profile_img.jpg", alt="로그인 유저 이미지")
+                    img(src=user.profileImg, alt="로그인 유저 이미지")
                     span #{user.name}
                   textarea#postContent(name="content", cols="30", rows="2" placeholder=`${user.name}님, 무슨 생각을 하고 계신가요?`)
                   img#img-preview.invisible(src='' width='250' alt='미리보기')
@@ -273,36 +274,67 @@ block content
                   div 기분/활동
           // 포스트
           #postArea
-            .postEffects
-              // header
-              div
-                a(href="")
-                  div
-                    img(src="/images/main/mainCenter/anonymous_userImg.jpg" alt="")
+            each post, index in posts
+              .postEffects
+                input.post-user-id(type='hidden' value=post.user.id)
+                input.post-id(type='hidden' value=post.id)
+                // header
                 div
-                  div Test User
-                  div 1시간
+                  a(href="")
+                    div
+                      img(src=post.user.profileImg alt="")
+                  div
+                    div= post.user.name
+                    -const units = ['분', '시간', '일', '월', '년'];
+                    -let elapsedTime = (new Date() - new Date(post.createdAt))/1000;
+                    -let timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
+                    -let idx; for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
+                    -if(idx === 0) { timeArr[0] += 1; idx += 1; }
+                    div #{timeArr[idx-1]}#{units[idx-1]}
+                  div
+                    img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
+                // main
                 div
-                  img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
-              // main
-              div
-                | test post입니다.
-              // 좋아요 등등
-              div
-                a(href="")
+                  div= post.content
+                  img(src=post.img, alt="")
+                // 좋아요 등등
+                div
+                  a(href="#")
+                    div
+                      img(src="/images/main/mainCenter/like.png" alt="")
+                      div 좋아요
+                  a(href="#")
+                    div
+                      div &#xe804
+                      div 댓글달기
+                  a(href="#")
+                    div
+                      img(src="/images/main/mainCenter/share.png" alt="")
+                      div 공유하기
+                // 댓글 파트
+                div
                   div
-                    img(src="/images/main/mainCenter/like.png" alt="")
-                    div 좋아요
-                a(href="")
-                  div
-                    div &#xe804
-                    div 댓글달기
-                a(href="")
-                  div
-                    img(src="/images/main/mainCenter/share.png" alt="")
-                    div 공유하기
-              // 댓글 파트
-              div
+                    if comments
+                      each comment in comments[index]
+                        div.commentItem(data-depth=comment.depth)
+                          input.comment-user-id(type='hidden' value=comment.user.id)
+                          //- input.comment-post-id(type='hidden' value=post.id)
+                          input.comment-id(type='hidden' value=comment.id)
+                          img(src=comment.user.profileImg, alt="")
+                          div
+                            div= comment.user.name
+                            div= comment.content
+                  #newCommentTab
+                    form(action="/comment" method="post")
+                      label
+                        img(src=user.profileImg alt="")
+                        div
+                          input.commentContent(type="text", name="content" placeholder="댓글을 입력하세요..." required)
+                      input(type='hidden' name="pid" value=post.id)
+                      input(type="hidden" name="depth" value=0)
+                      input(type="hidden" name="bundleCreatedAt" value=null)
+                      
+                    
     div
       #mainRight.custom-scroll
         // 광고
