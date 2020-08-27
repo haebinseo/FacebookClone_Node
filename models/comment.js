@@ -12,8 +12,9 @@ module.exports = (sequelize, DataTypes) =>
         allowNull: false,
       },
       depth: {
-        type: DataTypes.STRING(200),
-        allowNull: true,
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
       },
     },
     {

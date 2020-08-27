@@ -11,6 +11,7 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth/auth');
 const postRouter = require('./routes/post/post');
 const commentRouter = require('./routes/comment/comment');
+const likeRouter = require('./routes/like/like');
 // const userRouter = require('./routes/user');
 const passportConfig = require('./passport');
 
@@ -45,6 +46,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/post', postRouter);
 app.use('/comment', commentRouter);
+app.use('/like', likeRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');

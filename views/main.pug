@@ -297,22 +297,32 @@ block content
                 div
                   div= post.content
                   img(src=post.img, alt="")
+                // 좋아요 및 댓글 수
+                div
+                  .numLike(title="좋아요\n" + userWhoLikePosts[post.id][1].join('\n'))
+                    if userWhoLikePosts[post.id][0].length
+                      img(src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'%3e%3cdefs%3e%3clinearGradient id='a' x1='50%25' x2='50%25' y1='0%25' y2='100%25'%3e%3cstop offset='0%25' stop-color='%2318AFFF'/%3e%3cstop offset='100%25' stop-color='%230062DF'/%3e%3c/linearGradient%3e%3cfilter id='c' width='118.8%25' height='118.8%25' x='-9.4%25' y='-9.4%25' filterUnits='objectBoundingBox'%3e%3cfeGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/%3e%3cfeOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/%3e%3cfeComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/%3e%3cfeColorMatrix in='shadowInnerInner1' values='0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0'/%3e%3c/filter%3e%3cpath id='b' d='M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z'/%3e%3c/defs%3e%3cg fill='none'%3e%3cuse fill='url(%23a)' xlink:href='%23b'/%3e%3cuse fill='black' filter='url(%23c)' xlink:href='%23b'/%3e%3cpath fill='white' d='M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z'/%3e%3c/g%3e%3c/svg%3e", alt="like-icon")
+                      span(title=userWhoLikePosts[post.id][1].join('\n'))= userWhoLikePosts[post.id][0].length
+                  .numComment
+                    if comments[index].length
+                      span 댓글 #{comments[index].length}개
                 // 좋아요 등등
                 div
-                  a(href="#")
-                    div
-                      img(src="/images/main/mainCenter/like.png" alt="")
+                  div.likePostBtn(data-pid=post.id)
+                    if userWhoLikePosts[post.id][0].includes(user.id)
+                      span.icon--liked
+                      div.text-liked 좋아요
+                    else
+                      span.icon--like
                       div 좋아요
-                  a(href="#")
-                    div
-                      div &#xe804
-                      div 댓글달기
-                  a(href="#")
-                    div
-                      img(src="/images/main/mainCenter/share.png" alt="")
-                      div 공유하기
+                  div.commentBtn
+                    span.icon--comment
+                    div 답글 달기
+                  div
+                    span.icon--share
+                    div 공유하기
                 // 댓글 파트
-                div
+                div.commentSection
                   div
                     if comments
                       each comment in comments[index]
@@ -322,8 +332,26 @@ block content
                           input.comment-id(type='hidden' value=comment.id)
                           img(src=comment.user.profileImg, alt="")
                           div
-                            div= comment.user.name
-                            div= comment.content
+                            div
+                              div= comment.user.name
+                              div= comment.content
+                              if userWhoLikeComments[comment.id] && userWhoLikeComments[comment.id][0].length
+                                div(title=userWhoLikeComments[comment.id][1].join('\n'))
+                                  img(src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'%3e%3cdefs%3e%3clinearGradient id='a' x1='50%25' x2='50%25' y1='0%25' y2='100%25'%3e%3cstop offset='0%25' stop-color='%2318AFFF'/%3e%3cstop offset='100%25' stop-color='%230062DF'/%3e%3c/linearGradient%3e%3cfilter id='c' width='118.8%25' height='118.8%25' x='-9.4%25' y='-9.4%25' filterUnits='objectBoundingBox'%3e%3cfeGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/%3e%3cfeOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/%3e%3cfeComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/%3e%3cfeColorMatrix in='shadowInnerInner1' values='0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0'/%3e%3c/filter%3e%3cpath id='b' d='M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z'/%3e%3c/defs%3e%3cg fill='none'%3e%3cuse fill='url(%23a)' xlink:href='%23b'/%3e%3cuse fill='black' filter='url(%23c)' xlink:href='%23b'/%3e%3cpath fill='white' d='M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z'/%3e%3c/g%3e%3c/svg%3e", alt="like-icon")
+                                  span= userWhoLikeComments[comment.id][0].length
+                            div
+                              if userWhoLikeComments[comment.id] && userWhoLikeComments[comment.id][0].includes(user.id)
+                                span.likeCommentBtn.text-liked(data-cid=comment.id) 좋아요
+                              else
+                                span.likeCommentBtn(data-cid=comment.id) 좋아요
+                              |  · 
+                              span.replyBtn(data-depth=comment.depth data-bundle-created-at=comment.bundleCreatedAt) 답글 달기
+                              |  · 
+                              -elapsedTime = (new Date() - new Date(comment.createdAt))/1000;
+                              -timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
+                              -for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
+                              -if(idx === 0) { timeArr[0] += 1; idx += 1; }
+                              span #{timeArr[idx-1]}#{units[idx-1]}
                   #newCommentTab
                     form(action="/comment" method="post")
                       label

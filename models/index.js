@@ -35,8 +35,11 @@ db.User.belongsToMany(db.User, {
   foreignKey: 'followerId',
 });
 // Like (User - Post)
-db.User.belongsToMany(db.Post, { through: 'Like' });
-db.Post.belongsToMany(db.User, { through: 'Like' });
+db.User.belongsToMany(db.Post, { as: 'PostLikeds', through: 'LikePost' });
+db.Post.belongsToMany(db.User, { as: 'UserWhoLikePosts', through: 'LikePost' });
+// Like (User - Comment)
+db.User.belongsToMany(db.Comment, { as: 'CommentLikeds', through: 'LikeComment' });
+db.Comment.belongsToMany(db.User, { as: 'UserWhoLikeComments', through: 'LikeComment' });
 // comments
 db.User.hasMany(db.Comment);
 db.Post.hasMany(db.Comment);
