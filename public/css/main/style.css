@@ -14,6 +14,7 @@
   --overlay-alpha-80: rgba(244,244,244,0.8);
   --divider: #ced0d4;
   --disabled-button-background: #e4e6eb;
+  --shadow-1: rgba(0,0,0,0.1);
   --shadow-2: rgba(0,0,0,0.2);
   --fds-soft: cubic-bezier(0.08, 0.52, 0.52, 1);
   --fds-fast: 0.2s;
@@ -183,6 +184,46 @@ body>div:first-of-type>div {
   font-weight: 600;
   font-size: 15px;
 }
+#headerRight #account {
+  position: relative;
+}
+#headerRight #account #accountTab {
+  position: absolute;
+  top: 45px;
+  right: 0px;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  background-color: #fff;
+  border-radius: 8px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px;
+}
+#headerRight #account #accountTab #myProfile {
+  display: flex;
+}
+#headerRight #account #accountTab #myProfile>div:first-of-type {
+  border-radius: 50%;
+  margin: 8px 12px 8px 0;
+  overflow: hidden;
+}
+#headerRight #account #accountTab #myProfile>div:first-of-type img {
+  width: 60px;
+  height: 60px;
+}
+#headerRight #account #accountTab #myProfile>div:last-of-type {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#headerRight #account #accountTab #myProfile>div:last-of-type>span:first-of-type {
+  font-size: 17px;
+  font-weight: bold;
+}
+#headerRight #account #accountTab #myProfile>div:last-of-type>span:last-of-type {
+  font-size: 15px;
+  color: var(--secondary-text);
+}
 .p361ku9c {
   fill: var(--always-white);
 }
@@ -315,7 +356,7 @@ main>div:not([id="mainCenter"])>div {
   font-size: 12px;
   margin-top: auto;
 }
-#mainLeft>div>div {
+.icon--adchoices {
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -481,7 +522,7 @@ main>div:not([id="mainCenter"])>div {
   min-height: 488px;
   transform: translate(-50%, -50%);
   background-color: #fff;
-  box-shadow: 0 0 28px 1px rgba(0,0,0,0.1);
+  box-shadow: 0 0 28px 1px rgba(0,0,0,0.25);
   border-radius: 8px;
   z-index: 2;
 }

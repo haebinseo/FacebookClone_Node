@@ -15,6 +15,7 @@
     --divider: #CED0D4;
     --disabled-button-background: #E4E6EB;
 
+    --shadow-1: rgba(0,0,0,.1);
     --shadow-2: rgba(0,0,0,.2);
     --fds-soft: cubic-bezier(.08, .52, .52, 1);
     --fds-fast: .2s;
@@ -217,6 +218,56 @@ body {
             font-size: 15px;
         }
     }
+
+    #account {
+        position: relative;
+
+        #accountTab {
+            position: absolute;
+            top: 45px;
+            right: 0px;
+            box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+            background-color: white;
+            border-radius: 8px;
+            width: 360px;
+            // height: 400px;
+            display: flex;
+            flex-direction: column;
+            padding: 8px 16px;
+
+            #myProfile {
+                display: flex;
+                &>div {
+                    &:first-of-type {
+                        border-radius: 50%;
+                        margin: 8px 12px 8px 0;
+                        overflow: hidden;
+
+                        img {
+                            width: 60px;
+                            height 60px;
+                        }
+                    }
+
+                    &:last-of-type {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        // line-height: 110%;
+                        &>span:first-of-type {
+                            font-size: 17px;
+                            font-weight: bold;
+                        }
+
+                        &>span:last-of-type {
+                            font-size: 15px;
+                            color: var(--secondary-text);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 .p361ku9c {
@@ -387,16 +438,16 @@ main {
         padding: 16px;
         font-size: 12px;
         margin-top: auto;
-
-        &>div {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background-image: url(/images/login/adchoices.png);
-            background-position: 0 -67px;
-            filter: grayscale(1);
-        }
     }
+}
+
+.icon--adchoices {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url(/images/login/adchoices.png);
+    background-position: 0 -67px;
+    filter: grayscale(1);
 }
 
 .listDivider {
@@ -587,7 +638,7 @@ main {
                 min-height: 488px; 
                 transform: translate(-50%, -50%);
                 background-color: white;
-                box-shadow: 0 0 28px 1px rgba(0,0,0,.1);
+                box-shadow: 0 0 28px 1px rgba(0,0,0,.25);
                 // box-shadow: 0 12px 28px 0 rgba(0,0,0,.1);
                 border-radius: 8px; 
                 z-index: 2;
