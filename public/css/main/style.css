@@ -18,7 +18,7 @@
   --shadow-2: rgba(0,0,0,0.2);
   --fds-soft: cubic-bezier(0.08, 0.52, 0.52, 1);
   --fds-fast: 0.2s;
-  --filter-secondary-icon: invert(0.39) sepia(0.21) saturate(2) saturate(1.095) hue-rotate(147deg) brightness(0.94) contrast(0.86);
+  --filter-secondary-icon: invert(0.39) sepia(0.21) saturate(2) saturate(1.095) hue-rotate(174deg) brightness(0.94) contrast(0.86);
   --header-height: 60px;
 }
 * {
@@ -60,7 +60,7 @@ body>div:first-of-type>div {
   height: 60px;
 }
 .invisible {
-  display: none;
+  display: none !important;
 }
 #headerLeft {
   position: fixed;
@@ -197,10 +197,17 @@ body>div:first-of-type>div {
   width: 360px;
   display: flex;
   flex-direction: column;
-  padding: 8px 16px;
+  padding: 8px 8px;
+  cursor: default;
 }
 #headerRight #account #accountTab #myProfile {
   display: flex;
+  padding: 0 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#headerRight #account #accountTab #myProfile:hover {
+  background-color: #f2f2f2;
 }
 #headerRight #account #accountTab #myProfile>div:first-of-type {
   border-radius: 50%;
@@ -222,6 +229,45 @@ body>div:first-of-type>div {
 }
 #headerRight #account #accountTab #myProfile>div:last-of-type>span:last-of-type {
   font-size: 15px;
+  color: var(--secondary-text);
+}
+#headerRight #account #accountTab .tabDivider {
+  border-bottom: 1px solid var(--divider);
+  margin: 8px;
+}
+#headerRight #account #accountTab #logout {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#headerRight #account #accountTab #logout:hover {
+  background-color: #f2f2f2;
+}
+#headerRight #account #accountTab #logout div:first-of-type {
+  width: 36px;
+  height: 36px;
+  background-color: var(--secondary-button-background);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 12px 8px 0;
+}
+#headerRight #account #accountTab #logout div:first-of-type i {
+  background-image: url("/images/main/headRight/_AgLJqLL0tL.png");
+  background-position: 0 -1011px;
+  filter: var(--filter-secondary-icon);
+  height: 20px;
+  width: 20px;
+}
+#headerRight #account #accountTab #logout div:last-of-type {
+  font-size: 15px;
+}
+#headerRight #account #accountTab>div:last-of-type {
+  padding: 4px 8px;
+  font-size: 13px;
   color: var(--secondary-text);
 }
 .p361ku9c {

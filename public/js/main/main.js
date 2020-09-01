@@ -1,3 +1,13 @@
+// 계정 탭 토글
+document.getElementById('account')?.addEventListener('click', () => {
+  document.getElementById('accountTab')?.classList.toggle('invisible');
+});
+
+// 로그아웃
+document.getElementById('logout')?.addEventListener('click', function () {
+  this.submit();
+});
+
 // 게시글 작성 탭 토글
 document.getElementById('newPostTabBtn')?.addEventListener('click', () => {
   document.getElementById('newPostTab').classList.remove('invisible');
