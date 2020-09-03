@@ -697,32 +697,96 @@ main>div:not([id="mainCenter"])>div {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
-}
-#mainCenter #afterStory #postArea>div>div:first-of-type>a:first-of-type>div {
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  overflow: hidden;
+  position: relative;
 }
 #mainCenter #afterStory #postArea>div>div:first-of-type>div:first-of-type {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2) {
   padding: 0 10px;
   flex-grow: 1;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:first-of-type>div:first-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>div:first-of-type {
   font-weight: 600;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:first-of-type>div:last-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>div:last-of-type {
   color: var(--secondary-text);
   font-weight: 400;
   font-size: 13px;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:last-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(3) {
   width: 36px;
   height: 36px;
-  border-radius: 100%;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab {
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-35%);
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px 0 #d3d3d3;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type {
+  display: flex;
+  align-items: center;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:first-of-type {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:first-of-type img {
+  width: inherit;
+  height: inherit;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:last-of-type {
+  flex-grow: 1;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:last-of-type>span {
+  padding: 0 16px;
+  font-size: 20px;
+  font-weight: 700;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type {
+  display: flex;
+  padding: 6px 0;
+  gap: 0 8px;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div {
+  width: 48px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-button-background);
+  border-radius: 8px;
+  cursor: pointer;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div:first-of-type {
+  flex-grow: 1;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div:first-of-type>img {
+  margin-right: 6px;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div img {
+  width: 16px;
+  height: 16px;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div span {
+  font-size: 15px;
+  font-weight: 600;
 }
 #mainCenter #afterStory #postArea>div>div:nth-of-type(3) {
   display: flex;

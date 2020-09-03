@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) =>
       },
       accepted: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
       roomId: {

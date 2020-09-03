@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon bin/www",
-    "test": "NODE_ENV=test node_modules/.bin/mocha routes/post/post.spec.js -w"
+    "test": "NODE_ENV=test node_modules/.bin/mocha routes/friend/friend.spec.js -w"
   },
   "repository": {
     "type": "git",

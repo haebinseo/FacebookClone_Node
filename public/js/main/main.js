@@ -156,3 +156,8 @@ replyBtn.forEach((btn) => {
     inputs[0].focus();
   });
 });
+
+// 친구 추가
+document.querySelectorAll('.addFriendBtn')?.addEventListener('click', function () {
+  console.log('this', this);
+});
