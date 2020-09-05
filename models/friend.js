@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) =>
         defaultValue: false,
         allowNull: false,
       },
-      roomId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
     },
     {
       timestamps: true,

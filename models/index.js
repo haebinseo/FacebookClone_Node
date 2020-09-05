@@ -5,7 +5,12 @@ const config = require('../config/config')[env];
 
 const db = {};
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config,
+);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -45,7 +50,7 @@ db.User.hasMany(db.Comment);
 db.Post.hasMany(db.Comment);
 db.Comment.belongsTo(db.User);
 db.Comment.belongsTo(db.Post);
-// room - freiend
+// room - friend
 db.Room.hasMany(db.Friend);
 db.Friend.belongsTo(db.Room);
 // messages

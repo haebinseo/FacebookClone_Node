@@ -1,7 +1,27 @@
-const { Post, User, Sequelize } = require('../models');
+const { Post, User, Sequelize, Friend } = require('../models');
 
 const main = async (req, res, next) => {
   try {
+    // friends
+    const followingsObj = {};
+    const followingsArr = await Friend.findAll({
+      where: { followerId: req.user.id },
+      attributes: ['followingId', 'accepted', 'roomId'],
+    });
+    followingsArr.forEach(function (following) {
+      followingsObj[following.followingId] = [following.accepted, following.roomId];
+    });
+
+    const followersObj = {};
+    const followersArr = await Friend.findAll({
+      where: { followingId: req.user.id },
+      attributes: ['followerId', 'accepted', 'roomId'],
+    });
+    followersArr.forEach(function (follower) {
+      followersObj[follower.followerId] = [follower.accepted, follower.roomId];
+    });
+
+    // posts
     const posts = await Post.findAll({
       include: [
         {
@@ -55,12 +75,17 @@ const main = async (req, res, next) => {
         });
       });
     }
+    // console.log('user', req.user);
+    // console.log('user.Followings', req.user.Followings[0]);
+    // console.log('user.Followers', req.user.Followers[0]);
     // console.log('posts[0].UserWhoLikePosts', posts[0].UserWhoLikePosts);
     // console.log('posts[0].UserWhoLikePosts[0].LikePost', posts[0].UserWhoLikePosts[0].LikePost);
 
     res.render('main', {
       title: 'Facebook',
       user: req.user,
+      followings: followingsObj,
+      followers: followersObj,
       posts,
       comments,
       userWhoLikePosts,

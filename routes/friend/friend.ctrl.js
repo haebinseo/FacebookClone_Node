@@ -1,4 +1,4 @@
-const { User, Friend, Room } = require('../../models');
+const { User, Friend, Room, Sequelize } = require('../../models');
 
 const addFriend = async (req, res, next) => {
   const targetUID = parseInt(req.params.uid, 10);
@@ -16,7 +16,7 @@ const acceptFriend = async (req, res, next) => {
   const targetUID = parseInt(req.params.uid, 10);
   try {
     const user = await User.findOne({ where: { id: req.user.id } });
-    const acceptedFriend = await user.addFollowing(targetUID, {
+    const [acceptedFriend] = await user.addFollowing(targetUID, {
       through: { accepted: true },
     });
     let requestedFriend = await Friend.findOne({
@@ -25,11 +25,11 @@ const acceptFriend = async (req, res, next) => {
     requestedFriend.accepted = true;
     requestedFriend = await requestedFriend.save();
 
-    console.log('acceptedFriend : ', acceptedFriend);
-    console.log('requestedFriend : ', requestedFriend);
-
     const room = await Room.create({});
-    room.addFriends([acceptedFriend, requestedFriend]);
+    await room.addFriends([acceptedFriend, requestedFriend]);
+
+    // console.log('acceptedFriend : ', acceptedFriend);
+    // console.log('requestedFriend : ', requestedFriend);
 
     res.sendStatus(200);
   } catch (error) {
@@ -38,4 +38,29 @@ const acceptFriend = async (req, res, next) => {
   }
 };
 
-module.exports = { addFriend, acceptFriend };
+const unfriend = async (req, res, next) => {
+  const targetUID = parseInt(req.params.uid, 10);
+  try {
+    const friend = await Friend.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: targetUID,
+      },
+    });
+    const room = await friend.getRoom();
+    await room.destroy();
+    await friend.destroy();
+    await Friend.destroy({
+      where: {
+        followerId: targetUID,
+        followingId: req.user.id,
+      },
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
+
+module.exports = { addFriend, acceptFriend, unfriend };

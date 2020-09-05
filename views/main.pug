@@ -298,32 +298,75 @@ block content
                 // header
                 div
                   div
-                    img(src=post.user.profileImg alt="")
+                    img.accountHoverTabTrigger(src=post.user.profileImg alt="")
                   div
-                    div= post.user.name
+                    span.accountHoverTabTrigger= post.user.name
                     -const units = ['분', '시간', '일', '월', '년'];
                     -let elapsedTime = (new Date() - new Date(post.createdAt))/1000;
                     -let timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
                     -let idx; for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
                     -if(idx === 0) { timeArr[0] += 1; idx += 1; }
-                    div #{timeArr[idx-1]}#{units[idx-1]}
+                    span #{timeArr[idx-1]}#{units[idx-1]}
                   div
                     img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
-                  .accountHoverTab
+                  .accountHoverTab.invisible
                     div
                       div
                         img(src=post.user.profileImg alt="")
                       div 
                         span= post.user.name
                     div
-                      div.addFriendBtn
-                        img(src="/images/main/mainCenter/addFriend.png", alt="친추")
-                        span 친구 추가
-                      div(title="메세지 보내기")
-                        svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
-                          path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
-                      div
-                        img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+                      //- 본인
+                      if user.id === post.user.id
+                        div.editProfileBtn(data-uid=user.id)
+                          img(src="/images/main/mainCenter/editProfile.png", alt="")
+                          span 프로필 편집
+                      else if post.user.id in followings
+                        //- 쌍방 친구
+                        if followings[post.user.id][0]
+                          div
+                            svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+                              path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+                            span 메세지 보내기
+                          div.friendBtn(title="친구")
+                            img(src="/images/main/mainCenter/friend.png", alt="친구")
+                            .friendOptTab.invisible(title="")
+                              div.unfriendBtn(data-uid=post.user.id)
+                                i
+                                span 친구 끊기
+                          div
+                            img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+                        //- 요청 보냄
+                        else
+                          div.friendRequestedBtn(data-uid=post.user.id)
+                            img(src="/images/main/mainCenter/addFriend.png", alt="친추")
+                            span 친구 요청됨
+                          div(title="메세지 보내기")
+                            svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+                              path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+                          div
+                            img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+                      else
+                        //- 요청 받음
+                        if post.user.id in followers
+                          div.acceptFriendBtn(data-uid=post.user.id)
+                            img(src="/images/main/mainCenter/friend.png", alt="친구")
+                            span 응답하기
+                          div(title="메세지 보내기")
+                            svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+                              path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+                          div
+                            img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+                        else
+                          div.addFriendBtn(data-uid=post.user.id)
+                            img(src="/images/main/mainCenter/addFriend.png", alt="친추")
+                            span 친구 추가
+                          div(title="메세지 보내기")
+                            svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+                              path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+                          div
+                            img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+
                 // main
                 div
                   div= post.content

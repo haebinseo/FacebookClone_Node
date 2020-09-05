@@ -60,7 +60,8 @@ body>div:first-of-type>div {
   height: 60px;
 }
 .invisible {
-  display: none !important;
+  opacity: 0;
+  z-index: -1;
 }
 #headerLeft {
   position: fixed;
@@ -708,11 +709,14 @@ main>div:not([id="mainCenter"])>div {
 #mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2) {
   padding: 0 10px;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>div:first-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>span:first-of-type {
   font-weight: 600;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>div:last-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>span:last-of-type {
   color: var(--secondary-text);
   font-weight: 400;
   font-size: 13px;
@@ -727,7 +731,7 @@ main>div:not([id="mainCenter"])>div {
 }
 #mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab {
   position: absolute;
-  bottom: 100%;
+  bottom: 95%;
   transform: translateX(-35%);
   display: flex;
   flex-direction: column;
@@ -777,7 +781,8 @@ main>div:not([id="mainCenter"])>div {
 #mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div:first-of-type {
   flex-grow: 1;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div:first-of-type>img {
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div:first-of-type>img,
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div:first-of-type svg {
   margin-right: 6px;
 }
 #mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div img {
@@ -787,6 +792,41 @@ main>div:not([id="mainCenter"])>div {
 #mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type>div span {
   font-size: 15px;
   font-weight: 600;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type .friendBtn {
+  position: relative;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type .friendOptTab {
+  position: absolute;
+  bottom: -55px;
+  left: 0;
+  width: 344px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  padding: 8px 0;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type .friendOptTab>div {
+  height: 36px;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 0 8px;
+  display: flex;
+  align-items: center;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type .friendOptTab>div:hover {
+  background-color: var(--secondary-button-background);
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type .friendOptTab>div span {
+  font-weight: 500;
+}
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:last-of-type .friendOptTab>div.unfriendBtn i {
+  background-image: url("/images/main/mainCenter/unfriend.png");
+  background-position: 0 -25px;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  margin-right: 12px;
 }
 #mainCenter #afterStory #postArea>div>div:nth-of-type(3) {
   display: flex;
