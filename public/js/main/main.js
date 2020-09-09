@@ -234,3 +234,8 @@ document.querySelectorAll('.unfriendBtn')?.forEach((btn) => {
     xhr.send();
   });
 });
+
+// 메신저 버튼 이동 이벤트 등록
+document.getElementById('messenger')?.addEventListener('click', () => {
+  window.location.href = '/messenger';
+});

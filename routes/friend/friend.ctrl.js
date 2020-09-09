@@ -1,4 +1,4 @@
-const { User, Friend, Room, Sequelize } = require('../../models');
+const { User, Friend, Room } = require('../../models');
 
 const addFriend = async (req, res, next) => {
   const targetUID = parseInt(req.params.uid, 10);
@@ -15,8 +15,7 @@ const addFriend = async (req, res, next) => {
 const acceptFriend = async (req, res, next) => {
   const targetUID = parseInt(req.params.uid, 10);
   try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    const [acceptedFriend] = await user.addFollowing(targetUID, {
+    const [acceptedFriend] = await req.user.addFollowing(targetUID, {
       through: { accepted: true },
     });
     let requestedFriend = await Friend.findOne({
@@ -28,10 +27,13 @@ const acceptFriend = async (req, res, next) => {
     const room = await Room.create({});
     await room.addFriends([acceptedFriend, requestedFriend]);
 
-    // console.log('acceptedFriend : ', acceptedFriend);
-    // console.log('requestedFriend : ', requestedFriend);
-
     res.sendStatus(200);
+
+    // 가입 메시지 생성 및 emit
+    const msg = '이제 Messenger에서 친구와 메시지를 주고받을 수 있습니다.';
+    const message = await room.createMessage({ content: msg });
+    req.app.get('io').of('/user').to(req.user.id).emit('message', message);
+    req.app.get('io').of('/user').to(targetUID).emit('message', message);
   } catch (error) {
     console.error(error);
     next(error);

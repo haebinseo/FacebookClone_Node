@@ -1,0 +1,404 @@
+:root {
+  --always-white: #fff;
+  --primary-button-background: #1877f2;
+  --secondary-icon: #65676b;
+  --primary-text: #050505;
+  --secondary-text: #65676b;
+  --secondary-button-background: #e4e6eb;
+  --hover-overlay: rgba(0,0,0,0.05);
+  --accent: #1876f2;
+  --divider: #ced0d4;
+  --comment-background: #f0f2f5;
+  --surface-background: #fff;
+  --new-post-hover-background: #f2f2f2;
+  --overlay-alpha-80: rgba(244,244,244,0.8);
+  --divider: #ced0d4;
+  --disabled-button-background: #e4e6eb;
+  --shadow-1: rgba(0,0,0,0.1);
+  --shadow-2: rgba(0,0,0,0.2);
+  --fds-soft: cubic-bezier(0.08, 0.52, 0.52, 1);
+  --fds-fast: 0.2s;
+  --filter-secondary-icon: invert(0.39) sepia(0.21) saturate(2) saturate(1.095) hue-rotate(174deg) brightness(0.94) contrast(0.86);
+  --header-height: 60px;
+}
+* {
+  box-sizing: border-box;
+}
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+  margin: 0;
+}
+a {
+  text-decoration: none;
+  color: var(--primary-text);
+}
+a:visited {
+  color: var(--primary-text);
+}
+input,
+textarea {
+  outline: none;
+}
+input:focus::placeholder,
+textarea:focus::placeholder {
+  color: rgba(0,0,0,0.2);
+}
+body {
+  display: grid;
+  grid-template-rows: var(--header-height) 1fr;
+  font-family: "fontello", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+body>div:first-of-type {
+  position: relative;
+}
+body>div:first-of-type>div {
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+.invisible {
+  display: none !important;
+}
+#headerLeft {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 112px;
+  padding: 0 16px;
+  z-index: 2;
+}
+#headerLeft>a {
+  margin-right: 8px;
+}
+#headerLeft>div {
+  position: absolute;
+  top: 19px;
+  left: 75px;
+  color: #606770;
+  font-size: 20px;
+}
+#headerLeft>form>input {
+  min-width: 40px;
+  width: 100%;
+  height: 40px;
+  padding: 9px 16px;
+  background-color: var(--comment-background);
+  border-radius: 50px;
+  font-size: 15px;
+  text-indent: 20px;
+  border: 0;
+}
+#headerCenter {
+  position: fixed;
+  width: 100%;
+  box-shadow: 0 0 5px 1px rgba(0,0,0,0.1);
+  background-color: var(--surface-background);
+  justify-content: center;
+  padding: 0 110px;
+  z-index: 1;
+}
+#headerCenter>a {
+  flex-grow: 1;
+  height: 52px;
+  min-width: 50px;
+  max-width: calc(calc(680px - 32px) / 5);
+}
+#headerCenter>a>div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+#headerCenter>a>div>svg {
+  fill: var(--secondary-icon);
+}
+#headerCenter>a>div:hover {
+  background-color: #f2f2f2;
+}
+#headerCenter>a .selected {
+  position: relative;
+}
+#headerCenter>a .selected>svg {
+  fill: var(--primary-button-background);
+}
+#headerCenter>a .selected:hover {
+  background-color: unset;
+}
+#headerCenter>a .selected::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  width: 100%;
+  border-bottom: 3px solid var(--primary-button-background);
+}
+#headerCenter>a+a {
+  margin-left: 8px;
+}
+#headerCenter>a:last-of-type {
+  display: none;
+}
+#headerRight {
+  justify-content: space-around;
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding-right: 6px;
+  z-index: 2;
+}
+#headerRight>div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background-color: var(--secondary-button-background);
+}
+#headerRight>div:hover {
+  background-color: #d8dadf;
+  cursor: pointer;
+}
+#headerRight #user {
+  width: 91px;
+  height: 36px;
+  border-radius: 18px;
+  background-color: unset;
+  position: relative;
+}
+#headerRight #user:hover {
+  background-color: var(--hover-overlay);
+}
+#headerRight #user>img {
+  width: 28px;
+  height: 28px;
+  border-radius: 100%;
+}
+#headerRight #user>div {
+  padding: 0 5px 2px;
+  font-weight: 600;
+  font-size: 15px;
+}
+#headerRight #account {
+  position: relative;
+}
+#headerRight #account #accountTab {
+  position: absolute;
+  top: 45px;
+  right: 0px;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  background-color: #fff;
+  border-radius: 8px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 8px;
+  cursor: default;
+}
+#headerRight #account #accountTab #myProfile {
+  display: flex;
+  padding: 0 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#headerRight #account #accountTab #myProfile:hover {
+  background-color: #f2f2f2;
+}
+#headerRight #account #accountTab #myProfile>div:first-of-type {
+  border-radius: 50%;
+  margin: 8px 12px 8px 0;
+  overflow: hidden;
+}
+#headerRight #account #accountTab #myProfile>div:first-of-type img {
+  width: 60px;
+  height: 60px;
+}
+#headerRight #account #accountTab #myProfile>div:last-of-type {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#headerRight #account #accountTab #myProfile>div:last-of-type>span:first-of-type {
+  font-size: 17px;
+  font-weight: bold;
+}
+#headerRight #account #accountTab #myProfile>div:last-of-type>span:last-of-type {
+  font-size: 15px;
+  color: var(--secondary-text);
+}
+#headerRight #account #accountTab .tabDivider {
+  border-bottom: 1px solid var(--divider);
+  margin: 8px;
+}
+#headerRight #account #accountTab #logout {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#headerRight #account #accountTab #logout:hover {
+  background-color: #f2f2f2;
+}
+#headerRight #account #accountTab #logout div:first-of-type {
+  width: 36px;
+  height: 36px;
+  background-color: var(--secondary-button-background);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 12px 8px 0;
+}
+#headerRight #account #accountTab #logout div:first-of-type i {
+  background-image: url("/images/main/headRight/_AgLJqLL0tL.png");
+  background-position: 0 -1011px;
+  filter: var(--filter-secondary-icon);
+  height: 20px;
+  width: 20px;
+}
+#headerRight #account #accountTab #logout div:last-of-type {
+  font-size: 15px;
+}
+#headerRight #account #accountTab>div:last-of-type {
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--secondary-text);
+}
+.p361ku9c {
+  fill: var(--always-white);
+}
+.b7h9ocf4 {
+  transition-timing-function: var(--fds-soft);
+}
+.aaxa7vy3 {
+  fill: var(--primary-button-background);
+}
+.ms05siws {
+  transition-duration: var(--fds-fast);
+}
+.hwsy1cff {
+  transition-property: fill, stroke;
+}
+.em6zcovv {
+  fill: var(--secondary-icon);
+}
+@media (min-width: 1260px) {
+  #headerLeft {
+    width: 320px;
+  }
+}
+@media (max-height: 789px) and (min-width: 1100px), (max-width: 1379px) and (min-width: 1100px) {
+  #headerCenter>a {
+    max-width: calc(calc(590px - 32px) / 5);
+  }
+}
+@media (max-width: 1099px) {
+  #headerCenter>a {
+    max-width: calc(15vw - 55px);
+  }
+  #headerCenter>a:nth-of-type(5),
+  #headerCenter>a:last-of-type {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  #headerCenter {
+    justify-content: flex-start;
+  }
+  #headerCenter>a:not(:last-of-type) {
+    display: none;
+  }
+}
+@media (min-height: 790px) {
+  #mainCenter>div {
+    max-width: 680px;
+  }
+  #mainCenter>div #afterStory {
+    max-width: 680px;
+  }
+}
+@media (max-width: 1260px) {
+  #headerRight #user {
+    display: none;
+  }
+}
+main {
+  min-height: calc(100vh - var(--header-height));
+  display: grid;
+  width: 100%;
+  grid-template-areas: "friends head head" "friends chat info";
+  grid-template-rows: 60px 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
+}
+#friendsListTab {
+  grid-area: friends;
+  border-right: 1px solid rgba(0,0,0,0.1);
+}
+#friendsListTab>div:first-of-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+}
+#friendsListTab>div:first-of-type span {
+  font-size: 24px;
+  font-weight: bold;
+}
+#friendsListTab>div:first-of-type>div {
+  display: flex;
+  align-items: center;
+}
+#friendsListTab>div:first-of-type>div>div {
+  width: 36px;
+  height: 36px;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 50%;
+  margin-left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#friendsListTab>div:nth-of-type(2) {
+  position: relative;
+  padding: 4px 16px 12px;
+}
+#friendsListTab>div:nth-of-type(2)>div {
+  position: absolute;
+  top: 14px;
+  left: 29px;
+  color: #8c949e;
+  font-size: 20px;
+}
+#friendsListTab>div:nth-of-type(2)>form>input {
+  min-width: 40px;
+  width: 100%;
+  height: 40px;
+  padding: 9px 16px;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 50px;
+  font-size: 15px;
+  text-indent: 20px;
+  border: 0;
+}
+#friendsListTab>div:last-of-type {
+  border-top: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  color: #8c949e;
+  font-size: 13px;
+  padding: 12px;
+  text-align: center;
+}
+#friendHead {
+  grid-area: head;
+}
+#chat {
+  grid-area: chat;
+}
+#friendInfo {
+  grid-area: info;
+}

@@ -13,6 +13,7 @@ const postRouter = require('./routes/post/post');
 const commentRouter = require('./routes/comment/comment');
 const likeRouter = require('./routes/like/like');
 const friendRouter = require('./routes/friend/friend');
+const messageRouter = require('./routes/message/message');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -28,7 +29,7 @@ app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-const sessionOption = {
+const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
@@ -36,8 +37,8 @@ const sessionOption = {
     httpOnly: true,
     secure: false,
   },
-};
-app.use(session(sessionOption));
+});
+app.use(sessionMiddleware);
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -48,6 +49,7 @@ app.use('/post', postRouter);
 app.use('/comment', commentRouter);
 app.use('/like', likeRouter);
 app.use('/friend', friendRouter);
+app.use('/message', messageRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
@@ -63,4 +65,4 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = { app, sessionMiddleware };

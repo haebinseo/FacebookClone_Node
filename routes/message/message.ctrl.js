@@ -1,21 +1,19 @@
-const { User, Message } = require('../../models');
+const { User, Message, Room, Sequelize } = require('../../models');
 
-const main = async (req, res, next) => {
-  const user = await User.findOne({
-    where: { id: req.user.id },
-    include: {
-      model: User,
-      as: 'followings',
-      where: { accepted: true },
-    },
-  });
-  const msg = await Message.findAll({ where: { userId: req.user.id } });
+const postMessage = async (req, res, next) => {
+  try {
+    const roomId = req.params.rid;
+    const { content, friendId } = req.body;
+    const newMsg = await req.user.createMessage({ content, roomId });
 
-  res.render('message', {
-    title: 'Messenger | Facebook',
-    user,
-    msg,
-  });
+    const io = req.app.get('io');
+    io.of('/user').to(friendId).emit('message', newMsg);
+    io.of('/chat').to(roomId).emit('message', newMsg);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 };
 
-module.exports = { main };
+module.exports = { postMessage };

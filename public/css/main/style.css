@@ -60,8 +60,7 @@ body>div:first-of-type>div {
   height: 60px;
 }
 .invisible {
-  opacity: 0;
-  z-index: -1;
+  display: none !important;
 }
 #headerLeft {
   position: fixed;

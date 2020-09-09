@@ -2,6 +2,11 @@ module.exports = (sequelize, DataTypes) =>
   sequelize.define(
     'friend',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       followerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
