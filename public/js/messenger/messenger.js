@@ -8,6 +8,14 @@ document.getElementById('logout')?.addEventListener('click', function () {
   this.submit();
 });
 
+// 다른 사용자와 채팅
+document.querySelectorAll('li').forEach((list) => {
+  list.addEventListener('click', function () {
+    const addr = `/messenger/${this.dataset.rid}`;
+    if (window.location.href !== addr) window.location.href = addr;
+  });
+});
+
 // 현재 채팅방 정보란 토글
 document.getElementById('roomInfo')?.addEventListener('click', function () {
   this.children[0].classList.toggle('roomInfoActive');
@@ -16,8 +24,15 @@ document.getElementById('roomInfo')?.addEventListener('click', function () {
 
 // 채팅란 클릭시 input focus
 document.getElementById('messages')?.addEventListener('click', function () {
-  this.querySelector('#msgInput').focus();
+  this.parentNode.querySelector('#msgInput').focus();
 });
+
+// 마지막 상대방 채팅 옆에 프로필 이미지 띄우기
+const friendMsgs = document.querySelectorAll('.friendMsg');
+const profileImgDiv = friendMsgs[friendMsgs.length - 1].children[0];
+const img = document.createElement('img');
+img.src = profileImgDiv.dataset.friendImg;
+profileImgDiv.appendChild(img);
 
 // 메시지 작성 이벤트
 document.getElementById('messageForm')?.addEventListener('submit', function (e) {
@@ -40,4 +55,18 @@ document.getElementById('messageForm')?.addEventListener('submit', function (e) 
       }),
     );
   }
+});
+
+// 메시지 삭제 버튼 이벤트 등록
+document.querySelectorAll('.deleteMsgBtn').forEach((btn) => {
+  btn.addEventListener('click', function () {
+    const { mid } = this.parentNode.dataset;
+    const { rid } = this.parentNode.parentNode.dataset;
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status !== 200) console.error(xhr.responseText);
+    };
+    xhr.open('DELETE', `/message/${rid}/${mid}`);
+    xhr.send();
+  });
 });

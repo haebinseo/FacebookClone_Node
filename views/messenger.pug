@@ -96,7 +96,7 @@ block content
       div
         ul
           each room, index in rooms
-            li
+            li(data-rid=room.id)
               div(class= index===currentRoomIdx ? 'currentRoom' : undefined)
                 div
                   img(src=room.user.profileImg alt="")
@@ -141,18 +141,41 @@ block content
                   path(id="Fill-17" d="M18,10 C16.6195,10 15.5,11.119 15.5,12.5 C15.5,13.881 16.6195,15 18,15 C19.381,15 20.5,13.881 20.5,12.5 C20.5,11.119 19.381,10 18,10 Z M16,25 C16,25.552 16.448,26 17,26 L19,26 C19.552,26 20,25.552 20,25 L20,18 C20,17.448 19.552,17 19,17 L17,17 C16.448,17 16,17.448 16,18 L16,25 Z M18,30 C11.3725,30 6,24.6275 6,18 C6,11.3725 11.3725,6 18,6 C24.6275,6 30,11.3725 30,18 C30,24.6275 24.6275,30 18,30 Z" fill="#0099ff")
       div
         #chat
-          div#messages
+          div#messages(data-rid=currentRoom.id)
+            -let lastMsgTime = new Date(0);
             each message in messages
-              div
-                //- system message
-                if !message.userId
-                  div.systemMsg= message.content
-                //- user's message
-                else if message.userId === user.id
-                  div.myMsg= message.content
-                //- friend's message
+              -const time = new Date(message.createdAt);
+              -const updatedTime = new Date(message.updatedAt);
+              -const amPm = ['오전', '오후'];
+              -const hours = time.getHours()%12;
+              -const minutes = '0' + time.getMinutes();
+              -const timeText = `${time.getFullYear()}년 ${time.getMonth()+1}월 ${time.getDate()}일 ${amPm[Math.floor(time.getHours()/12)]} ${hours===0?12:hours}:${minutes.slice(-2)}`;
+              if time - lastMsgTime > 86400000
+                -lastMsgTime = time;
+                div.systemMsg
+                  div= `${time.getFullYear()%100}. ${time.getMonth()+1}. ${time.getDate()}. ${amPm[Math.floor(time.getHours()/12)]} ${hours===0?12:hours}:${minutes.slice(-2)}`
+
+              //- system message
+              if !message.userId
+                div.systemMsg(data-mid=message.id)
+                  div= message.content
+              //- user's message
+              else if message.userId === user.id
+                if time.getTime() === updatedTime.getTime()
+                  div.myMsg(title=timeText data-mid=message.id)
+                    div.deleteMsgBtn ❌
+                    div= message.content
                 else
-                  div.friendMsg= message.content
+                  -const updatedHours = updatedTime.getHours()%12;
+                  -const updatedMinutes = '0' + updatedTime.getMinutes();
+                  -const updatedTimeText = `${updatedTime.getFullYear()}년 ${updatedTime.getMonth()+1}월 ${updatedTime.getDate()}일 ${amPm[Math.floor(updatedTime.getHours()/12)]} ${updatedHours===0?12:updatedHours}:${minutes.slice(-2)}`;
+                  div.myMsg.deletedMsg(title=`보냄: ${timeText}\n보내기 취소함: ${updatedTimeText}` data-mid=message.id)
+                    div= message.content
+              //- friend's message
+              else
+                div.friendMsg(title=timeText data-mid=message.id class= time.getTime()===updatedTime.getTime()?undefined:'deletedMsg')
+                  div.friendProfileImg(data-friend-img=currentRoom.user.profileImg)
+                  div= message.content
           form#messageForm(data-rid=currentRoom.id)
             div
               svg(height="24" width="24" viewBox="0 0 24 24")
@@ -211,14 +234,47 @@ block content
         
       });
 
-      chatSocket.on('message', (data) => {
-        const outerdiv = document.createElement('div');
+      chatSocket.on('message', (msg) => {
+        const outerDiv = document.createElement('div');
         const innerDiv = document.createElement('div');
-        if (data.userId === parseInt('#{user.id}', 10)) innerDiv.classList.add('myMsg');
-        else if (!data.userId) innerDiv.classList.add('systemMsg');
-        else innerDiv.classList.add('friendMsg');
-        innerDiv.textContent = data.content;
-        outerdiv.appendChild(innerDiv);
-        document.getElementById('messages').appendChild(outerdiv);
-      })
+        outerDiv.setAttribute('data-mid', msg.id);
+        if (msg.userId === parseInt('#{user.id}', 10)) {
+          outerDiv.classList.add('myMsg');
+          const deleteBtn = document.createElement('div');
+          deleteBtn.innerText = '❌';
+          deleteBtn.classList.add('deleteMsgBtn');
+          deleteBtn.addEventListener('click', function () {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => {
+              if (xhr.status !== 200) console.error(xhr.responseText);
+            };
+            xhr.open('DELETE', `/message/${msg.id}`);
+            xhr.send();
+          });
+          outerDiv.appendChild(deleteBtn);
+        } else if (!msg.userId) {
+          outerDiv.classList.add('systemMsg');
+        } else {
+          outerDiv.classList.add('friendMsg');
+          const friendMsgs = document.querySelectorAll('.friendMsg')
+          const prevImgDiv = friendMsgs[friendMsgs.length - 1].children[0];
+          const cloneImgDiv = prevImgDiv.cloneNode(true);
+          prevImgDiv.children[0].remove();
+          outerDiv.appendChild(cloneImgDiv);
+        }
+        innerDiv.textContent = msg.content;
+        outerDiv.appendChild(innerDiv);
+        const messagesDiv = document.getElementById('messages')
+        messagesDiv.appendChild(outerDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;  // 스크롤바 최하단으로
+      });
+
+      chatSocket.on('deleteMsg', (msg) => {
+        const targetMsg = document.querySelector(`[data-mid="${msg.id}"]`);
+        targetMsg.classList.add('deletedMsg');
+        const headMsg = targetMsg.classList.contains('myMsg') ? '' : '#{currentRoom.user.name}님이 ';
+        targetMsg.lastChild.innerText = headMsg + msg.content;
+        targetMsg.children[0].remove();
+      });
+
       

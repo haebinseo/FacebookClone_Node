@@ -385,6 +385,7 @@ main #friendsListTab>div:nth-of-type(2)>form>input {
 }
 main #friendsListTab>div:last-of-type li {
   padding: 0 8px;
+  cursor: pointer;
 }
 main #friendsListTab>div:last-of-type li .currentRoom {
   background-color: rgba(0,0,0,0.05);
@@ -493,34 +494,83 @@ main>div:last-of-type>div:last-of-type #chat {
 }
 main>div:last-of-type>div:last-of-type #chat>div {
   flex-grow: 1;
+  max-height: calc(100vh - 172px);
   padding: 0 12px;
+  overflow-y: auto;
+}
+main>div:last-of-type>div:last-of-type #chat>div::-webkit-scrollbar {
+  width: 7px;
+}
+main>div:last-of-type>div:last-of-type #chat>div::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: transparent;
+}
+main>div:last-of-type>div:last-of-type #chat>div:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.35);
 }
 main>div:last-of-type>div:last-of-type #chat>div>div {
   display: flex;
-  flex-direction: column;
+  align-items: center;
 }
-main>div:last-of-type>div:last-of-type #chat>div>div>div {
+main>div:last-of-type>div:last-of-type #chat>div .systemMsg {
+  justify-content: center;
+}
+main>div:last-of-type>div:last-of-type #chat>div .systemMsg>div {
   width: fit-content;
-}
-main>div:last-of-type>div:last-of-type #chat>div>div .systemMsg {
   color: rgba(0,0,0,0.4);
   font-size: 12px;
-  align-self: center;
+  justify-content: center;
   margin: 12px 0;
 }
-main>div:last-of-type>div:last-of-type #chat>div>div .myMsg {
+main>div:last-of-type>div:last-of-type #chat>div .myMsg {
+  justify-content: flex-end;
+}
+main>div:last-of-type>div:last-of-type #chat>div .myMsg:hover>.deleteMsgBtn {
+  opacity: 1;
+}
+main>div:last-of-type>div:last-of-type #chat>div .myMsg>div:last-of-type {
+  width: fit-content;
   background-color: #0084ff;
   border-radius: 20px;
   padding: 6px 12px 7px;
   color: #fff;
   align-self: flex-end;
   margin: 2px;
+  line-height: 1.28;
 }
-main>div:last-of-type>div:last-of-type #chat>div>div .friendMsg {
+main>div:last-of-type>div:last-of-type #chat>div .deleteMsgBtn {
+  cursor: pointer;
+  opacity: 0;
+  margin-right: 10px;
+  filter: opacity(0.7);
+}
+main>div:last-of-type>div:last-of-type #chat>div .friendMsg>div:last-of-type {
+  width: fit-content;
   background-color: #f1f0f0;
   border-radius: 20px;
   padding: 6px 12px 7px;
   margin: 2px;
+  display: flex;
+  align-items: center;
+  line-height: 1.28;
+}
+main>div:last-of-type>div:last-of-type #chat>div .friendProfileImg {
+  width: 28px;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+main>div:last-of-type>div:last-of-type #chat>div .friendProfileImg img {
+  width: inherit;
+  height: inherit;
+}
+main>div:last-of-type>div:last-of-type #chat>div .friendMsg.deletedMsg>div:last-of-type,
+main>div:last-of-type>div:last-of-type #chat>div .myMsg.deletedMsg>div:last-of-type {
+  background-color: #fff;
+  border: 1px solid #c0c0c0;
+  font-style: italic;
+  color: rgba(0,0,0,0.4);
 }
 main>div:last-of-type>div:last-of-type #chat form {
   height: 52px;
