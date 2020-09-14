@@ -29,10 +29,12 @@ document.getElementById('messages')?.addEventListener('click', function () {
 
 // 마지막 상대방 채팅 옆에 프로필 이미지 띄우기
 const friendMsgs = document.querySelectorAll('.friendMsg');
-const profileImgDiv = friendMsgs[friendMsgs.length - 1].children[0];
-const img = document.createElement('img');
-img.src = profileImgDiv.dataset.friendImg;
-profileImgDiv.appendChild(img);
+if (friendMsgs.length) {
+  const profileImgDiv = friendMsgs[friendMsgs.length - 1].children[0];
+  const img = document.createElement('img');
+  img.src = profileImgDiv.dataset.friendImg;
+  profileImgDiv.appendChild(img);
+}
 
 // 메시지 작성 이벤트
 document.getElementById('messageForm')?.addEventListener('submit', function (e) {
@@ -50,7 +52,7 @@ document.getElementById('messageForm')?.addEventListener('submit', function (e) 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(
       JSON.stringify({
-        friendId,
+        friendId: friendId.value,
         content: inputElem.value,
       }),
     );
@@ -62,11 +64,12 @@ document.querySelectorAll('.deleteMsgBtn').forEach((btn) => {
   btn.addEventListener('click', function () {
     const { mid } = this.parentNode.dataset;
     const { rid } = this.parentNode.parentNode.dataset;
+    const { fid } = this.dataset;
     const xhr = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status !== 200) console.error(xhr.responseText);
     };
-    xhr.open('DELETE', `/message/${rid}/${mid}`);
+    xhr.open('DELETE', `/message/${rid}/${mid}?fid=${fid}`);
     xhr.send();
   });
 });

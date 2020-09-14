@@ -1,4 +1,3 @@
-const { render } = require('pug');
 const { Post, User, Sequelize, Friend, Room, Message } = require('../models');
 
 const main = async (req, res, next) => {
@@ -170,6 +169,7 @@ const messengerRoom = async (req, res, next) => {
         {
           model: Message,
           order: [['createdAt', 'DESC']],
+          paranoid: false,
           limit: 1,
         },
       ],
@@ -201,7 +201,14 @@ const messengerRoom = async (req, res, next) => {
         currentRoomIdx = i;
       }
     });
-    const messages = await currentRoom.getMessages({ order: [['createdAt', 'ASC']] });
+    let messages = await currentRoom.getMessages({
+      paranoid: false,
+      order: [['createdAt', 'ASC']],
+    });
+    messages.forEach((m) => {
+      if (!m.isRead) m.isRead = true;
+    });
+    messages = await Promise.all(messages.map((m) => m.save()));
 
     // console.log('messages', messages);
 

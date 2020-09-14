@@ -8,12 +8,13 @@ module.exports = (server, app, sessionMiddleware) => {
   const chat = io.of('/chat');
   io.use((socket, next) => sessionMiddleware(socket.request, socket.request.res, next));
 
-  user.on('connect', (socket) => {
+  user.on('connection', (socket) => {
     // console.log('user 네임스페이스에 연결');
     const { passport } = socket.request.session;
     if (passport && passport.user) socket.join(passport.user);
     socket.on('disconnect', () => {
-      console.log('user 네임스페이스 접속 해제');
+      // console.log('user 네임스페이스 접속 해제');
+      if (passport && passport.user) socket.leave(passport.user);
     });
   });
 
@@ -25,7 +26,7 @@ module.exports = (server, app, sessionMiddleware) => {
     const roomId = referer.split('/')[referer.split('/').length - 1].replace(/\?.+/, '');
     socket.join(roomId);
     socket.on('disconnect', () => {
-      console.log('chat 네임스페이스 접속 해제');
+      // console.log('chat 네임스페이스 접속 해제');
       socket.leave(roomId);
     });
   });

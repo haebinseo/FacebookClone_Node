@@ -47,9 +47,6 @@ block content
         img(src=user.profileImg alt="")
         div= user.name
       #create(title="만들기") &#xe801
-      //- #messenger(title="Messenger")
-      //-   svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="20" width="20")
-      //-     path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
       #alarm(title="알림")
         svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.fzdkajry(viewbox="0 0 28 28" alt="" height="20" width="20")
           path(d="M7.847 23.488C9.207 23.488 11.443 23.363 14.467 22.806 13.944 24.228 12.581 25.247 10.98 25.247 9.649 25.247 8.483 24.542 7.825 23.488L7.847 23.488ZM24.923 15.73C25.17 17.002 24.278 18.127 22.27 19.076 21.17 19.595 18.724 20.583 14.684 21.369 11.568 21.974 9.285 22.113 7.848 22.113 7.421 22.113 7.068 22.101 6.79 22.085 4.574 21.958 3.324 21.248 3.077 19.976 2.702 18.049 3.295 17.305 4.278 16.073L4.537 15.748C5.2 14.907 5.459 14.081 5.035 11.902 4.086 7.022 6.284 3.687 11.064 2.753 15.846 1.83 19.134 4.096 20.083 8.977 20.506 11.156 21.056 11.824 21.986 12.355L21.986 12.356 22.348 12.561C23.72 13.335 24.548 13.802 24.923 15.73Z")
@@ -97,22 +94,19 @@ block content
         ul
           each room, index in rooms
             li(data-rid=room.id)
-              div(class= index===currentRoomIdx ? 'currentRoom' : undefined)
+              div(class= index===currentRoomIdx ? 'currentRoom' : room.messages[0].isRead?undefined:"unreadMsg")
                 div
                   img(src=room.user.profileImg alt="")
                 div
                   div= room.user.name
                   div
-                    if room.messages[0] && room.messages[0].content
-                      span= room.messages[0].content
-                      -let timeText;
-                      -const time = new Date(room.messages[0].createdAt);
-                      -const now = new Date();
-                      -if (time.getFullYear() === now.getFullYear()) timeText = `${time.getMonth()+1}월 ${time.getDate()}일`;
-                      -else timeText = `${time.getFullYear()%100}. ${time.getMonth()+1}. ${time.getDate()}.`;
-                      span &nbsp·&nbsp#{timeText}
-                    else
-                      span sample message
+                    span.latestMsg(data-created-at=room.messages[0].createdAt)= room.messages[0].content
+                    -let timeText;
+                    -const time = new Date(room.messages[0].createdAt);
+                    -const now = new Date();
+                    -if (time.getFullYear() === now.getFullYear()) timeText = `${time.getMonth()+1}월 ${time.getDate()}일`;
+                    -else timeText = `${time.getFullYear()%100}. ${time.getMonth()+1}. ${time.getDate()}.`;
+                    span &nbsp·&nbsp#{timeText}
     div
       #friendHead
         div
@@ -145,7 +139,7 @@ block content
             -let lastMsgTime = new Date(0);
             each message in messages
               -const time = new Date(message.createdAt);
-              -const updatedTime = new Date(message.updatedAt);
+              -const isDeleted =  Boolean(message.deletedAt);
               -const amPm = ['오전', '오후'];
               -const hours = time.getHours()%12;
               -const minutes = '0' + time.getMinutes();
@@ -161,21 +155,22 @@ block content
                   div= message.content
               //- user's message
               else if message.userId === user.id
-                if time.getTime() === updatedTime.getTime()
+                if !isDeleted
                   div.myMsg(title=timeText data-mid=message.id)
-                    div.deleteMsgBtn ❌
+                    div.deleteMsgBtn(data-fid=currentRoom.user.id) ❌
                     div= message.content
                 else
-                  -const updatedHours = updatedTime.getHours()%12;
-                  -const updatedMinutes = '0' + updatedTime.getMinutes();
-                  -const updatedTimeText = `${updatedTime.getFullYear()}년 ${updatedTime.getMonth()+1}월 ${updatedTime.getDate()}일 ${amPm[Math.floor(updatedTime.getHours()/12)]} ${updatedHours===0?12:updatedHours}:${minutes.slice(-2)}`;
-                  div.myMsg.deletedMsg(title=`보냄: ${timeText}\n보내기 취소함: ${updatedTimeText}` data-mid=message.id)
+                  -const deletedTime = new Date(message.deletedAt);
+                  -const deletedHours = deletedTime.getHours()%12;
+                  -const deletedMinutes = '0' + deletedTime.getMinutes();
+                  -const deletedTimeText = `${deletedTime.getFullYear()}년 ${deletedTime.getMonth()+1}월 ${deletedTime.getDate()}일 ${amPm[Math.floor(deletedTime.getHours()/12)]} ${deletedHours===0?12:deletedHours}:${minutes.slice(-2)}`;
+                  div.myMsg.deletedMsg(title=`보냄: ${timeText}\n보내기 취소함: ${deletedTimeText}` data-mid=message.id)
                     div= message.content
               //- friend's message
               else
-                div.friendMsg(title=timeText data-mid=message.id class= time.getTime()===updatedTime.getTime()?undefined:'deletedMsg')
+                div.friendMsg(title=timeText data-mid=message.id class= isDeleted?'deletedMsg':undefined)
                   div.friendProfileImg(data-friend-img=currentRoom.user.profileImg)
-                  div= message.content
+                  div= isDeleted?`${currentRoom.user.name}님이`:"" + `${message.content}`
           form#messageForm(data-rid=currentRoom.id)
             div
               svg(height="24" width="24" viewBox="0 0 24 24")
@@ -227,12 +222,24 @@ block content
     script(src="/js/messenger/messenger.js")
     script(src="/socket.io/socket.io.js")
     script.
-      const userSocket = io.connect('http://localhost:8000/user', { path: '/socket.io' });
-      const chatSocket = io.connect('http://localhost:8000/chat', { path: '/socket.io' });
+      const userSocket = io.connect('/user', { forceNew: true, path: '/socket.io' });
+      const chatSocket = io.connect('/chat', { forceNew: true, path: '/socket.io' });
 
-      userSocket.on('message', (data) => {
-        
+      userSocket.on('message', (msg) => {
+        const targetRoom = document.querySelector(`li[data-rid="${msg.roomId}"]`);
+        const msgSpan = targetRoom.querySelector('.latestMsg');
+        if (parseInt(msg.roomId, 10) !== parseInt('#{currentRoom.id}', 10) && msg.userId !== user.id) targetRoom.children[0].classList.add('unreadMsg');
+        msgSpan.innerText = msg.content;
       });
+
+      userSocket.on('deleteMsg', (msg) => {
+        const targetRoom = document.querySelector(`li[data-rid="${msg.roomId}"]`);
+        const msgSpan = targetRoom.querySelector('.latestMsg');
+        if (msg.createdAt < msgSpan.dataset.createdAt) return;
+        if (parseInt(msg.roomId, 10) !== parseInt('#{currentRoom.id}', 10) && msg.userId !== user.id) targetRoom.children[0].classList.add('unreadMsg');
+        msgSpan.innerText = msg.content;
+      });
+
 
       chatSocket.on('message', (msg) => {
         const outerDiv = document.createElement('div');
@@ -242,13 +249,14 @@ block content
           outerDiv.classList.add('myMsg');
           const deleteBtn = document.createElement('div');
           deleteBtn.innerText = '❌';
+          deleteBtn.setAttribute('data-fid', '#{currentRoom.user.id}');
           deleteBtn.classList.add('deleteMsgBtn');
           deleteBtn.addEventListener('click', function () {
             const xhr = new XMLHttpRequest();
             xhr.onload = () => {
               if (xhr.status !== 200) console.error(xhr.responseText);
             };
-            xhr.open('DELETE', `/message/${msg.id}`);
+            xhr.open('DELETE', `/message/${msg.roomId}/${msg.id}`);
             xhr.send();
           });
           outerDiv.appendChild(deleteBtn);
@@ -256,11 +264,21 @@ block content
           outerDiv.classList.add('systemMsg');
         } else {
           outerDiv.classList.add('friendMsg');
-          const friendMsgs = document.querySelectorAll('.friendMsg')
-          const prevImgDiv = friendMsgs[friendMsgs.length - 1].children[0];
-          const cloneImgDiv = prevImgDiv.cloneNode(true);
-          prevImgDiv.children[0].remove();
-          outerDiv.appendChild(cloneImgDiv);
+          const friendMsgs = document.querySelectorAll('.friendMsg');
+          if (friendMsgs.length) {
+            const prevImgDiv = friendMsgs[friendMsgs.length - 1].children[0];
+            const cloneImgDiv = prevImgDiv.cloneNode(true);
+            prevImgDiv.children[0].remove();
+            outerDiv.appendChild(cloneImgDiv);
+          } else {
+            const profileImgDiv = document.createElement('div');
+            profileImgDiv.classList.add('friendProfileImg');
+            profileImgDiv.setAttribute('data-friend-img', '#{currentRoom.user.profileImg}');
+            const img = document.createElement('img');
+            img.src = '#{currentRoom.user.profileImg}';
+            profileImgDiv.appendChild(img);
+            outerDiv.appendChild(profileImgDiv);
+          }
         }
         innerDiv.textContent = msg.content;
         outerDiv.appendChild(innerDiv);

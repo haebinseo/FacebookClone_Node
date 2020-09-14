@@ -390,6 +390,12 @@ main #friendsListTab>div:last-of-type li {
 main #friendsListTab>div:last-of-type li .currentRoom {
   background-color: rgba(0,0,0,0.05);
 }
+main #friendsListTab>div:last-of-type li .unreadMsg {
+  font-weight: bold;
+}
+main #friendsListTab>div:last-of-type li .unreadMsg span {
+  color: #000;
+}
 main #friendsListTab>div:last-of-type li>div {
   height: 64px;
   display: flex;
