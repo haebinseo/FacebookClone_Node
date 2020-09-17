@@ -94,7 +94,7 @@ block content
         ul
           each room, index in rooms
             li(data-rid=room.id)
-              div(class= index===currentRoomIdx ? 'currentRoom' : room.messages[0].isRead?undefined:"unreadMsg")
+              div(class= index===currentRoomIdx ? 'currentRoom' : room.messages[0].userId===user.id || room.messages[0].isRead?undefined:"unreadMsg")
                 div
                   img(src=room.user.profileImg alt="")
                 div

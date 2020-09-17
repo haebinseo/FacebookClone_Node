@@ -29,6 +29,6 @@ const upload2 = multer();
 
 router.post('/img', isLoggedIn, upload.single('image'), ctrl.img);
 router.post('/', isLoggedIn, upload2.none(), ctrl.post);
-router.get('/hashtag', ctrl.tagSearch);
+router.get('/hashtag', isLoggedIn, ctrl.tagSearch);
 
 module.exports = router;

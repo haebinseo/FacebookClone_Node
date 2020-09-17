@@ -90,7 +90,6 @@ const main = async (req, res, next) => {
       comments,
       userWhoLikePosts,
       userWhoLikeComments,
-      // loginError: req.flash('loginError'),
     });
   } catch (error) {
     console.error(error);

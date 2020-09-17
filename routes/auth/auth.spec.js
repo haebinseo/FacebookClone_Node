@@ -1,19 +1,44 @@
 require('should');
 const request = require('supertest');
-const app = require('../../app');
-const { User, sequelize } = require('../../models');
+const httpMocks = require('node-mocks-http');
+const events = require('events');
+const { app } = require('../../app');
 
-describe('POST /auth/join은', () => {
-  const user = {
+const { sequelize } = require('../../models');
+const { join } = require('./auth.ctrl');
+
+const users = [
+  {
     email: 'shb0107@gmail.com',
     family_name: '해빈',
     first_name: '서',
-    password: 'goqls008?',
+    password: 'testpwd',
     gender: 'male',
     year: 1994,
-    month: 4,
+    month: '4월',
     day: 7,
-  };
+  },
+  {
+    email: 'shb0107@gmail.com',
+    family_name: '이메일',
+    first_name: '중복',
+    password: 'testpwd2',
+    gender: 'male',
+    year: 1994,
+    month: '4월',
+    day: 7,
+  },
+];
+const req = httpMocks.createRequest({
+  method: 'POST',
+  url: '/join',
+  body: users[0],
+});
+const res = httpMocks.createResponse({
+  eventEmitter: events.EventEmitter,
+});
+
+describe('POST /auth/join은', () => {
   before(() => sequelize.sync({ force: true }));
 
   describe('성공시', () => {
@@ -21,12 +46,10 @@ describe('POST /auth/join은', () => {
       request(app)
         .post('/auth/join')
         .type('form')
-        .send(user)
+        .send(users[0])
         .expect(303)
-        .end((err) => {
-          if (err) return done(err);
-          return done();
-        });
+        .expect('Location', '/')
+        .end(done);
     });
   });
 
@@ -34,51 +57,28 @@ describe('POST /auth/join은', () => {
     it('GET /unauth 로 redirect한다.', (done) => {
       request(app)
         .post('/auth/join')
-        .send(user)
+        .type('form')
+        .send(users[1])
         .expect(303)
-        .end((err) => {
-          if (err) return done(err);
-          return done();
-        });
+        .expect('Location', '/unauth')
+        .end(done);
     });
   });
 });
 
 describe('POST /auth/login은', () => {
-  const user = {
-    email: 'shb0107@gmail.com',
-    family_name: '해빈',
-    first_name: '서',
-    password: 'goqls008?',
-    gender: 'male',
-    year: 1994,
-    month: 4,
-    day: 7,
-  };
   before(() => sequelize.sync({ force: true }));
+  before(() => join(req, res));
 
   describe('성공시', () => {
-    before((done) => {
-      request(app)
-        .post('/auth/join')
-        .type('form')
-        .send(user)
-        .end((err) => {
-          if (err) return done(err);
-          return done();
-        });
-    });
-
     it('GET / 로 redirect한다.', (done) => {
       request(app)
         .post('/auth/login')
         .type('form')
-        .send({ email: 'shb0107@gmail.com', password: 'goqls008?' })
+        .send({ email: users[0].email, password: users[0].password })
         .expect(303)
-        .end((err) => {
-          if (err) return done(err);
-          return done();
-        });
+        .expect('Location', '/')
+        .end(done);
     });
   });
 
@@ -87,58 +87,26 @@ describe('POST /auth/login은', () => {
       request(app)
         .post('/auth/login')
         .type('form')
-        .send({ email: 'shb0107@gmail.com', password: 'wrongPassword' })
+        .send({ email: users[0].email, password: users[1].password })
         .expect(303)
-        .end((err) => {
-          if (err) return done(err);
-          return done();
-        });
+        .expect('Location', '/unauth')
+        .end(done);
     });
   });
 });
 
 describe('POST /auth/logout은', () => {
-  const user = {
-    email: 'shb0107@gmail.com',
-    family_name: '해빈',
-    first_name: '서',
-    password: 'goqls008?',
-    gender: 'male',
-    year: 1994,
-    month: 4,
-    day: 7,
-  };
   before(() => sequelize.sync({ force: true }));
-  before((done) => {
-    request(app)
-      .post('/auth/join')
-      .type('form')
-      .send(user)
-      .then(() => {
-        request(app)
-          .post('/auth/login')
-          .type('form')
-          .send({ email: 'shb0107@gmail.com', password: 'goqls008?' })
-          .end((err) => {
-            if (err) return done(err);
-            return done();
-          });
-      })
-      .catch((error) => {
-        console.error(error);
-        done(error);
-      });
-  });
+  before(() => join(req, res));
 
   describe('성공시', () => {
-    it('로그아웃 후 GET / 로 redirect한다.', (done) => {
-      request(app)
-        .get('/auth/logout')
-        .expect(303)
-        .end((err) => {
-          if (err) return done(err);
-          return done();
-        });
+    it('로그아웃 후 GET /unauth 로 redirect한다.', (done) => {
+      const agent = request.agent(app);
+      agent
+        .post('/auth/login')
+        .type('form')
+        .send({ email: users[0].email, password: users[0].password });
+      agent.get('/auth/logout').expect(303).expect('Location', '/unauth').end(done);
     });
   });
 });
