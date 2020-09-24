@@ -1,6 +1,5 @@
 const passport = require('passport');
-const bcrypt = require('bcrypt');
-const { User } = require('../../models');
+const { createUser } = require('./createData');
 
 const login = (req, res, next) => {
   passport.authenticate('local', (authError, user, info) => {
@@ -23,36 +22,34 @@ const login = (req, res, next) => {
 };
 
 const join = async (req, res, next) => {
-  const {
-    email,
-    family_name: familyName,
-    first_name: firstName,
-    password,
-    gender,
-    year,
-    month,
-    day,
-  } = req.body;
-  const birth = new Date(year, parseInt(month[0], 10) - 1, day);
-  // console.log('birth', year, month, day);
   try {
-    const exUser = await User.findOne({ where: { email } });
-    if (exUser) {
-      req.flash('joinError', '이미 가입된 이메일입니다.');
-      return res.redirect(303, '/unauth');
-    }
-    const hash = await bcrypt.hash(password, 12);
-    await User.create({
+    const {
+      email,
+      family_name: familyName,
+      first_name: firstName,
+      password,
+      gender,
+      year,
+      month,
+      day,
+    } = req.body;
+    const birth = new Date(year, parseInt(month[0], 10) - 1, day); // month - String ex) 4월
+    const argument = {
       email,
       name: familyName + firstName,
-      password: hash,
+      password,
       gender,
       birth,
-    });
-    return res.redirect(303, '/');
+    };
+
+    if (!(await createUser(argument))) {
+      req.flash('joinError', '이미 가입된 이메일입니다.');
+    }
+
+    res.redirect(303, '/unauth');
   } catch (error) {
     console.error(error);
-    return next(error);
+    next(error);
   }
 };
 

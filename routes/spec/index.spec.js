@@ -2,9 +2,10 @@ require('should-http');
 const request = require('supertest');
 const httpMocks = require('node-mocks-http');
 const events = require('events');
-const { app } = require('../app');
-const { sequelize } = require('../models');
-const { join } = require('./auth/auth.ctrl');
+
+const { app } = require('../../app');
+const { sequelize } = require('../../db/models');
+const { join } = require('../../controllers/authentication');
 
 const users = [
   {

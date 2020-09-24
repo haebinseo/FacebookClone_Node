@@ -897,7 +897,20 @@ main>div:not([id="mainCenter"])>div {
   border-radius: 50%;
   margin-right: 8px;
 }
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
 #mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type:hover>div:last-of-type>div {
+  opacity: 1;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type {
   background-color: var(--comment-background);
   border-radius: 18px;
   padding: 8px 12px;
@@ -905,14 +918,14 @@ main>div:not([id="mainCenter"])>div {
   word-break: break-word;
   width: fit-content;
 }
-#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type {
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:first-of-type {
   font-size: 13px;
   font-weight: bold;
 }
-#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:nth-of-type(2) {
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(2) {
   font-size: 15px;
 }
-#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:nth-of-type(3) {
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(3) {
   position: absolute;
   bottom: -11px;
   right: 2px;
@@ -925,9 +938,53 @@ main>div:not([id="mainCenter"])>div {
   font-size: 13px;
   color: var(--secondary-text);
 }
-#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:nth-of-type(3) img {
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(3) img {
   width: 16px;
   margin-right: 6px;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:last-of-type {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:last-of-type>div {
+  width: inherit;
+  height: inherit;
+  border-radius: 50%;
+  background-color: var(--hover-overlay);
+  cursor: pointer;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:last-of-type>div>i {
+  width: 16px;
+  height: 16px;
+  background-image: url("/images/main/mainCenter/_P4nCKl1-P8.png");
+  background-position: 0px -731px;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:last-of-type>div>div {
+  position: absolute;
+  z-index: 1;
+  top: 115%;
+  left: -59px;
+  width: 150px;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:last-of-type>div>div>div {
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:last-of-type>div>div>div:hover {
+  background-color: var(--hover-overlay);
 }
 #mainCenter #afterStory #postArea>div>div:last-of-type .commentItem>div>div:last-of-type {
   margin-left: 12px;

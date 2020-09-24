@@ -1,16 +1,7 @@
 const renderMain = (
   req,
   res,
-  {
-    title = 'Facebook',
-    user,
-    followings,
-    followers,
-    posts,
-    comments,
-    userWhoLikePosts,
-    userWhoLikeComments,
-  },
+  { title = 'Facebook', user = req.user, followings, followers, posts, likes },
 ) => {
   res.render('main', {
     title,
@@ -18,13 +9,11 @@ const renderMain = (
     followings,
     followers,
     posts,
-    comments,
-    userWhoLikePosts,
-    userWhoLikeComments,
+    likes,
   });
 };
 
-const renderLogin = (req, res, { title = 'Facebook - 로그인 또는 가입' }) => {
+const renderLogin = (req, res, { title } = { title: 'Facebook - 로그인 또는 가입' }) => {
   res.render('login', {
     title,
     loginError: req.flash('loginError'),
@@ -35,9 +24,16 @@ const renderLogin = (req, res, { title = 'Facebook - 로그인 또는 가입' })
 const renderMessenger = (
   req,
   res,
-  { title = 'Messenger | Facebook', user, rooms, currentRoom, currentRoomIdx, messages },
+  {
+    title = 'Messenger | Facebook',
+    user = req.user,
+    rooms,
+    currentRoom,
+    currentRoomIdx,
+    messages,
+  },
 ) => {
-  res.render('main', {
+  res.render('messenger', {
     title,
     user,
     rooms,

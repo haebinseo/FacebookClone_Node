@@ -1,12 +1,13 @@
-require('should');
+require('should-http');
 const request = require('supertest');
-const httpMocks = require('node-mocks-http');
-const events = require('events');
+// const httpMocks = require('node-mocks-http');
+// const events = require('events');
 const path = require('path');
+const fs = require('fs');
 const { app } = require('../../app');
 
-const { sequelize } = require('../../models');
-const { join } = require('../auth/auth.ctrl');
+const { sequelize, Post } = require('../../db/models');
+// const { join } = require('../../controllers/authentication');
 
 const users = [
   {
@@ -30,21 +31,30 @@ const users = [
     day: 7,
   },
 ];
-const req = httpMocks.createRequest({
-  method: 'POST',
-  url: '/join',
-  body: users[0],
-});
-const res = httpMocks.createResponse({
-  eventEmitter: events.EventEmitter,
-});
+const posts = [
+  { content: '테스트 중입니당!' },
+  { content: '테스트 중입니당!! #test' },
+  { content: '테스트 중입니당!!!2 #test2' },
+];
+
+// const req = httpMocks.createRequest({
+//   method: 'POST',
+//   url: '/join',
+//   body: users[0],
+// });
+// const res = httpMocks.createResponse({
+//   eventEmitter: events.EventEmitter,
+// });
 
 describe('POST /post/img는', () => {
   before(() => sequelize.sync({ force: true }));
-  before(() => join(req, res));
+  before((done) => {
+    request(app).post('/auth/join').type('form').send(users[0]).end(done);
+  });
 
   describe('로그인 되어있을 때', () => {
     const agent = request.agent(app);
+    let url;
     before((done) => {
       agent
         .post('/auth/login')
@@ -60,10 +70,19 @@ describe('POST /post/img는', () => {
         .expect(200)
         .end((err, response) => {
           if (err) return done(err);
-          console.log('res.body', response.body);
-          response.body.url.should.be.a.String();
+          console.log('res.body: ', response.body);
+          url = response.body.url;
+          url.should.be.a.String();
           return done();
         });
+    });
+
+    it('해당 파일이 upload폴더에 존재해야 한다.', () => {
+      const fileName = url.split('/')[2];
+      const filePath = path.join(__dirname, '../../uploads', fileName);
+      console.log('filePath: ', filePath);
+      const fileExists = fs.existsSync(filePath);
+      fileExists.should.be.ok();
     });
   });
 
@@ -81,8 +100,9 @@ describe('POST /post/img는', () => {
 
 describe('POST /post는', () => {
   before(() => sequelize.sync({ force: true }));
-  before(() => join(req, res));
-  const post = { content: '테스트 중입니당!' };
+  before((done) => {
+    request(app).post('/auth/join').type('form').send(users[0]).end(done);
+  });
 
   describe('로그인 되어있을 때', () => {
     const agent = request.agent(app);
@@ -95,15 +115,21 @@ describe('POST /post는', () => {
     });
 
     it('게시물 작성후 /로 redirect한다.', (done) => {
-      agent.post('/post').send(post).expect(303).expect('Location', '/').end(done);
+      agent.post('/post').send(posts[0]).expect(303).expect('Location', '/').end(done);
+    });
+
+    it('게시물은 posts 테이블에 저장된다.', async () => {
+      const postResult = await Post.findOne();
+      postResult.should.be.an.instanceOf(Object);
+      console.log('postResult: ', postResult.dataValues);
     });
   });
 
   describe('로그인 되어있지 않을 때', () => {
     it('GET /unauth 로 redirect 한다.', (done) => {
       request(app)
-        .post('/post/img')
-        .attach('image')
+        .post('/post')
+        .send(posts[0])
         .expect(303)
         .expect('Location', '/unauth')
         .end(done);
@@ -113,10 +139,14 @@ describe('POST /post는', () => {
 
 describe('GET /hasgtag는', () => {
   before(() => sequelize.sync({ force: true }));
-  before(() => join(req, res));
+  // join
+  before((done) => {
+    request(app).post('/auth/join').type('form').send(users[0]).end(done);
+  });
 
   describe('로그인 되어있을 때', () => {
     const agent = request.agent(app);
+    // login
     before((done) => {
       agent
         .post('/auth/login')
@@ -124,16 +154,26 @@ describe('GET /hasgtag는', () => {
         .send({ email: users[0].email, password: users[0].password })
         .end(done);
     });
-
-    it('아무 태그도 입력되어있지 않으면 GET /로 redirect한다.', (done) => {
-      agent.get('/hashtag').expect(303).expect('Locatoin', '/').end(done);
+    // post posts
+    before((done) => {
+      agent
+        .post('/post')
+        .send(posts[0])
+        .end(() => {
+          agent
+            .post('/post')
+            .send(posts[1])
+            .end(() => {
+              agent.post('/post').send(posts[2]).end(done);
+            });
+        });
     });
 
-    it('태그가 입력되어 있다면 해당 태그를 포함한 포스트들로 main 페이지를 렌더링해 전송한다.', (done) => {
+    it('해당 태그를 포함한 포스트들로 main 페이지를 렌더링해 전송한다.', (done) => {
       agent
-        .get('/hashtag?hashtag=test')
+        .get('/post/hashtag?hashtag=test')
         .expect(200)
-        .end((err, response) => {
+        .end(async (err, response) => {
           if (err) return done(err);
           response.should.be.html();
           return done();
@@ -144,8 +184,7 @@ describe('GET /hasgtag는', () => {
   describe('로그인 되어있지 않을 때', () => {
     it('GET /unauth 로 redirect 한다.', (done) => {
       request(app)
-        .post('/post/img')
-        .attach('image')
+        .get('/post/hashtag?hashtag=test')
         .expect(303)
         .expect('Location', '/unauth')
         .end(done);

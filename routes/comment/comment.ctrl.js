@@ -1,4 +1,4 @@
-const { Comment } = require('../../models');
+const { Comment } = require('../../db/models');
 
 const comment = async (req, res, next) => {
   try {

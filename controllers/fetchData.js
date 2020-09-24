@@ -1,4 +1,13 @@
-const { Post, User, Sequelize, Friend, Comment, Room, Message } = require('../models');
+const {
+  Post,
+  User,
+  Sequelize,
+  Friend,
+  Comment,
+  Room,
+  Message,
+  Hashtag,
+} = require('../db/models');
 
 const fetchFriends = async (userId) => {
   const followingsObj = {};
@@ -6,8 +15,8 @@ const fetchFriends = async (userId) => {
     where: { followerId: userId },
     attributes: ['followingId', 'accepted', 'roomId'],
   });
-  followingsArr.forEach((following) => {
-    followingsObj[following.followingId] = [following.accepted, following.roomId];
+  followingsArr.forEach((f) => {
+    followingsObj[f.followingId] = { accepted: f.accepted, roomId: f.roomId };
   });
 
   const followersObj = {};
@@ -15,15 +24,15 @@ const fetchFriends = async (userId) => {
     where: { followingId: userId },
     attributes: ['followerId', 'accepted', 'roomId'],
   });
-  followersArr.forEach((follower) => {
-    followersObj[follower.followerId] = [follower.accepted, follower.roomId];
+  followersArr.forEach((f) => {
+    followersObj[f.followerId] = { accepted: f.accepted, roomId: f.roomId };
   });
 
   return { followingsObj, followersObj };
 };
 
-const fetchPosts = async () => {
-  const posts = await Post.findAll({
+const fetchPosts = async (ids = []) => {
+  const findOption = {
     include: [
       {
         model: User,
@@ -51,7 +60,10 @@ const fetchPosts = async () => {
       },
     ],
     order: [['createdAt', 'DESC']],
-  });
+  };
+  if (ids.length) findOption.where = { id: { [Sequelize.Op.in]: ids } };
+
+  const posts = await Post.findAll(findOption);
   const likes = { posts: {}, comments: {} };
 
   posts.forEach((post) => {
@@ -63,9 +75,10 @@ const fetchPosts = async () => {
     });
 
     // UserWhoLikeComments
+    // console.log('post', post);
     post.comments.forEach((comment) => {
       likes.comments[comment.id] = { id: [], name: [] };
-      comment.UserWhoLikePosts.forEach((user) => {
+      comment.UserWhoLikeComments.forEach((user) => {
         likes.comments[comment.id].id.push(user.id);
         likes.comments[comment.id].name.push(user.name);
       });
@@ -75,13 +88,39 @@ const fetchPosts = async () => {
   return { posts, likes };
 };
 
+const fetchPostsWithTag = async (tag) => {
+  const hashtag = await Hashtag.findOne({
+    where: { title: tag },
+    include: [
+      {
+        model: Post,
+        attributes: ['id'],
+      },
+    ],
+  });
+  const posts = [];
+  const likes = { posts: {}, comments: {} };
+  if (!hashtag) return { posts, likes };
+
+  const postIds = hashtag.posts.map((p) => p.id);
+  return fetchPosts(postIds);
+};
+
 const fetchRooms = async (userId) => {
   // fetch friends
-  const friends = await Friend.findAll({ where: { followerId: userId, accepted: true } });
-  const roomIds = friends.map((f) => f.roomId);
+  let rooms = [];
+  const user = await User.findOne({ where: { id: userId } });
+  const friends = await user.getFollowings({
+    through: {
+      where: { accepted: true },
+      attributes: ['createdAt', 'roomId'],
+    },
+  });
+  if (!friends.length) return { friends, rooms };
 
   // fetch chatting rooms with the latest message
-  const rooms = await Room.findAll({
+  const roomIds = friends.map((f) => f.friend.roomId);
+  rooms = await Room.findAll({
     where: { id: { [Sequelize.Op.in]: roomIds } },
     include: [
       {
@@ -113,4 +152,10 @@ const fetchMessages = async (roomId) => {
   return messages;
 };
 
-module.exports = { fetchFriends, fetchPosts, fetchRooms, fetchMessages };
+module.exports = {
+  fetchFriends,
+  fetchPosts,
+  fetchPostsWithTag,
+  fetchRooms,
+  fetchMessages,
+};

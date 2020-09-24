@@ -45,8 +45,14 @@ document.getElementById('messageForm')?.addEventListener('submit', function (e) 
   if (inputElem.value) {
     const xhr = new XMLHttpRequest();
     xhr.onload = () => {
-      if (xhr.status === 200) inputElem.value = '';
-      else console.error(xhr.responseText);
+      if (xhr.status === 200) {
+        inputElem.value = '';
+        if (xhr.getResponseHeader('Content-Type') === 'text/html; charset=utf-8') {
+          window.location.reload();
+        }
+      } else {
+        console.error(xhr.responseText);
+      }
     };
     xhr.open('POST', `/message/${roomId}`);
     xhr.setRequestHeader('Content-Type', 'application/json');

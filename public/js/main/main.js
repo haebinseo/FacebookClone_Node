@@ -204,7 +204,7 @@ document.querySelectorAll('.addFriendBtn')?.forEach((btn) =>
       if (xhr.status === 200) window.location.reload();
       else console.error(xhr.responseText);
     };
-    xhr.open('POST', `/friend/${targetUID}/add`);
+    xhr.open('POST', `/friend/add/${targetUID}`);
     xhr.send();
   }),
 );
@@ -217,7 +217,7 @@ document.querySelectorAll('.acceptFriendBtn')?.forEach((btn) =>
       if (xhr.status === 200) window.location.reload();
       else console.error(xhr.responseText);
     };
-    xhr.open('POST', `/friend/${targetUID}/accept`);
+    xhr.open('POST', `/friend/accept/${targetUID}`);
     xhr.send();
   }),
 );
@@ -230,7 +230,7 @@ document.querySelectorAll('.unfriendBtn')?.forEach((btn) => {
       if (xhr.status === 200) window.location.reload();
       else console.error(xhr.responseText);
     };
-    xhr.open('DELETE', `/friend/${targetUID}`);
+    xhr.open('DELETE', `/friend/remove/${targetUID}`);
     xhr.send();
   });
 });

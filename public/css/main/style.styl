@@ -1095,38 +1095,103 @@ main {
             }
 
             &>div {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+
               &>div:first-of-type {
-                background-color: var(--comment-background);
-                border-radius: 18px;
-                padding: 8px 12px;
-                position: relative;
-                word-break: break-word;
-                width: fit-content;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                &:hover>div:last-of-type>div {
+                  // 수정 및 삭제 버튼
+                  opacity: 1;
+                }
 
                 &>div:first-of-type {
-                  font-size: 13px;
-                  font-weight: bold;
-                }
-                &>div:nth-of-type(2) {
-                  font-size: 15px;
-                  
-                }
-                &>div:nth-of-type(3) {
-                  position: absolute;
-                  bottom: -11px;
-                  right: 2px;
-                  display: flex;
-                  cursor: default;
-                  background-color: white;
-                  border-radius: 10px;
-                  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-                  padding: 2px;
-                  font-size: 13px;
-                  color: var(--secondary-text);
+                  background-color: var(--comment-background);
+                  border-radius: 18px;
+                  padding: 8px 12px;
+                  position: relative;
+                  word-break: break-word;
+                  width: fit-content;
 
-                  img {
-                    width: 16px;
-                    margin-right: 6px;
+                  &>div:first-of-type {
+                    font-size: 13px;
+                    font-weight: bold;
+                  }
+                  &>div:nth-of-type(2) {
+                    font-size: 15px;
+                    
+                  }
+                  &>div:nth-of-type(3) {
+                    position: absolute;
+                    bottom: -11px;
+                    right: 2px;
+                    display: flex;
+                    cursor: default;
+                    background-color: white;
+                    border-radius: 10px;
+                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+                    padding: 2px;
+                    font-size: 13px;
+                    color: var(--secondary-text);
+
+                    img {
+                      width: 16px;
+                      margin-right: 6px;
+                    }
+                  }
+                }
+
+                &>div:last-of-type {
+                  width: 32px;
+                  height: 32px;
+                  flex-shrink: 0;
+
+                  &>div {
+                    width: inherit;
+                    height: inherit;
+                    border-radius: 50%;
+                    background-color: var(--hover-overlay);
+                    cursor: pointer;
+                    opacity: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+
+                    &>i {
+                      width: 16px;
+                      height 16px;
+                      background-image: url('/images/main/mainCenter/_P4nCKl1-P8.png');
+                      background-position: 0px -731px;
+                    }
+
+                    &>div {
+                      position: absolute;
+                      z-index: 1;
+                      top: 115%;
+                      left: -59px;
+                      width: 150px;
+                      background-color: white;
+                      padding: 8px;
+                      border-radius: 8px;
+                      box-shadow: 0 12px 28px 0 var(--shadow-2),0 2px 4px 0 var(--shadow-1);
+
+                      &>div {
+                        height: 34px;
+                        padding: 0 8px;
+                        border-radius: 4px;
+                        display: flex;
+                        align-items: center;
+
+                        &:hover {
+                          background-color: var(--hover-overlay);  
+                        }
+                      }
+                    }
                   }
                 }
               }
