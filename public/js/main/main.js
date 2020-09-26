@@ -63,17 +63,6 @@ function commentPostHandler(e) {
     depth: e.target.children[2].value,
     bundleCreatedAt: e.target.children[3].value,
   };
-  let urlEncodedData = '';
-  const urlEncodedDataPairs = [];
-
-  // Turn the data object into an array of URL-encoded key/value pairs.
-  Object.entries(formData).forEach(([key, value]) => {
-    urlEncodedDataPairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
-  });
-
-  // Combine the pairs into a single string and replace all %-encoded spaces to
-  // the '+' character; matches the behaviour of browser form submissions.
-  urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
 
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
@@ -81,8 +70,8 @@ function commentPostHandler(e) {
     else console.error(xhr.responseText);
   };
   xhr.open('POST', '/comment');
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.send(urlEncodedData);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify(formData));
 }
 
 // 댓글 작성 이벤트 커스텀

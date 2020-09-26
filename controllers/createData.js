@@ -64,8 +64,28 @@ const createTwoWayFriend = async ({ userId, targetUID }) => {
   return room.id;
 };
 
-const createMessage = async ({ roomId, content }) => {
-  return Message.create({ roomId, content });
+const createMessage = async ({ userId = null, roomId, content }) => {
+  const room = await Room.findOne({
+    where: { id: roomId },
+    include: [
+      {
+        model: Friend,
+      },
+    ],
+  });
+  if (!room) {
+    // room doesn't exist
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  } else if (userId && !room.friends.map((f) => f.followingId).includes(userId)) {
+    // it is not a system message && the user isn't in the room.
+    const err = new Error('Forbidden');
+    err.status = 403;
+    throw err;
+  }
+
+  return Message.create({ userId, roomId, content });
 };
 
 const createLike = async ({ userId, target, targetId }) => {
@@ -83,6 +103,21 @@ const createLike = async ({ userId, target, targetId }) => {
   else await targetObj.addUserWhoLikeComment(userId);
 };
 
+const createComment = async ({ content, depth, userId, postId, bundleCreatedAt }) => {
+  const post = await Post.findOne({ where: { id: postId } });
+  if (!post) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  }
+
+  return Comment.create(
+    bundleCreatedAt
+      ? { content, depth, userId, postId, bundleCreatedAt }
+      : { content, depth, userId, postId },
+  );
+};
+
 module.exports = {
   createUser,
   createPost,
@@ -90,4 +125,5 @@ module.exports = {
   createTwoWayFriend,
   createMessage,
   createLike,
+  createComment,
 };

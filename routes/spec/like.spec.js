@@ -40,7 +40,11 @@ const posts = [
   { content: '테스트 중입니당!! #test' },
   { content: '테스트 중입니당!!!2 #test2' },
 ];
-const comments = [{ content: '테스트 댓글입니다' }, { content: '테스트 댓글입니다2' }];
+const comments = [
+  { content: '테스트 댓글입니다', pid: null, depth: 0, bundleCreatedAt: null },
+  { content: '테스트 댓글입니다2', pid: null, depth: 0, bundleCreatedAt: null },
+  { content: '테스트 대댓글입니다', pid: null, depth: 1, bundleCreatedAt: null },
+];
 
 describe('POST /like/post/:pid는', () => {
   before(() => sequelize.sync({ force: true }));
@@ -138,7 +142,12 @@ describe('POST /like/comment/:cid는', () => {
           .post('/post')
           .send(posts[0])
           .end(() => {
-            agent1.post('/comment').send(comments[0]).end(done);
+            comments[0].pid = 1;
+            agent1
+              .post('/comment')
+              .set('Content-Type', 'application/json')
+              .send(comments[0])
+              .end(done);
           });
       });
   });
@@ -150,6 +159,10 @@ describe('POST /like/comment/:cid는', () => {
       .type('form')
       .send({ email: users[1].email, password: users[1].password })
       .end(done);
+  });
+  // init comments
+  after(() => {
+    comments[0].pid = null;
   });
 
   describe('성공시', () => {
@@ -289,11 +302,18 @@ describe('DELETE /like/comment/:cid는', () => {
           .post('/post')
           .send(posts[0])
           .end(() => {
+            comments[0].pid = 1;
+            comments[1].pid = 1;
             agent1
               .post('/comment')
+              .set('Content-Type', 'application/json')
               .send(comments[0])
               .end(() => {
-                agent1.post('/comment').send(comments[1]).end(done);
+                agent1
+                  .post('/comment')
+                  .set('Content-Type', 'application/json')
+                  .send(comments[1])
+                  .end(done);
               });
           });
       });
@@ -310,6 +330,11 @@ describe('DELETE /like/comment/:cid는', () => {
           agent2.post('/like/comment/2').end(done);
         });
       });
+  });
+  // init comments
+  after(() => {
+    comments[0].pid = null;
+    comments[1].pid = null;
   });
 
   describe('성공시', () => {

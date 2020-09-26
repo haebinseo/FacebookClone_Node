@@ -44,4 +44,29 @@ const deleteLike = async ({ userId, target, targetId }) => {
   else await user.removeCommentLiked(targetId);
 };
 
-module.exports = { deleteFriend, deleteLike };
+const deleteComment = async ({ userId, commentId }) => {
+  const comment = await Comment.findOne({ where: { id: commentId } });
+  if (!comment || comment.userId !== userId) {
+    const err = new Error(comment ? 'Forbidden' : 'Not Found');
+    err.status = comment ? 403 : 404;
+    throw err;
+  }
+
+  await comment.destroy();
+};
+
+const deleteMessage = async ({ userId, msgId }) => {
+  let message = await Message.findOne({ where: { id: msgId } });
+  if (!message || message.userId !== userId) {
+    const err = new Error(message ? 'Forbidden' : 'Not Found');
+    err.status = message ? 403 : 404;
+    throw err;
+  }
+
+  message.content = '메시지 보내기를 취소했습니다';
+  message = await message.save();
+  await message.destroy();
+  return message;
+};
+
+module.exports = { deleteFriend, deleteLike, deleteComment, deleteMessage };

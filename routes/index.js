@@ -30,7 +30,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
     const argument = { followings, followers, posts, likes };
     renderMain(req, res, argument);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -52,7 +52,7 @@ router.get('/messenger', isLoggedIn, async (req, res, next) => {
 
     res.redirect(`/messenger/${rooms[idxOfTheLatest].id}`);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -103,7 +103,7 @@ router.get('/messenger/:rid', isLoggedIn, async (req, res, next) => {
     const argument = { rooms, currentRoom, currentRoomIdx, messages };
     renderMessenger(req, res, argument);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });

@@ -13,7 +13,7 @@ router.post('/add/:uid', isLoggedIn, async (req, res, next) => {
     await createOneWayFriend(argument);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -30,7 +30,7 @@ router.post('/accept/:uid', isLoggedIn, async (req, res, next) => {
     req.app.get('io').of('/user').to(argument.userId).emit('message', message);
     req.app.get('io').of('/user').to(argument.targetUID).emit('message', message);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -41,7 +41,7 @@ router.delete('/remove/:uid', isLoggedIn, async (req, res, next) => {
     await deleteFriend(argument);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });

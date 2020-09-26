@@ -152,10 +152,33 @@ const fetchMessages = async (roomId) => {
   return messages;
 };
 
+const fetchFriendInRoom = async ({ userId, roomId }) => {
+  const room = await Room.findOne({
+    where: { id: roomId },
+    include: [
+      {
+        model: Friend,
+      },
+    ],
+  });
+  const friendInRoom = room.friends
+    .map((f) => f.followingId)
+    .filter((uid) => uid !== userId);
+  if (friendInRoom.length > 1) {
+    // user is not in the room
+    const err = new Error('Forbidden');
+    err.status = 403;
+    throw err;
+  }
+
+  return friendInRoom[0];
+};
+
 module.exports = {
   fetchFriends,
   fetchPosts,
   fetchPostsWithTag,
   fetchRooms,
   fetchMessages,
+  fetchFriendInRoom,
 };

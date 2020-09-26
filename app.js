@@ -10,10 +10,10 @@ require('dotenv').config();
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post');
-const commentRouter = require('./routes/comment/comment');
+const commentRouter = require('./routes/comment');
 const likeRouter = require('./routes/like');
 const friendRouter = require('./routes/friend');
-const messageRouter = require('./routes/message/message');
+const messageRouter = require('./routes/message');
 const passportConfig = require('./passport');
 
 const app = express();

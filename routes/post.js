@@ -44,7 +44,7 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
     await createPost(argument);
     res.redirect(303, '/');
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -65,7 +65,7 @@ router.get('/hashtag', isLoggedIn, async (req, res, next) => {
     };
     renderMain(req, res, argument);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });

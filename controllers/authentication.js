@@ -4,7 +4,7 @@ const { createUser } = require('./createData');
 const login = (req, res, next) => {
   passport.authenticate('local', (authError, user, info) => {
     if (authError) {
-      console.error(authError);
+      // console.error(authError);
       return next(authError);
     }
     if (!user) {
@@ -13,7 +13,7 @@ const login = (req, res, next) => {
     }
     return req.login(user, (loginError) => {
       if (loginError) {
-        console.error(loginError);
+        // console.error(loginError);
         return next(loginError);
       }
       return res.redirect(303, '/');
@@ -48,7 +48,7 @@ const join = async (req, res, next) => {
 
     res.redirect(303, '/unauth');
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 };

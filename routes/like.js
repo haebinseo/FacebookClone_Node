@@ -12,7 +12,7 @@ router.post('/post/:pid', async (req, res, next) => {
     await createLike(argument);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -27,7 +27,7 @@ router.post('/comment/:cid', async (req, res, next) => {
     await createLike(argument);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -42,7 +42,7 @@ router.delete('/post/:pid', async (req, res, next) => {
     await deleteLike(argument);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -57,7 +57,7 @@ router.delete('/comment/:cid', async (req, res, next) => {
     await deleteLike(argument);
     res.sendStatus(200);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
