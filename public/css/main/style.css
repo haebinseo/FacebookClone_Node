@@ -290,33 +290,34 @@ body>div:first-of-type>div {
 }
 main {
   display: flex;
-  justify-content: space-between;
   min-height: calc(100vh - var(--header-height));
 }
 main>div {
   min-height: inherit;
-  flex-grow: 1;
 }
 main>div:not([id="mainCenter"]) {
-  max-width: 320px;
-  width: 25vw;
-  flex-basis: 25%;
-  min-width: 280px;
+  max-width: 360px;
+  flex: 1 1 280px;
 }
 main>div:not([id="mainCenter"])>div {
-  padding: 16px 8px 0 8px;
+  padding-top: 16px;
   overflow-y: auto;
   overscroll-behavior-y: contain;
 /* will-change: transform,scroll-position; */
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: -webkit-sticky;
+  position: sticky;
   top: var(--header-height);
   min-width: inherit;
   max-width: inherit;
   width: inherit;
   min-height: inherit;
   height: 0;
+}
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
 .custom-scroll::-webkit-scrollbar {
   width: 8px;
@@ -331,20 +332,26 @@ main>div:not([id="mainCenter"])>div {
   border-radius: 15px;
   background-color: transparent;
 }
-.custom-scroll:hover::-webkit-scrollbar-thumb {
-  background-color: #ced0d4;
-}
 .custom-scroll::-webkit-scrollbar-button {
   width: 0;
   height: 0;
 }
-#mainLeft ul {
+.custom-scroll:hover {
+  scrollbar-color: #ced0d4 transparent;
+}
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: #ced0d4;
+}
+#mainLeft>div ul {
   flex-shrink: 0;
 }
-#mainLeft ul #mainLeftUserImg {
+#mainLeft>div ul #mainLeftUserImg {
   border-radius: 100%;
 }
-#mainLeft ul li>a>div {
+#mainLeft>div ul li {
+  padding: 0 8px;
+}
+#mainLeft>div ul li>a>div {
   display: flex;
   align-items: center;
   padding: 0 8px;
@@ -352,36 +359,35 @@ main>div:not([id="mainCenter"])>div {
   font-weight: 500;
   font-size: 15px;
 }
-#mainLeft ul li>a>div:hover {
+#mainLeft>div ul li>a>div:hover {
   background-color: #e4e6e9;
 }
-#mainLeft ul li>a>div>img {
+#mainLeft>div ul li>a>div>img {
   margin: 8px 12px 8px 0;
   width: 36px;
   height: 36px;
 }
-#mainLeft ul #mainLeftMore {
+#mainLeft>div ul #mainLeftMore {
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 15px;
-  margin: 8px 8px;
-  padding: 6px 0;
+  margin: 8px 16px;
   border-radius: 6px;
   height: 36px;
   background-color: var(--secondary-button-background);
 }
-#mainLeft ul #mainLeftMore:hover {
+#mainLeft>div ul #mainLeftMore:hover {
   background-color: #e4e6e9;
 }
-#mainLeft ul #mainLeftMore img {
+#mainLeft>div ul #mainLeftMore img {
   margin-left: 5px;
 }
-#mainLeft ul #mainLeftMore ~ li {
+#mainLeft>div ul #mainLeftMore ~ li {
   display: none;
 }
-#mainLeft ul #mainLeftDirectImg {
+#mainLeft>div ul #mainLeftDirectImg {
   width: 36px;
   height: 36px;
   border: 1px solid #a7bad8;
@@ -392,13 +398,13 @@ main>div:not([id="mainCenter"])>div {
   justify-content: center;
   overflow: hidden;
 }
-#mainLeft ul #mainLeftDirectImg>img {
+#mainLeft>div ul #mainLeftDirectImg>img {
   width: 100%;
   height: 100%;
 }
-#mainLeft>div {
+#mainLeft>div>div {
   flex-shrink: 0;
-  padding: 16px;
+  padding: 16px 24px;
   font-size: 12px;
   margin-top: auto;
 }
@@ -412,17 +418,16 @@ main>div:not([id="mainCenter"])>div {
 }
 .listDivider {
   border-bottom: 1px solid var(--divider);
-  margin: 16px 8px 12px;
+  margin: 16px 16px 12px;
 }
 .listName {
   color: var(--secondary-text);
   font-weight: 600;
   font-size: 17px;
-  padding: 0 8px 8px;
+  padding: 0 16px 8px;
 }
 #mainCenter {
-  flex-basis: 50%;
-  min-width: 0;
+  flex: 1 1 50vw;
   padding: 0 32px;
   display: flex;
   flex-direction: column;
@@ -712,10 +717,10 @@ main>div:not([id="mainCenter"])>div {
   flex-direction: column;
   align-items: flex-start;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>span:first-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>a>span {
   font-weight: 600;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>span:last-of-type {
+#mainCenter #afterStory #postArea>div>div:first-of-type>div:nth-of-type(2)>span {
   color: var(--secondary-text);
   font-weight: 400;
   font-size: 13px;
@@ -750,14 +755,14 @@ main>div:not([id="mainCenter"])>div {
   border-radius: 50%;
   overflow: hidden;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:first-of-type img {
-  width: inherit;
-  height: inherit;
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:first-of-type>a>img {
+  width: 96px;
+  height: 96px;
 }
 #mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:last-of-type {
   flex-grow: 1;
 }
-#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:last-of-type>span {
+#mainCenter #afterStory #postArea>div>div:first-of-type .accountHoverTab>div:first-of-type>div:last-of-type>a>span {
   padding: 0 16px;
   font-size: 20px;
   font-weight: 700;
@@ -1004,23 +1009,37 @@ main>div:not([id="mainCenter"])>div {
   display: flex;
   font-size: 15px;
   font-weight: bold;
-  height: 44px;
   padding: 4px 0px;
 }
 #mainCenter #afterStory #postArea>div>div:last-of-type label>img {
-  align-self: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  margin-right: 8px;
+  margin: 2px 8px 0 0;
 }
-#mainCenter #afterStory #postArea>div>div:last-of-type label div {
+#mainCenter #afterStory #postArea>div>div:last-of-type label>div {
   flex-grow: 1;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type label>div>div:first-of-type {
   background-color: var(--comment-background);
   border-radius: 20px;
   border: none;
   display: flex;
   align-items: center;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type label>div>div:nth-of-type(2) {
+  font-size: 12px;
+  font-weight: normal;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type label>div>div:nth-of-type(2) a {
+  color: var(--accent);
+  cursor: pointer;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type label>div>div:nth-of-type(2) a:hover {
+  text-decoration: underline;
+}
+#mainCenter #afterStory #postArea>div>div:last-of-type label>div>div:nth-of-type(2) a:visited {
+  color: var(--accent);
 }
 #mainCenter #afterStory #postArea>div>div:last-of-type label input {
   width: 100%;
@@ -1030,67 +1049,58 @@ main>div:not([id="mainCenter"])>div {
   font-size: 15px;
 }
 #mainCenter #afterStory #postArea>div>div .text-liked {
-  color: #2078f4;
+  color: var(--accent);
 }
-#mainRight {
-  right: 0;
-}
-#mainRight #ads>div:first-of-type {
+#mainRight>div #ads>div {
   font-size: 16px;
   font-weight: 600;
   color: var(--secondary-text);
   margin-bottom: 10px;
-  padding: 0 8px;
+  padding: 0 16px;
 }
-#mainRight #ads>div:nth-last-of-type(2) {
+#mainRight>div #ads>a>div {
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: 8px 8px;
+  margin: 0 8px;
   border-radius: 6px;
 }
-#mainRight #ads>div:nth-last-of-type(2)>img {
+#mainRight>div #ads>a>div>div:first-of-type {
   width: 40%;
+}
+#mainRight>div #ads>a>div>div:first-of-type>img {
+  width: 100%;
   border-radius: 8px;
 }
-#mainRight #ads>div:nth-last-of-type(2)>a {
+#mainRight>div #ads>a>div>div:last-of-type {
+  width: 60%;
   padding: 15px;
+  word-break: keep-all;
 }
-#mainRight #ads>div:nth-last-of-type(2)>a>div:first-of-type {
+#mainRight>div #ads>a>div>div:last-of-type>span {
+  display: inline-block;
+}
+#mainRight>div #ads>a>div>div:last-of-type>span:first-of-type {
   font-weight: 500;
   font-size: 15px;
   margin-bottom: 10px;
 }
-#mainRight #ads>div:nth-last-of-type(2)>a>div:last-of-type {
+#mainRight>div #ads>a>div>div:last-of-type>span:last-of-type {
   font-size: 13px;
   color: var(--secondary-text);
 }
-#mainRight #ads>div:nth-last-of-type(2):hover {
+#mainRight>div #ads>a>div:hover {
   background-color: var(--hover-overlay);
 }
-#mainRight li>a>div {
-  display: flex;
-  align-items: center;
-  padding: 6px 8px;
-  border-radius: 6px;
-}
-#mainRight li>a>div>img {
-  width: 36px;
-  height: 36px;
-  margin-right: 15px;
-  border-radius: 100%;
-}
-#mainRight li>a>div:hover {
-  background-color: var(--hover-overlay);
-}
-#mainRight #contacts>div {
+#mainRight>div #contacts>div {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-#mainRight #contacts>div>div:last-of-type {
+#mainRight>div #contacts>div>div:last-of-type {
   display: flex;
 }
-#mainRight #contacts>div>div>div {
+#mainRight>div #contacts>div>div>div {
   width: 32px;
   height: 32px;
   margin-left: 8px;
@@ -1099,8 +1109,61 @@ main>div:not([id="mainCenter"])>div {
   align-items: center;
   justify-content: center;
 }
-#mainRight #contacts>div>div>div:hover {
+#mainRight>div #contacts>div>div>div:hover {
   background-color: var(--hover-overlay);
+}
+#mainRight>div #contacts li {
+  position: relative;
+  display: flex;
+  padding: 0 8px;
+}
+#mainRight>div #contacts li>a {
+  flex: 1 0 0;
+}
+#mainRight>div #contacts li>a>div {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+#mainRight>div #contacts li>a>div>img {
+  width: 36px;
+  height: 36px;
+  margin-right: 15px;
+  border-radius: 100%;
+}
+#mainRight>div #contacts li>a>div:hover {
+  background-color: var(--hover-overlay);
+}
+#mainRight>div #contacts li .contactHoverTab {
+  position: fixed;
+  z-index: 2;
+  transform: translate(-408px, -40px);
+  display: flex;
+  align-items: center;
+  width: 400px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px 0 #d3d3d3;
+}
+#mainRight>div #contacts li .contactHoverTab>div:first-of-type {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+#mainRight>div #contacts li .contactHoverTab>div:first-of-type>a>img {
+  width: 96px;
+  height: 96px;
+}
+#mainRight>div #contacts li .contactHoverTab>div:last-of-type {
+  flex-grow: 1;
+}
+#mainRight>div #contacts li .contactHoverTab>div:last-of-type>a>span {
+  padding: 0 16px;
+  font-size: 20px;
+  font-weight: 700;
 }
 @media (min-width: 1260px) {
   #headerLeft {

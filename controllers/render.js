@@ -1,13 +1,14 @@
 const renderMain = (
   req,
   res,
-  { title = 'Facebook', user = req.user, followings, followers, posts, likes },
+  { title = 'Facebook', user = req.user, followings, followers, friends, posts, likes },
 ) => {
   res.render('main', {
     title,
     user,
     followings,
     followers,
+    friends,
     posts,
     likes,
   });
@@ -43,4 +44,66 @@ const renderMessenger = (
   });
 };
 
-module.exports = { renderMain, renderLogin, renderMessenger };
+const renderProfile = (
+  req,
+  res,
+  {
+    user = req.user,
+    targetUser,
+    title = `${targetUser.name} | Facebook`,
+    followings,
+    followers,
+    friends,
+    posts,
+    likes,
+  },
+) => {
+  res.render('pTimeline', {
+    title,
+    user,
+    targetUser,
+    followings,
+    followers,
+    friends,
+    posts,
+    likes,
+    selected: 'timeline',
+  });
+};
+
+const renderProfileFriend = (
+  req,
+  res,
+  {
+    user = req.user,
+    targetUser,
+    title = `${targetUser.name} | Facebook`,
+    followings,
+    followers,
+    friends,
+    myFollowings,
+    myFollowers,
+    myFriends,
+  },
+) => {
+  res.render('pFriend', {
+    title,
+    user,
+    targetUser,
+    followings,
+    followers,
+    friends,
+    myFollowings,
+    myFollowers,
+    myFriends,
+    selected: 'friend',
+  });
+};
+
+module.exports = {
+  renderMain,
+  renderLogin,
+  renderMessenger,
+  renderProfile,
+  renderProfileFriend,
+};

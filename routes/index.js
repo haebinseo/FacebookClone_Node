@@ -22,12 +22,14 @@ router.get('/', isLoggedIn, async (req, res, next) => {
    * posts, likes - Array
    */
   try {
-    const { followingsObj: followings, followersObj: followers } = await fetchFriends(
-      req.user.id,
-    );
+    const {
+      followingsObj: followings,
+      followersObj: followers,
+      friends,
+    } = await fetchFriends(req.user.id);
     const { posts, likes } = await fetchPosts();
 
-    const argument = { followings, followers, posts, likes };
+    const argument = { followings, followers, friends, posts, likes };
     renderMain(req, res, argument);
   } catch (error) {
     // console.error(error);

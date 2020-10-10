@@ -10,25 +10,39 @@ const {
 } = require('../db/models');
 
 const fetchFriends = async (userId) => {
-  const followingsObj = {};
-  const followingsArr = await Friend.findAll({
-    where: { followerId: userId },
-    attributes: ['followingId', 'accepted', 'roomId'],
+  const user = await User.findOne({
+    where: { id: userId },
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'name', 'profileImg'],
+        as: 'Followings',
+        through: {
+          attributes: ['followingId', 'accepted', 'roomId'],
+        },
+      },
+    ],
   });
-  followingsArr.forEach((f) => {
-    followingsObj[f.followingId] = { accepted: f.accepted, roomId: f.roomId };
+  const friends = user.Followings.filter((f) => f.friend.accepted);
+
+  const followingsObj = {};
+  user.Followings.forEach((f) => {
+    followingsObj[f.friend.followingId] = {
+      accepted: f.friend.accepted,
+      roomId: f.friend.roomId,
+    };
   });
 
-  const followersObj = {};
-  const followersArr = await Friend.findAll({
+  const followers = await Friend.findAll({
     where: { followingId: userId },
     attributes: ['followerId', 'accepted', 'roomId'],
   });
-  followersArr.forEach((f) => {
+  const followersObj = {};
+  followers.forEach((f) => {
     followersObj[f.followerId] = { accepted: f.accepted, roomId: f.roomId };
   });
 
-  return { followingsObj, followersObj };
+  return { followingsObj, followersObj, friends };
 };
 
 const fetchPosts = async (ids = []) => {
@@ -106,6 +120,24 @@ const fetchPostsWithTag = async (tag) => {
   return fetchPosts(postIds);
 };
 
+const fetchPostsWithUser = async (targetUID) => {
+  const user = await User.findOne({
+    where: { id: targetUID },
+    include: [
+      {
+        model: Post,
+        attributes: ['id'],
+      },
+    ],
+  });
+  const posts = [];
+  const likes = { posts: {}, comments: {} };
+  if (!user.posts.length) return { posts, likes };
+
+  const postIds = user.posts.map((p) => p.id);
+  return fetchPosts(postIds);
+};
+
 const fetchRooms = async (userId) => {
   // fetch friends
   let rooms = [];
@@ -174,11 +206,27 @@ const fetchFriendInRoom = async ({ userId, roomId }) => {
   return friendInRoom[0];
 };
 
+const fetchUserProfile = async (targetUID) => {
+  const targetUser = await User.findOne({
+    where: { id: targetUID },
+    attributes: ['id', 'email', 'name', 'gender', 'birth', 'profileImg'],
+  });
+  if (!targetUser) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  }
+
+  return targetUser;
+};
+
 module.exports = {
   fetchFriends,
   fetchPosts,
   fetchPostsWithTag,
+  fetchPostsWithUser,
   fetchRooms,
   fetchMessages,
   fetchFriendInRoom,
+  fetchUserProfile,
 };

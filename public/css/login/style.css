@@ -4,6 +4,9 @@
 a {
   text-decoration: none;
 }
+a[href="#"] {
+  cursor: default;
+}
 a:hover {
   text-decoration: underline;
 }
@@ -327,6 +330,7 @@ main>div>div {
   width: 194px;
   padding: 3px 20px 7px 20px;
   margin: 10px 0;
+  cursor: pointer;
   font-size: 19px;
   font-weight: bold;
   color: #fff;

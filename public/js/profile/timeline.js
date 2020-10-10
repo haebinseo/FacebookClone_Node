@@ -1,27 +1,28 @@
-// 계정 탭 토글
-document.getElementById('account')?.addEventListener('click', () => {
-  document.getElementById('accountTab')?.classList.toggle('invisible');
+// 정보 수정 탭 토글
+document.getElementById('accountInfoEditBtn')?.addEventListener('click', () => {
+  document.querySelector('body').classList.add('noScroll');
+  document.getElementById('profileEditTab').classList.remove('invisible');
 });
-
-// 계정 프로필 이동 이벤트
-const profileBtns = document.querySelectorAll('.profileBtn');
-profileBtns.forEach((btn) => {
-  btn.addEventListener('click', function () {
-    window.location.href = `/profile/${this.dataset.uid}`;
-  });
-});
-
-// 로그아웃
-document.getElementById('logout')?.addEventListener('click', function () {
-  this.submit();
-});
+function tabCloseEventHandler(e) {
+  e.preventDefault();
+  document.querySelector('body').classList.remove('noScroll');
+  document.getElementById('profileEditTab').classList.add('invisible');
+}
+document
+  .getElementById('profileEditCloseBtn')
+  ?.addEventListener('click', tabCloseEventHandler);
+document
+  .getElementById('profileEditCancelBtn')
+  ?.addEventListener('click', tabCloseEventHandler);
 
 // 게시글 작성 탭 토글
 document.getElementById('newPostTabBtn')?.addEventListener('click', () => {
+  document.querySelector('body').classList.add('noScroll');
   document.getElementById('newPostTab').classList.remove('invisible');
   document.getElementById('postContent').focus();
 });
 document.getElementById('newPostCloseBtn')?.addEventListener('click', () => {
+  document.querySelector('body').classList.remove('noScroll');
   document.getElementById('newPostTab').classList.add('invisible');
 });
 
@@ -333,31 +334,5 @@ document.querySelectorAll('.unfriendBtn')?.forEach((btn) => {
     };
     xhr.open('DELETE', `/friend/remove/${targetUID}`);
     xhr.send();
-  });
-});
-
-// 메신저 버튼 이동 이벤트 등록
-document.getElementById('messenger')?.addEventListener('click', () => {
-  window.location.href = '/messenger';
-});
-
-// 연락처 탭 토글
-const contactHoverTabTriggers = document.querySelectorAll('.contactHoverTabTrigger');
-contactHoverTabTriggers.forEach((trigger) => {
-  const contactHoverTab = trigger.querySelector('.contactHoverTab');
-  trigger.addEventListener('mouseenter', function () {
-    contactHoverTab.classList.remove('invisible');
-  });
-  trigger.addEventListener('mouseleave', function () {
-    contactHoverTab.classList.add('invisible');
-  });
-});
-// 연락처 스크롤시 탭 위치 자동 갱신
-const mainRightScroll = document.querySelector('#mainRight div');
-mainRightScroll.addEventListener('scroll', function () {
-  const { scrollTop } = this;
-  const contactHoverTabs = this.querySelectorAll('.contactHoverTab');
-  contactHoverTabs.forEach(function (tab) {
-    tab.style.transform = `translate(-408px, ${-(scrollTop + 40)}px)`;
   });
 });

@@ -52,14 +52,17 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
 router.get('/hashtag', isLoggedIn, async (req, res, next) => {
   try {
     const { hashtag } = req.query;
-    const { followingsObj: followings, followersObj: followers } = await fetchFriends(
-      req.user.id,
-    );
+    const {
+      followingsObj: followings,
+      followersObj: followers,
+      friends,
+    } = await fetchFriends(req.user.id);
     const { posts, likes } = await fetchPostsWithTag(hashtag);
     const argument = {
       title: `${hashtag} | Facebook`,
       followings,
       followers,
+      friends,
       posts,
       likes,
     };
