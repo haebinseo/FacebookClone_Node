@@ -297,6 +297,7 @@
 #timelineRight #newPostTab form>div:nth-of-type(2) {
   flex-direction: column;
   flex-grow: 1;
+  gap: 16px;
 }
 #timelineRight #newPostTab form>div:nth-of-type(2)>div {
   display: flex;
@@ -304,7 +305,6 @@
   font-size: 15px;
   font-weight: bold;
   height: 56px;
-  padding-bottom: 16px;
 }
 #timelineRight #newPostTab form>div:nth-of-type(2)>div>img {
   width: 40px;
@@ -316,6 +316,11 @@
   font-size: 24px;
   border: none;
   resize: none;
+}
+#timelineRight #newPostTab form>div:nth-of-type(2)>.photo-preview {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
 }
 #timelineRight #newPostTab form>div:last-of-type {
   flex-direction: column;
@@ -349,11 +354,13 @@
   background-color: var(--hover-overlay);
 }
 #timelineRight #newPostTab form>div:last-of-type>div>div>label>div {
+  height: 24px;
+  width: 24px;
+}
+#timelineRight #newPostTab form>div:last-of-type>div>div .icon--photo {
   background-image: url("/images/main/mainCenter/C6EldyzVPp5.png");
   background-position-x: 0px;
   background-position-y: -208px;
-  height: 24px;
-  width: 24px;
 }
 #timelineRight #newPostTab form>div:last-of-type button {
   border-radius: 6px;

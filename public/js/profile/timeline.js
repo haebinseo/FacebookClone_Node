@@ -26,24 +26,33 @@ document.getElementById('newPostCloseBtn')?.addEventListener('click', () => {
   document.getElementById('newPostTab').classList.add('invisible');
 });
 
-// 게시글 이미지 upload
-document.getElementById('img')?.addEventListener('change', (e) => {
+// 게시글 사진 upload
+document.getElementById('photo')?.addEventListener('change', (e) => {
   const formData = new FormData();
   const { files } = e.target;
-  console.log(files);
-  formData.append('image', files[0]);
+  // console.log(files);
+  for (let i = 0; i < files.length; i += 1) {
+    formData.append('photos', files[i], files[i].name);
+  }
+
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
     if (xhr.status === 200) {
-      const { url } = JSON.parse(xhr.responseText);
-      document.getElementById('img-url').value = url;
-      document.getElementById('img-preview').src = url;
-      document.getElementById('img-preview').style.display = 'inline';
+      const { photoIds, urls } = JSON.parse(xhr.responseText);
+      document.getElementById('photoIds').value = photoIds.join();
+      const preview = document.querySelector('.photo-preview');
+      preview.classList.remove('invisible');
+      for (let previewClone, i = 0; i < urls.length; i += 1) {
+        previewClone = preview.cloneNode(true);
+        preview.insertAdjacentElement('beforebegin', previewClone);
+        previewClone.querySelector('img').src = urls[i];
+      }
+      preview.classList.add('invisible');
     } else {
       console.error(xhr.responseText);
     }
   };
-  xhr.open('POST', '/post/img');
+  xhr.open('POST', '/photo');
   xhr.send(formData);
 });
 

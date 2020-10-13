@@ -117,8 +117,8 @@ block append content
         a(href= selected==='friend' ? undefined : `/profile/${targetUser.id}/friend`)
           div(class= selected==='friend' ? 'selected' : undefined)
             span 친구
-        a
-          div(class= selected==='image' ? 'selected' : undefined)
+        a(href= selected==='photo' ? undefined : `/profile/${targetUser.id}/photo`)
+          div(class= selected==='photo' ? 'selected' : undefined)
             span 사진
         a
           div

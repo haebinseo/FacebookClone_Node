@@ -15,6 +15,7 @@ const likeRouter = require('./routes/like');
 const friendRouter = require('./routes/friend');
 const messageRouter = require('./routes/message');
 const profileRouter = require('./routes/profile');
+const photoRouter = require('./routes/photo');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -26,7 +27,7 @@ app.set('port', process.env.PORT || 8000);
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/img', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -52,6 +53,7 @@ app.use('/like', likeRouter);
 app.use('/friend', friendRouter);
 app.use('/message', messageRouter);
 app.use('/profile', profileRouter);
+app.use('/photo', photoRouter);
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');

@@ -4,8 +4,13 @@ const {
   fetchUserProfile,
   fetchPostsWithUser,
   fetchFriends,
+  fetchUserPhotos,
 } = require('../controllers/fetchData');
-const { renderProfile, renderProfileFriend } = require('../controllers/render');
+const {
+  renderProfile,
+  renderProfileFriend,
+  renderProfilePhoto,
+} = require('../controllers/render');
 
 router.get('/:uid', isLoggedIn, async (req, res, next) => {
   try {
@@ -20,7 +25,7 @@ router.get('/:uid', isLoggedIn, async (req, res, next) => {
     const argument = { targetUser, followings, followers, friends, posts, likes };
     renderProfile(req, res, argument);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     next(error);
   }
 });
@@ -53,7 +58,20 @@ router.get('/:uid/friend', isLoggedIn, async (req, res, next) => {
     };
     renderProfileFriend(req, res, argument);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
+    next(error);
+  }
+});
+
+router.get('/:uid/photo', isLoggedIn, async (req, res, next) => {
+  try {
+    const targetUser = await fetchUserProfile(req.params.uid);
+    const photos = await fetchUserPhotos(targetUser.id);
+
+    const argument = { targetUser, photos };
+    renderProfilePhoto(req, res, argument);
+  } catch (error) {
+    // console.error(error);
     next(error);
   }
 });

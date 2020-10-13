@@ -1,5 +1,6 @@
 :root {
   --always-white: white;
+  --always-dark-overlay: rgba(0,0,0,0.4);
   --primary-button-background: #1877f2;
   --secondary-icon: #65676b;
   --primary-text: #050505;
@@ -75,6 +76,10 @@ body {
   display: none !important;
   // opacity: 0;
   // z-index: -1;
+}
+
+.noScroll {
+  overflow-y: hidden;
 }
 
 #headerLeft {
@@ -748,14 +753,14 @@ main {
           &:nth-of-type(2) {
             flex-direction: column;
             flex-grow: 1;
+            gap: 4px;
 
-            &>div {
+            &>div:first-of-type  {
               display: flex;
               align-items: center;
               font-size: 15px;
               font-weight: bold;
               height: 56px;
-              padding-bottom: 16px;
 
               &>img {
                 width: 40px;
@@ -765,10 +770,43 @@ main {
               }
             }
 
-            &>textarea {
-              font-size: 24px;
-              border: none;
-              resize: none;
+            &>div:nth-of-type(2)  {
+              max-height: 500px;
+              display: flex;
+              flex-direction: column;
+              overflow-y: scroll;
+
+              &>textarea {
+                flex-shrink: 0;
+                font-size: 24px;
+                border: none;
+                resize: none;
+                overflow-y: visible;
+              }
+
+              &>div {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+
+                &>.photo-preview {
+                  flex: 1 0 150px;
+
+                  &>div {
+                    padding-top: 100%;
+                    position: relative;
+
+                    &>img {
+                      position: absolute;
+                      top: 0;
+                      width: 100%;
+                      height: 100%;
+                      object-fit: contain;
+                    }  
+                  }
+                }
+              }
             }
           }
           
@@ -791,26 +829,32 @@ main {
                 padding: 0 8px;
               }
 
-              &>div {
-                height 36px;
-                width: 36px;
-                border-radius: 50%;
-                border: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+              &>label {
                 cursor: pointer;
 
-                &:hover {
-                  background-color: var(--hover-overlay);
-                }
+                &>div {
+                  height 36px;
+                  width: 36px;
+                  border-radius: 50%;
+                  border: none;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
 
-                &>label>div {
-                  background-image: url(/images/main/mainCenter/C6EldyzVPp5.png);
-                  background-position-x: 0px;
-                  background-position-y: -208px;
-                  height 24px;
-                  width: 24px;
+                  &:hover {
+                    background-color: var(--hover-overlay);
+                  }
+                    
+                  &>i {
+                    display: inline-block;
+                    height 24px;
+                    width: 24px;
+                  }
+                  .icon--photo {
+                    background-image: url(/images/main/mainCenter/C6EldyzVPp5.png);
+                    background-position-x: 0px;
+                    background-position-y: -208px;
+                  }
                 }
               }
             }
@@ -846,7 +890,7 @@ main {
       padding: 12px 16px 10px;
       
       &>div {
-        &:first-of-type {
+        &.postHeader {
           display: flex;
           align-items: center;
           margin-bottom: 12px;
@@ -1005,6 +1049,107 @@ main {
                         margin-right: 12px;
                       }
                     }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        &.postMain {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+
+          &>div:first-of-type {
+            word-break: break-all;
+          }
+
+          &>div:nth-of-type(2) {
+            width:100%;
+
+            &>div {
+              position: relative;
+              padding-top: 100%;
+
+              &>div {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                &>.firstPhotoLine {
+                  flex: 1 1 0;
+                  display: flex;
+                  gap: 2px;
+
+                  &>div {
+                    flex: 1 0 49%;
+                    
+                    &>div {
+                      padding-top: 100%;
+                      position: relative;
+                    
+                      &>img {
+                        position: absolute;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                      }
+                    }
+                  }
+                }
+
+                &>.secondPhotoLine {
+                  flex: 1 1 0;
+                  display: flex;
+                  gap: 2px;
+
+                  &>div {
+                    flex: 1 0 49%;
+                    height: 100%;
+                    position: relative;
+                    
+                    &>img {
+                      position: absolute;
+                      top: 0;
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                    }
+
+                    &>div {
+                      position: absolute;
+                      top: 0;
+                      width: 100%;
+                      height: 100%;
+                      background-color: var(--always-dark-overlay);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+
+                      &>span {
+                        font-size: 32px;
+                        font-weight: bold;
+                        color: white;
+                      }
+                    }
+                    // &>div {
+                    //   padding-top: 100%;
+                    //   position: relative;
+                    
+                    //   &>img {
+                    //     position: absolute;
+                    //     top: 0;
+                    //     width: 100%;
+                    //     height: 100%;
+                    //     object-fit: cover;
+                    //   }
+                    // }
                   }
                 }
               }

@@ -18,31 +18,62 @@ document.getElementById('logout')?.addEventListener('click', function () {
 
 // 게시글 작성 탭 토글
 document.getElementById('newPostTabBtn')?.addEventListener('click', () => {
+  document.querySelector('body').classList.add('noScroll');
   document.getElementById('newPostTab').classList.remove('invisible');
   document.getElementById('postContent').focus();
 });
-document.getElementById('newPostCloseBtn')?.addEventListener('click', () => {
+document.getElementById('newPostCloseBtn')?.addEventListener('click', function () {
+  document.querySelector('body').classList.remove('noScroll');
   document.getElementById('newPostTab').classList.add('invisible');
+  // reset the form
+  this.querySelector('input').click();
+  document.getElementById('postContent').style.fontSize = '24px';
+  const previews = document.querySelectorAll('.photo-preview:not(.invisible)');
+  previews.forEach((p) => p.remove());
 });
 
+// 게시글 작성 textarea auto resizing
+function textareaResizeHandler(e) {
+  const targetStyle = e.target.style;
+  if (e.target.textLength > 60) {
+    if (targetStyle.fontSize !== '15px') targetStyle.fontSize = '15px';
+  } else if (targetStyle.fontSize !== '24px') {
+    targetStyle.fontSize = '24px';
+  }
+
+  targetStyle.height = '40px'; // shrink the textarea if it is empty
+  targetStyle.height = `${e.target.scrollHeight + 40}px`;
+}
+document.getElementById('postContent').addEventListener('keydown', textareaResizeHandler);
+document.getElementById('postContent').addEventListener('keyup', textareaResizeHandler);
+
 // 게시글 이미지 upload
-document.getElementById('img')?.addEventListener('change', (e) => {
+document.getElementById('photo')?.addEventListener('change', (e) => {
   const formData = new FormData();
   const { files } = e.target;
-  console.log(files);
-  formData.append('image', files[0]);
+  // console.log(files);
+  for (let i = 0; i < files.length; i += 1) {
+    formData.append('photos', files[i], files[i].name);
+  }
+
   const xhr = new XMLHttpRequest();
   xhr.onload = () => {
     if (xhr.status === 200) {
-      const { url } = JSON.parse(xhr.responseText);
-      document.getElementById('img-url').value = url;
-      document.getElementById('img-preview').src = url;
-      document.getElementById('img-preview').style.display = 'inline';
+      const { photoIds, urls } = JSON.parse(xhr.responseText);
+      document.getElementById('photoIds').value = photoIds.join();
+      const preview = document.querySelector('.photo-preview.invisible');
+      preview.classList.remove('invisible');
+      for (let previewClone, i = 0; i < urls.length; i += 1) {
+        previewClone = preview.cloneNode(true);
+        preview.insertAdjacentElement('beforebegin', previewClone);
+        previewClone.querySelector('img').src = urls[i];
+      }
+      preview.classList.add('invisible');
     } else {
       console.error(xhr.responseText);
     }
   };
-  xhr.open('POST', '/post/img');
+  xhr.open('POST', '/photo');
   xhr.send(formData);
 });
 

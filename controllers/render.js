@@ -100,10 +100,25 @@ const renderProfileFriend = (
   });
 };
 
+const renderProfilePhoto = (
+  req,
+  res,
+  { user = req.user, targetUser, title = `${targetUser.name} | Facebook`, photos },
+) => {
+  res.render('pPhoto', {
+    title,
+    user,
+    targetUser,
+    photos,
+    selected: 'photo',
+  });
+};
+
 module.exports = {
   renderMain,
   renderLogin,
   renderMessenger,
   renderProfile,
   renderProfileFriend,
+  renderProfilePhoto,
 };

@@ -1,5 +1,14 @@
 const bcrypt = require('bcrypt');
-const { User, Post, Hashtag, Friend, Room, Message, Comment } = require('../db/models');
+const {
+  User,
+  Post,
+  Hashtag,
+  Friend,
+  Room,
+  Message,
+  Comment,
+  Photo,
+} = require('../db/models');
 
 const createUser = async ({ email, name, password, gender, birth }) => {
   const exUser = await User.findOne({ where: { email } });
@@ -26,8 +35,11 @@ const createHashtags = (hashtags) => {
   );
 };
 
-const createPost = async ({ content, img, userId }) => {
-  const newPost = await Post.create({ content, img, userId });
+const createPost = async ({ content, photoIds = [], userId }) => {
+  const newPost = await Post.create({ content, userId });
+  // associate post with photos
+  if (photoIds.length) await newPost.addPhotos(photoIds);
+  // associate post with hashtags
   const hashtags = content.match(/#[^\s#]*/g);
   if (hashtags) {
     const result = await createHashtags(hashtags);
@@ -118,6 +130,10 @@ const createComment = async ({ content, depth, userId, postId, bundleCreatedAt }
   );
 };
 
+const createPhotos = async (photos) => {
+  return Photo.bulkCreate(photos);
+};
+
 module.exports = {
   createUser,
   createPost,
@@ -126,4 +142,5 @@ module.exports = {
   createMessage,
   createLike,
   createComment,
+  createPhotos,
 };

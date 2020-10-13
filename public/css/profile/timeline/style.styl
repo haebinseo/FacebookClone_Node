@@ -372,6 +372,7 @@
         &:nth-of-type(2) {
           flex-direction: column;
           flex-grow: 1;
+          gap: 16px;
 
           &>div {
             display: flex;
@@ -379,7 +380,7 @@
             font-size: 15px;
             font-weight: bold;
             height: 56px;
-            padding-bottom: 16px;
+            // padding-bottom: 16px;
 
             &>img {
               width: 40px;
@@ -393,6 +394,12 @@
             font-size: 24px;
             border: none;
             resize: none;
+          }
+
+          &>.photo-preview {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
           }
         }
         
@@ -430,11 +437,14 @@
               }
 
               &>label>div {
+                height 24px;
+                width: 24px;
+              }
+
+              .icon--photo {
                 background-image: url(/images/main/mainCenter/C6EldyzVPp5.png);
                 background-position-x: 0px;
                 background-position-y: -208px;
-                height 24px;
-                width: 24px;
               }
             }
           }

@@ -7,6 +7,7 @@ const {
   Room,
   Message,
   Hashtag,
+  Photo,
 } = require('../db/models');
 
 const fetchFriends = async (userId) => {
@@ -51,6 +52,10 @@ const fetchPosts = async (ids = []) => {
       {
         model: User,
         attributes: ['id', 'name', 'profileImg'],
+      },
+      {
+        model: Photo,
+        attributes: ['id', 'url'],
       },
       {
         model: User,
@@ -220,6 +225,20 @@ const fetchUserProfile = async (targetUID) => {
   return targetUser;
 };
 
+const fetchUserPhotos = async (targetUID) => {
+  const targetUser = await User.findOne({
+    where: { id: targetUID },
+    include: [{ model: Photo }],
+  });
+  if (!targetUser) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  }
+
+  return targetUser.photos;
+};
+
 module.exports = {
   fetchFriends,
   fetchPosts,
@@ -229,4 +248,5 @@ module.exports = {
   fetchMessages,
   fetchFriendInRoom,
   fetchUserProfile,
+  fetchUserPhotos,
 };

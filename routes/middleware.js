@@ -1,9 +1,27 @@
-module.exports.isLoggedIn = (req, res, next) => {
+const Multer = require('multer');
+const path = require('path');
+
+const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) next();
   else res.redirect(303, '/unauth');
 };
 
-module.exports.isNotLoggedIn = (req, res, next) => {
+const isNotLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) next();
   else res.redirect(303, '/');
 };
+
+const multer = Multer({
+  storage: Multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename(req, file, cb) {
+      const ext = path.extname(file.originalname);
+      cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+module.exports = { isLoggedIn, isNotLoggedIn, multer };

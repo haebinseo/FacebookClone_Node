@@ -1,0 +1,91 @@
+.postEffects {
+  box-shadow: 0 1px 2px var(--shadow-2);
+  background-color: var(--surface-background);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+#main {
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 396px);
+}
+#profilePhoto {
+  display: flex;
+  width: 908px;
+  margin-top: 16px;
+  padding: 0 16px;
+}
+#profilePhoto>div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+}
+#profilePhoto>div>div:first-of-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+#profilePhoto>div>div:first-of-type>span {
+  font-size: 20px;
+  font-weight: bold;
+}
+#profilePhoto>div>div:first-of-type>div {
+  height: 36px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+}
+#profilePhoto>div>div:first-of-type>div>span {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--accent);
+}
+#profilePhoto>div>div:first-of-type>div>div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--hover-ovarlay);
+  opacity: 0;
+}
+#profilePhoto>div>div:first-of-type>div:hover>div {
+  opacity: 1;
+}
+#profilePhoto>div>div:nth-of-type(2) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#profilePhoto>div>div:nth-of-type(2)>div {
+  flex: 1 0 168px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+#profilePhoto>div>div:nth-of-type(2)>div>img {
+  width: 100%;
+  height: 100%;
+}
+#profilePhoto>div>div:nth-of-type(2)>div>div {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: var(--always-dark-overlay);
+}
+#profilePhoto>div>div:nth-of-type(2)>div>div>i {
+  display: inline-block;
+  background-image: url("/images/profile/photo/KkfHv1-IknJ.png");
+  background-position: 0 -494px;
+  height: 16px;
+  width: 16px;
+}
