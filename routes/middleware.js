@@ -3,7 +3,7 @@ const path = require('path');
 
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) next();
-  else res.redirect(303, '/unauth');
+  else res.redirect(303, '/login');
 };
 
 const isNotLoggedIn = (req, res, next) => {

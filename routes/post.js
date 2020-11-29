@@ -1,47 +1,28 @@
 const router = require('express').Router();
+const { isLoggedIn } = require('./middleware');
+const {
+  createPost,
+  updatePost,
+  deletePost,
+  createComment,
+  updateComment,
+  deleteComment,
+  createLike,
+  deleteLike,
+} = require('../controllers/post.ctrl');
 
-const { isLoggedIn, multer } = require('./middleware');
-const { fetchFriends, fetchPostsWithTag } = require('../controllers/fetchData');
-const { createPost } = require('../controllers/createData');
-const { renderMain } = require('../controllers/render');
+router.post('/', isLoggedIn, createPost);
+router.patch('/:postId', isLoggedIn, updatePost);
+router.delete('/:postId', isLoggedIn, deletePost);
 
-router.post('/', isLoggedIn, multer.none(), async (req, res, next) => {
-  try {
-    const argument = {
-      content: req.body.content,
-      photoIds: req.body.photoIds.split(','),
-      userId: req.user.id,
-    };
-    await createPost(argument);
-    res.redirect(303, '/');
-  } catch (error) {
-    // console.error(error);
-    next(error);
-  }
-});
+router.post('/:postId/comment', isLoggedIn, createComment);
+router.post('/:postId/comment/:commentId', isLoggedIn, createComment);
+router.patch('/:postId/comment/:commentId', isLoggedIn, updateComment);
+router.delete('/:postId/comment/:commentId', isLoggedIn, deleteComment);
 
-router.get('/hashtag', isLoggedIn, async (req, res, next) => {
-  try {
-    const { hashtag } = req.query;
-    const {
-      followingsObj: followings,
-      followersObj: followers,
-      friends,
-    } = await fetchFriends(req.user.id);
-    const { posts, likes } = await fetchPostsWithTag(hashtag);
-    const argument = {
-      title: `${hashtag} | Facebook`,
-      followings,
-      followers,
-      friends,
-      posts,
-      likes,
-    };
-    renderMain(req, res, argument);
-  } catch (error) {
-    // console.error(error);
-    next(error);
-  }
-});
+router.post('/:postId/like', isLoggedIn, createLike);
+router.post('/:postId/comment/:commentId/like', isLoggedIn, createLike);
+router.delete('/:postId/like', isLoggedIn, deleteLike);
+router.delete('/:postId/comment/:commentId/like', isLoggedIn, deleteLike);
 
 module.exports = router;

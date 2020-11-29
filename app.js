@@ -8,13 +8,10 @@ const passport = require('passport');
 require('dotenv').config();
 
 const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
-const commentRouter = require('./routes/comment');
-const likeRouter = require('./routes/like');
-const friendRouter = require('./routes/friend');
+const searchRouter = require('./routes/search');
 const messageRouter = require('./routes/message');
-const profileRouter = require('./routes/profile');
 const photoRouter = require('./routes/photo');
 const passportConfig = require('./passport');
 
@@ -46,13 +43,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
-app.use('/auth', authRouter);
+app.use('/user', userRouter);
 app.use('/post', postRouter);
-app.use('/comment', commentRouter);
-app.use('/like', likeRouter);
-app.use('/friend', friendRouter);
+app.use('/search', searchRouter);
 app.use('/message', messageRouter);
-app.use('/profile', profileRouter);
 app.use('/photo', photoRouter);
 
 app.use((req, res, next) => {
@@ -61,8 +55,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   res.status(err.status || 500);

@@ -1,9 +1,7 @@
 const router = require('express').Router();
 const fs = require('fs');
-
 const { isLoggedIn, multer } = require('./middleware');
-// const { fetchFriends, fetchPostsWithTag } = require('../controllers/fetchData');
-const { createPhotos } = require('../controllers/createData');
+const { uploadPhotos, deletePhoto } = require('../controllers/photo.ctrl');
 
 fs.readdir('uploads', (err) => {
   if (err) {
@@ -12,30 +10,7 @@ fs.readdir('uploads', (err) => {
   }
 });
 
-router.get('/:filename', isLoggedIn, (req, res) => {
-  // console.log('req.file: ', req.files);
-  // const urls = req.files.map((f) => `/photo/${f.filename}`);
-  // res.json({ urls });
-});
-
-router.post('/', isLoggedIn, multer.array('photos', 12), async (req, res, next) => {
-  try {
-    // console.log('req.files: ', req.files);
-    let photos = req.files.map((f) => {
-      return { userId: req.user.id, url: `/uploads/${f.filename}` };
-    });
-    photos = await createPhotos(photos);
-    const photoIds = [];
-    const urls = [];
-    photos.forEach((p) => {
-      photoIds.push(p.id);
-      urls.push(p.url);
-    });
-    res.json({ photoIds, urls });
-  } catch (error) {
-    // console.error(error);
-    next(error);
-  }
-});
+router.post('/', isLoggedIn, multer.array('photos', 12), uploadPhotos);
+router.delete('/:photoId', isLoggedIn, deletePhoto);
 
 module.exports = router;

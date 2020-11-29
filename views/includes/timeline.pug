@@ -1,0 +1,222 @@
+//- block append css
+  link(rel="stylesheet", href="/css/includes/timeline.css")
+
+//- block append script
+  script(src="/js/includes/timeline.js")
+  script(src="/socket.io/socket.io.js")
+  script.
+    const userSocket = io.connect('/user', { forceNew: true, path: '/socket.io' });
+
+    userSocket.on('likePosted', );
+    userSocket.on('commentPosted', );
+    userSocket.on('confirmFriend', );
+    userSocket.on('friendConfirmed', );
+
+
+//- What are you thinking about?
+#newPostArea.postEffects
+  div
+    img(src=user.profilePhoto alt="로그인 유저 이미지")
+    div#newPostTabBtn #{user.name}님, 무슨 생각을 하고 계신가요?
+  div
+  div
+    a
+      div
+        img(src="/images/main/mainCenter/liveImage.png" alt="라이브 방송 이미지")
+        div 라이브 방송
+    a
+      div
+        img(src="/images/main/mainCenter/photo_videoImage.png" alt="사진/동영상 이미지")
+        div 사진/동영상
+    a
+      div
+        img(src="/images/main/mainCenter/feeling_acticity.png" alt="기분/활동 이미지")
+        div 기분/활동
+//- posts
+#postArea
+  for post in posts
+    div.postEffects
+      input.post-user-id(type='hidden' value=post.user.id)
+      input.post-id(type='hidden' value=post.id)
+      //- post head
+      div.postHeader(data-post-author-id=post.user.id)
+        div
+          a(href=`/profile/${post.user.id}`)
+            img.accountHoverTabTrigger(src=post.user.profilePhoto alt="")
+        div
+          a(href=`/profile/${post.user.id}`)
+            span.accountHoverTabTrigger= post.user.name
+          -const units = ['분', '시간', '일', '월', '년'];
+          -let elapsedTime = (new Date() - new Date(post.createdAt))/1000;
+          -let timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
+          -let idx; for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
+          -if(idx === 0) { timeArr[0] += 1; idx += 1; }
+          span #{timeArr[idx-1]}#{units[idx-1]}
+        div
+          img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
+
+      //- post main
+      div.postMain
+        div= post.content
+        div
+          -const photoLen = post.photos.length;
+          if photoLen > 0
+            div
+              div
+                div.firstPhotoLine
+                  div
+                    div
+                      img.postPhoto(src=post.photos[0].url, alt="")
+                  if photoLen > 1
+                    div
+                      div
+                        img.postPhoto(src=post.photos[1].url, alt="")
+                if photoLen > 2
+                  div.secondPhotoLine
+                    div
+                      img.postPhoto(src=post.photos[2].url, alt="")
+                    if photoLen > 3
+                      div
+                        img.postPhoto(src=post.photos[3].url, alt="")
+                        if photoLen > 4
+                          div
+                            span= `+${photoLen - 4}장`
+      //- number of likes and comments
+      div
+        .numLike(title="좋아요\n" + likes.posts[post.id].name.join('\n'))
+          if likes.posts[post.id].id.length
+            img(src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'%3e%3cdefs%3e%3clinearGradient id='a' x1='50%25' x2='50%25' y1='0%25' y2='100%25'%3e%3cstop offset='0%25' stop-color='%2318AFFF'/%3e%3cstop offset='100%25' stop-color='%230062DF'/%3e%3c/linearGradient%3e%3cfilter id='c' width='118.8%25' height='118.8%25' x='-9.4%25' y='-9.4%25' filterUnits='objectBoundingBox'%3e%3cfeGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/%3e%3cfeOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/%3e%3cfeComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/%3e%3cfeColorMatrix in='shadowInnerInner1' values='0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0'/%3e%3c/filter%3e%3cpath id='b' d='M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z'/%3e%3c/defs%3e%3cg fill='none'%3e%3cuse fill='url(%23a)' xlink:href='%23b'/%3e%3cuse fill='black' filter='url(%23c)' xlink:href='%23b'/%3e%3cpath fill='white' d='M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z'/%3e%3c/g%3e%3c/svg%3e", alt="like-icon")
+            span(title=likes.posts[post.id].name.join('\n'))= likes.posts[post.id].id.length
+        .numComment
+          if post.comments.length
+            span 댓글 #{post.comments.length}개
+      //- buttons for extra functions(like, comment, share)
+      div
+        div.likePostBtn(data-pid=post.id)
+          if likes.posts[post.id].id.includes(user.id)
+            span.icon--liked
+            div.text-liked 좋아요
+          else
+            span.icon--like
+            div 좋아요
+        div.commentBtn
+          span.icon--comment
+          div 답글 달기
+        div
+          span.icon--share
+          div 공유하기
+      //- comment area
+      div.commentSection
+        div
+          if post.comments.length
+            each comment in post.comments
+              div.commentItem(data-depth=comment.depth data-bundle-created-at=comment.bundleCreatedAt)
+                input.comment-user-id(type='hidden' value=comment.user.id)
+                //- input.comment-post-id(type='hidden' value=post.id)
+                input.comment-id(type='hidden' value=comment.id)
+                img(src=comment.user.profilePhoto, alt="")
+                div
+                  div
+                    div
+                      div= comment.user.name
+                      div.commentContent= comment.content
+                      if likes.comments[comment.id] && likes.comments[comment.id].id.length
+                        div(title=likes.comments[comment.id].name.join('\n'))
+                          img(src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 16 16'%3e%3cdefs%3e%3clinearGradient id='a' x1='50%25' x2='50%25' y1='0%25' y2='100%25'%3e%3cstop offset='0%25' stop-color='%2318AFFF'/%3e%3cstop offset='100%25' stop-color='%230062DF'/%3e%3c/linearGradient%3e%3cfilter id='c' width='118.8%25' height='118.8%25' x='-9.4%25' y='-9.4%25' filterUnits='objectBoundingBox'%3e%3cfeGaussianBlur in='SourceAlpha' result='shadowBlurInner1' stdDeviation='1'/%3e%3cfeOffset dy='-1' in='shadowBlurInner1' result='shadowOffsetInner1'/%3e%3cfeComposite in='shadowOffsetInner1' in2='SourceAlpha' k2='-1' k3='1' operator='arithmetic' result='shadowInnerInner1'/%3e%3cfeColorMatrix in='shadowInnerInner1' values='0 0 0 0 0 0 0 0 0 0.299356041 0 0 0 0 0.681187726 0 0 0 0.3495684 0'/%3e%3c/filter%3e%3cpath id='b' d='M8 0a8 8 0 00-8 8 8 8 0 1016 0 8 8 0 00-8-8z'/%3e%3c/defs%3e%3cg fill='none'%3e%3cuse fill='url(%23a)' xlink:href='%23b'/%3e%3cuse fill='black' filter='url(%23c)' xlink:href='%23b'/%3e%3cpath fill='white' d='M12.162 7.338c.176.123.338.245.338.674 0 .43-.229.604-.474.725a.73.73 0 01.089.546c-.077.344-.392.611-.672.69.121.194.159.385.015.62-.185.295-.346.407-1.058.407H7.5c-.988 0-1.5-.546-1.5-1V7.665c0-1.23 1.467-2.275 1.467-3.13L7.361 3.47c-.005-.065.008-.224.058-.27.08-.079.301-.2.635-.2.218 0 .363.041.534.123.581.277.732.978.732 1.542 0 .271-.414 1.083-.47 1.364 0 0 .867-.192 1.879-.199 1.061-.006 1.749.19 1.749.842 0 .261-.219.523-.316.666zM3.6 7h.8a.6.6 0 01.6.6v3.8a.6.6 0 01-.6.6h-.8a.6.6 0 01-.6-.6V7.6a.6.6 0 01.6-.6z'/%3e%3c/g%3e%3c/svg%3e", alt="like-icon")
+                          span= likes.comments[comment.id].id.length
+                    //- edit and delete btns
+                    div
+                      if comment.user.id === user.id
+                        div.commentMoreBtn
+                          i
+                          div.commentMoreTab.invisible(data-cid=comment.id)
+                            div.editCommentBtn 
+                              span 수정
+                            div.deleteCommentBtn 
+                              span 삭제
+                  div
+                    if likes.comments[comment.id] && likes.comments[comment.id].id.includes(user.id)
+                      span.likeCommentBtn.text-liked(data-cid=comment.id) 좋아요
+                    else
+                      span.likeCommentBtn(data-cid=comment.id) 좋아요
+                    |  · 
+                    span.replyBtn(data-depth=comment.depth data-bundle-created-at=comment.bundleCreatedAt) 답글 달기
+                    |  · 
+                    -elapsedTime = (new Date() - new Date(comment.createdAt))/1000;
+                    -timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
+                    -for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
+                    -if(idx === 0) { timeArr[0] += 1; idx += 1; }
+                    span #{timeArr[idx-1]}#{units[idx-1]}
+        .newCommentTab
+          form(action="/comment" method="post")
+            label
+              img(src=user.profilePhoto alt="")
+              div
+                div
+                  input.commentContent(type="text", name="content" placeholder="댓글을 입력하세요..." required)
+            input(type='hidden' name="pid" value=post.id)
+            input(type="hidden" name="depth" value=0)
+            input(type="hidden" name="bundleCreatedAt" value=null)
+
+.accountHoverTab.invisible
+  div
+    div
+      a
+        img
+    div 
+      a
+        span
+  div(data-uid)
+    //- myself
+    //- if user.id === post.user.id
+    div#myAHTab.invisible
+      div.editProfileBtn
+        img(src="/images/main/mainCenter/editProfile.png", alt="")
+        span 프로필 편집
+    //- else if post.user.id in followings
+      //- friend
+      if followings[post.user.id].accepted
+    div#friendAHTab.invisible
+      div
+        svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+          path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+        span 메세지 보내기
+      div.friendBtn(title="친구")
+        img(src="/images/main/mainCenter/friend.png", alt="친구")
+        .friendOptTab.invisible(title="")
+          div.unfriendBtn
+            i
+            span 친구 끊기
+      div
+        img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+      //- following
+      //- else
+    div#friendAddedAHTab.invisible
+      div.friendRequestedBtn
+        img(src="/images/main/mainCenter/addFriend.png", alt="친추")
+        span 친구 요청됨
+      div(title="메세지 보내기")
+        svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+          path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+      div
+        img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+    //- else if post.user.id in followers
+    div#confirmAHTab.invisible
+      //- followed
+      div.acceptFriendBtn
+        img(src="/images/main/mainCenter/friend.png", alt="친구")
+        span 응답하기
+      div(title="메세지 보내기")
+        svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+          path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+      div
+        img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+    div#defaultAHTab
+      div.addFriendBtn
+        img(src="/images/main/mainCenter/addFriend.png", alt="친추")
+        span 친구 추가
+      div(title="메세지 보내기")
+        svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
+          path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
+      div
+        img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")

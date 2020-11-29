@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon bin/www",
-    "test": "NODE_ENV=test node_modules/.bin/mocha routes/spec -w"
+    "test": "NODE_ENV=test node_modules/.bin/mocha routes/spec/message.spec.js -w"
   },
   "repository": {
     "type": "git",
@@ -46,6 +46,7 @@
     "should": "^13.2.3",
     "should-http": "^0.1.1",
     "sinon": "^9.0.3",
+    "socket.io-client": "^3.0.3",
     "supertest": "^4.0.2"
   }
 }

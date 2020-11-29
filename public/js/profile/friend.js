@@ -35,42 +35,23 @@ document.querySelectorAll('.friendBtn')?.forEach((bnt) => {
   });
 });
 
+function friendEventHandler(e) {
+  const targetUserId = e.currentTarget.dataset.uid;
+  const isUnfriendBtn = e.currentTarget.classList.item(0) === 'unfriendBtn';
+  const xhr = new XMLHttpRequest();
+  xhr.onload = () => {
+    if (xhr.status === 201 || xhr.status === 204) window.location.reload();
+    else console.error(xhr.responseText);
+  };
+  xhr.open(isUnfriendBtn ? 'DELETE' : 'POST', `/friend/${targetUserId}`);
+  xhr.send();
+}
 // 친구 추가
-document.querySelectorAll('.addFriendBtn')?.forEach((btn) =>
-  btn.addEventListener('click', function () {
-    const targetUID = this.dataset.uid;
-    const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
-      if (xhr.status === 200) window.location.reload();
-      else console.error(xhr.responseText);
-    };
-    xhr.open('POST', `/friend/add/${targetUID}`);
-    xhr.send();
-  }),
-);
+const addFriendBtns = document.querySelectorAll('.addFriendBtn');
+addFriendBtns.forEach((btn) => btn.addEventListener('click', friendEventHandler));
 // 친구 수락
-document.querySelectorAll('.acceptFriendBtn')?.forEach((btn) =>
-  btn.addEventListener('click', function () {
-    const targetUID = this.dataset.uid;
-    const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
-      if (xhr.status === 200) window.location.reload();
-      else console.error(xhr.responseText);
-    };
-    xhr.open('POST', `/friend/accept/${targetUID}`);
-    xhr.send();
-  }),
-);
+const acceptFriendBtns = document.querySelectorAll('.acceptFriendBtn');
+acceptFriendBtns.forEach((btn) => btn.addEventListener('click', friendEventHandler));
 // 친구 끊기
-document.querySelectorAll('.unfriendBtn')?.forEach((btn) => {
-  btn.addEventListener('click', function () {
-    const targetUID = this.dataset.uid;
-    const xhr = new XMLHttpRequest();
-    xhr.onload = () => {
-      if (xhr.status === 200) window.location.reload();
-      else console.error(xhr.responseText);
-    };
-    xhr.open('DELETE', `/friend/remove/${targetUID}`);
-    xhr.send();
-  });
-});
+const unfriendBtns = document.querySelectorAll('.unfriendBtn');
+unfriendBtns.forEach((btn) => btn.addEventListener('click', friendEventHandler));

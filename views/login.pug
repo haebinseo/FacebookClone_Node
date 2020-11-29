@@ -1,18 +1,18 @@
 extends layout
 
-block css
+block append css
   link(rel="stylesheet" href="/css/login/style.css")
 
-block content
+block append content
   header
     div
       // This is Header area
       // head logo box
       div
-        a(href="/unauth")
+        a(href="/")
           #logo
       // head login box
-      form#form_login(action="/auth/login" method="post")
+      form#form_login(action="/user/login" method="post")
         div
           label(for="id_login") 이메일
           input#id_login(type="text" name="email" required)
@@ -48,7 +48,7 @@ block content
       #signUp
         .head1 새 계정 만들기
         .head2 빠르고 쉽습니다.
-        form#form_signup(action="/auth/join" method="post")
+        form#form_signup(action="/user/join" method="post")
           div
             input(type="text" name="family_name" placeholder="성(姓)" required)
             input(type="text" name="first_name" placeholder="이름(성은 제외)" required)
@@ -252,6 +252,8 @@ block content
         li
           a(href="#") 고객 센터
       div Facebook © 2020
+
+block append script
   script.
     const isError = "#{loginError}#{joinError}";
     if (isError) alert(isError); 
