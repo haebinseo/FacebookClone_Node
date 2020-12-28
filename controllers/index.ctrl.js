@@ -1,5 +1,5 @@
 const render = require('./render');
-const { userDAO, postDAO, messsageDAO, photoDAO } = require('../models');
+const { userDAO, postDAO, messageDAO, photoDAO } = require('../models');
 
 async function showHomePage(req, res, next) {
   /*
@@ -11,12 +11,13 @@ async function showHomePage(req, res, next) {
       followingsObj: followings,
       followersObj: followers,
       friends,
-    } = await userDAO.fetchFriends(req.user.id);
-    const { posts, likes } = await postDAO.fetchPosts();
-    const alarms = await userDAO.fetchAlarms(req.user.id);
+    } = await userDAO.getFriends(req.user.id);
+    const { posts, likes } = await postDAO.getPosts();
+    const alarms = await userDAO.getAlarms(req.user.id);
+    const unreadMessageCount = await messageDAO.getUnreadMessageCount(req.user.id);
     // console.log('alarms', alarms);
 
-    const argument = { followings, followers, friends, posts, likes, alarms };
+    const argument = { followings, followers, friends, posts, likes, alarms, unreadMessageCount };
     render.main(req, res, argument);
   } catch (error) {
     // console.error(error);
@@ -28,13 +29,49 @@ function showLoginPage(req, res) {
   render.login(req, res);
 }
 
+async function showPhotoDetail(req, res, next) {
+  try {
+    const photoId = parseInt(req.params.photoId, 10);
+    const photo = await photoDAO.getPhoto(photoId);
+    const {
+      posts: [post],
+      likes,
+    } = await postDAO.getPosts([photo.postId]);
+    const photoIdx = post.photos.findIndex((p) => p.id === photo.id);
+
+    const {
+      followingsObj: followings,
+      followersObj: followers,
+      friends,
+    } = await userDAO.getFriends(req.user.id);
+    const alarms = await userDAO.getAlarms(req.user.id);
+    const unreadMessageCount = await messageDAO.getUnreadMessageCount(req.user.id);
+
+    const args = {
+      followings,
+      followers,
+      friends,
+      photo: photo.toJSON(),
+      photoIdx,
+      post: post.toJSON(),
+      likes,
+      alarms,
+      unreadMessageCount,
+    };
+    render.photoDetail(req, res, args);
+  } catch (error) {
+    // console.error(error);
+    next(error);
+  }
+}
+
 async function showMessenger(req, res, next) {
   /*
    * rooms - Array
    */
   try {
-    const alarms = await userDAO.fetchAlarms(req.user.id);
-    const { rooms } = await messsageDAO.fetchRooms(req.user.id);
+    const alarms = await userDAO.getAlarms(req.user.id);
+    const { rooms } = await messageDAO.getRooms(req.user.id);
     const roomsWithMsg = rooms.filter((r) => r.messages.length); // rooms that have one or more messages.
     if (!roomsWithMsg.length) {
       const argument = {
@@ -66,11 +103,11 @@ async function showMessengerWithRoomId(req, res, next) {
    * currentRoomIdx - Number
    */
   try {
-    const alarms = await userDAO.fetchAlarms(req.user.id);
+    const alarms = await userDAO.getAlarms(req.user.id);
     const roomId = parseInt(req.params.roomId, 10);
-    const { friends, rooms } = await messsageDAO.fetchRooms(req.user.id);
+    const { friends, rooms } = await messageDAO.getRooms(req.user.id);
     const roomsWithMsg = rooms.filter((r) => r.messages.length); // rooms that have one or more messages.
-    const messages = await messsageDAO.fetchMessages(roomId);
+    const messages = (await messageDAO.getMessages(roomId)).map((m) => m.toJSON());
 
     // sort chat rooms by the latest message
     roomsWithMsg.sort((r1, r2) => {
@@ -104,7 +141,7 @@ async function showMessengerWithRoomId(req, res, next) {
     }
 
     // console.log('currentRoom.user', currentRoom.user);
-    console.log('currentRoom', currentRoom);
+    // console.log('currentRoom', currentRoom);
 
     const argument = {
       rooms: roomsWithMsg,
@@ -114,6 +151,11 @@ async function showMessengerWithRoomId(req, res, next) {
       alarms,
     };
     render.messenger(req, res, argument);
+
+    // update the read status of messages
+    const unreadMessageIds = messages.filter((msg) => !msg.isRead).map((msg) => msg.id);
+    console.log('unreadMessageIds: ', unreadMessageIds);
+    await messageDAO.updateMessageReadStatus(unreadMessageIds);
   } catch (error) {
     // console.error(error);
     next(error);
@@ -122,16 +164,29 @@ async function showMessengerWithRoomId(req, res, next) {
 
 async function showProfile(req, res, next) {
   try {
-    const alarms = await userDAO.fetchAlarms(req.user.id);
-    const targetUser = await userDAO.fetchUserProfile(req.params.uid);
+    const alarms = await userDAO.getAlarms(req.user.id);
+    const unreadMessageCount = await messageDAO.getUnreadMessageCount(req.user.id);
+    const targetUser = await userDAO.getUser(req.params.userId);
     const {
       followingsObj: followings,
       followersObj: followers,
       friends,
-    } = await userDAO.fetchFriends(req.user.id);
-    const { posts, likes } = await postDAO.fetchPostsWithUser(req.params.uid);
+    } = await userDAO.getFriends(req.user.id);
+    const { posts, likes } = await postDAO.getPostsWithUser(req.params.userId);
+    const args = { userId: targetUser.id, limit: 9 };
+    const photos = await photoDAO.getPhotosWithUser(args);
 
-    const argument = { targetUser, followings, followers, friends, posts, likes, alarms };
+    const argument = {
+      targetUser,
+      followings,
+      followers,
+      friends,
+      posts,
+      likes,
+      alarms,
+      unreadMessageCount,
+      photos,
+    };
     render.profile.timeline(req, res, argument);
   } catch (error) {
     // console.error(error);
@@ -141,18 +196,19 @@ async function showProfile(req, res, next) {
 
 async function showProfileFriend(req, res, next) {
   try {
-    const alarms = await userDAO.fetchAlarms(req.user.id);
-    const targetUser = await userDAO.fetchUserProfile(req.params.uid);
+    const alarms = await userDAO.getAlarms(req.user.id);
+    const unreadMessageCount = await messageDAO.getUnreadMessageCount(req.user.id);
+    const targetUser = await userDAO.getUser(req.params.userId);
     const {
       followingsObj: myFollowings,
       followersObj: myFollowers,
       myFriends,
-    } = await userDAO.fetchFriends(req.user.id);
+    } = await userDAO.getFriends(req.user.id);
     const {
       followingsObj: followings,
       followersObj: followers,
       friends,
-    } = await userDAO.fetchFriends(targetUser.id);
+    } = await userDAO.getFriends(targetUser.id);
     // except the current user from friends list
     const idxCurrUser = friends.findIndex((f) => f.id === req.user.id);
     if (idxCurrUser >= 0) friends.splice(idxCurrUser, 1);
@@ -166,6 +222,7 @@ async function showProfileFriend(req, res, next) {
       myFollowers,
       myFriends,
       alarms,
+      unreadMessageCount,
     };
     render.profile.friend(req, res, argument);
   } catch (error) {
@@ -176,12 +233,14 @@ async function showProfileFriend(req, res, next) {
 
 async function showProfilePhoto(req, res, next) {
   try {
-    const alarms = await userDAO.fetchAlarms(req.user.id);
-    const targetUser = await userDAO.fetchUserProfile(req.params.uid);
-    const photos = await photoDAO.fetchPhotosWithUser(targetUser.id);
+    const alarms = await userDAO.getAlarms(req.user.id);
+    const unreadMessageCount = await messageDAO.getUnreadMessageCount(req.user.id);
+    const targetUser = await userDAO.getUser(req.params.userId);
+    let args = { userId: targetUser.id };
+    const photos = await photoDAO.getPhotosWithUser(args);
 
-    const argument = { targetUser, photos, alarms };
-    render.profile.photo(req, res, argument);
+    args = { targetUser, photos, alarms, unreadMessageCount };
+    render.profile.photo(req, res, args);
   } catch (error) {
     // console.error(error);
     next(error);
@@ -191,6 +250,7 @@ async function showProfilePhoto(req, res, next) {
 module.exports = {
   showHomePage,
   showLoginPage,
+  showPhotoDetail,
   showMessenger,
   showMessengerWithRoomId,
   showProfile,

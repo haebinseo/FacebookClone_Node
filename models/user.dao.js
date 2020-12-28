@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const { User, Sequelize, Friend, Room, Alarm, Photo, Message } = require('../db/models');
 
 /* ===================================  READ  =================================== */
-const fetchFriends = async (userId) => {
+const getFriends = async (userId) => {
   const user = await User.findOne({
     where: { id: userId },
     include: [
@@ -38,7 +38,7 @@ const fetchFriends = async (userId) => {
   return { followingsObj, followersObj, friends };
 };
 
-const fetchUser = async (targetUserId) => {
+const getUser = async (targetUserId) => {
   const targetUser = await User.findOne({
     where: { id: targetUserId },
     attributes: ['id', 'email', 'name', 'gender', 'birth', 'profilePhoto'],
@@ -65,7 +65,7 @@ const isFriend = async ({ userId, targetUserId }) => {
   return followed ? 3 : 0;
 };
 
-const fetchAlarms = async (userId) => {
+const getAlarms = async (userId) => {
   const eightWeeksFromNow = new Date();
   eightWeeksFromNow.setMonth(eightWeeksFromNow.getMonth() - 2);
   return Alarm.findAll({
@@ -76,6 +76,19 @@ const fetchAlarms = async (userId) => {
       },
     },
     order: [['createdAt', 'DESC']],
+    include: [
+      {
+        model: User,
+        as: 'Sender',
+        attributes: ['id', 'name', 'profilePhoto'],
+      },
+    ],
+  });
+};
+
+const getAlarm = async (alarmId) => {
+  return Alarm.findOne({
+    where: { id: alarmId },
     include: [
       {
         model: User,
@@ -154,16 +167,17 @@ const createAlarm = async ({ userId, targetUserId, type }) => {
 
 /* ===================================  UPDATE  =================================== */
 
-const updateUserProfile = async ({ userId, photoId, name, gender }) => {
+const updateUserProfile = async ({ userId, photoURL, name, gender }) => {
   const user = await User.findOne({ where: { id: userId } });
-  const photo = !photoId ? null : await Photo.findOne({ where: { id: photoId } });
-  if (photoId && (!photo || photo.userId !== userId)) {
-    const err = new Error(photo ? 'Forbidden' : 'Not Found');
-    err.status = photo ? 403 : 404;
-    throw err;
-  }
+  // const photo = !photoURL ? null : await Photo.findOne({ where: { id: photoURL } });
+  // if (photoURL && (!photo || photo.userId !== userId)) {
+  //   const err = new Error(photo ? 'Forbidden' : 'Not Found');
+  //   err.status = photo ? 403 : 404;
+  //   throw err;
+  // }
 
-  if (photoId) user.profilePhoto = photo.url;
+  // if (photoURL) user.profilePhoto = photo.url;
+  if (photoURL) user.profilePhoto = photoURL;
   if (name) user.name = name;
   if (gender) user.gender = gender;
   await user.save();
@@ -275,10 +289,11 @@ const deleteAlarms = async ({ receiverId, alarmIds }) => {
 };
 
 module.exports = {
-  fetchFriends,
-  fetchUser,
+  getFriends,
+  getUser,
   isFriend,
-  fetchAlarms,
+  getAlarms,
+  getAlarm,
   createUser,
   createFriend,
   createAlarm,

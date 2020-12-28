@@ -6,6 +6,7 @@ const {
   isFriend,
   createFriend,
   deleteFriend,
+  getUserPhotos,
   updateUserProfileInfo,
   updateAlarms,
   deleteAlarms,
@@ -19,6 +20,8 @@ router.get('/logout', isLoggedIn, logout);
 router.get('/friend/:userId', isLoggedIn, isFriend);
 router.post('/friend/:userId', isLoggedIn, createFriend);
 router.delete('/friend/:userId', isLoggedIn, deleteFriend);
+
+router.get('/photo', isLoggedIn, getUserPhotos);
 
 router.patch('/info', isLoggedIn, updateUserProfileInfo);
 

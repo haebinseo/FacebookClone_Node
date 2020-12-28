@@ -4,7 +4,7 @@ const { postDAO, userDAO } = require('../models');
 async function getTagAutocomplete(req, res, next) {
   try {
     const { hashtag } = req.query;
-    const candidates = hashtag ? await postDAO.fetchHashtagCandidates(hashtag) : [];
+    const candidates = hashtag ? await postDAO.getHashtagCandidates(hashtag) : [];
     res.json(candidates);
   } catch (error) {
     // console.error(error);
@@ -19,8 +19,9 @@ async function showPostsWithTag(req, res, next) {
       followingsObj: followings,
       followersObj: followers,
       friends,
-    } = await userDAO.fetchFriends(req.user.id);
-    const { posts, likes } = await postDAO.fetchPostsWithTag(hashtag);
+    } = await userDAO.getFriends(req.user.id);
+    const { posts, likes } = await postDAO.getPostsWithTag(hashtag);
+    const alarms = await userDAO.getAlarms(req.user.id);
     const args = {
       title: `${hashtag} | Facebook`,
       followings,
@@ -28,6 +29,7 @@ async function showPostsWithTag(req, res, next) {
       friends,
       posts,
       likes,
+      alarms,
     };
     render.main(req, res, args);
   } catch (error) {

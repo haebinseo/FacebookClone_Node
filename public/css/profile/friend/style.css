@@ -15,23 +15,23 @@
   margin-top: 16px;
   padding: 0 16px;
 }
-#profileFriend>div {
+#profileFriend>div:first-of-type {
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 100%;
   padding: 16px;
 }
-#profileFriend>div>div:first-of-type>span {
+#profileFriend>div:first-of-type>div:first-of-type>span {
   font-size: 20px;
   font-weight: bold;
 }
-#profileFriend>div>div:nth-of-type(2) {
+#profileFriend>div:first-of-type>div:nth-of-type(2) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-#profileFriend>div>div:nth-of-type(2)>div {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div {
   width: calc(50% - 4px);
   border-radius: 8px;
   box-shadow: 0 0 2px var(--media-inner-border);
@@ -41,44 +41,42 @@
   padding: 16px;
   position: relative;
 }
-#profileFriend>div>div:nth-of-type(2)>div>a {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>a {
   display: inline-block;
 }
-#profileFriend>div>div:nth-of-type(2)>div>a:first-of-type {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>a:first-of-type {
   width: 80px;
   height: 80px;
   border-radius: 8px;
   overflow: hidden;
 }
-#profileFriend>div>div:nth-of-type(2)>div>a:first-of-type>img {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>a:first-of-type>img {
   width: 100%;
   height: 100%;
 }
-#profileFriend>div>div:nth-of-type(2)>div>a:nth-of-type(2) {
-  flex: 1 1 0;
-}
-#profileFriend>div>div:nth-of-type(2)>div>a:nth-of-type(2)>span {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>a:nth-of-type(2)>span {
   font-weight: bold;
   font-size: 17px;
 }
-#profileFriend>div>div:nth-of-type(2)>div>a:nth-of-type(2)>span:hover {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>a:nth-of-type(2)>span:hover {
   text-decoration: underline;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>div:first-of-type {
   position: relative;
   border-radius: 6px;
   height: 36px;
   padding: 0 12px;
   background-color: var(--secondary-button-background);
+  margin-left: auto;
   display: flex;
   align-items: center;
   cursor: pointer;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type>span {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>div:first-of-type>span {
   font-weight: bold;
   font-size: 15px;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type>div:last-of-type {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>div:first-of-type>div:last-of-type {
   position: absolute;
   left: 0;
   width: 100%;
@@ -86,12 +84,12 @@
   background-color: var(--hover-overlay);
   opacity: 0;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type:hover>div:last-of-type {
+#profileFriend>div:first-of-type>div:nth-of-type(2)>div>div:first-of-type:hover>div:last-of-type {
   opacity: 1;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type .friendOptTab {
+#profileFriend>.friendOptTab {
   position: absolute;
-  bottom: -55px;
+  top: 0;
   left: 0;
   width: 344px;
   border-radius: 8px;
@@ -99,7 +97,7 @@
   box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
   padding: 8px 0;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type .friendOptTab>div {
+#profileFriend>.friendOptTab>div {
   height: 36px;
   border-radius: 8px;
   padding: 8px;
@@ -107,13 +105,14 @@
   display: flex;
   align-items: center;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type .friendOptTab>div:hover {
+#profileFriend>.friendOptTab>div:hover {
   background-color: var(--secondary-button-background);
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type .friendOptTab>div span {
+#profileFriend>.friendOptTab>div span {
+  font-size: 15px;
   font-weight: 500;
 }
-#profileFriend>div>div:nth-of-type(2)>div>div:first-of-type .friendOptTab>div.unfriendBtn i {
+#profileFriend>.friendOptTab>div.unfriendBtn i {
   background-image: url("/images/main/mainCenter/unfriend.png");
   background-position: 0 -25px;
   display: inline-block;
@@ -121,10 +120,10 @@
   width: 20px;
   margin-right: 12px;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab {
+#accountHoverTab {
   position: absolute;
-  bottom: 85%;
-  transform: translateX(-35%);
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   width: 400px;
@@ -132,35 +131,36 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 0 8px 0 #d3d3d3;
+  z-index: 1;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:first-of-type {
+#accountHoverTab>div:first-of-type {
   display: flex;
   align-items: center;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:first-of-type>div:first-of-type {
+#accountHoverTab>div:first-of-type>div:first-of-type {
   width: 96px;
   height: 96px;
   border-radius: 50%;
   overflow: hidden;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:first-of-type>div:first-of-type>a>img {
+#accountHoverTab>div:first-of-type>div:first-of-type>a>img {
   width: 96px;
   height: 96px;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:first-of-type>div:last-of-type {
+#accountHoverTab>div:first-of-type>div:last-of-type {
   flex-grow: 1;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:first-of-type>div:last-of-type>a>span {
+#accountHoverTab>div:first-of-type>div:last-of-type>a>span {
   padding: 0 16px;
   font-size: 20px;
   font-weight: 700;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type {
+#accountHoverTab>div:last-of-type>div {
   display: flex;
   padding: 6px 0;
   gap: 0 8px;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type>div {
+#accountHoverTab>div:last-of-type>div>div {
   width: 48px;
   height: 36px;
   display: flex;
@@ -170,25 +170,25 @@
   border-radius: 8px;
   cursor: pointer;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type>div:first-of-type {
+#accountHoverTab>div:last-of-type>div>div:first-of-type {
   flex-grow: 1;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type>div:first-of-type>img,
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type>div:first-of-type svg {
+#accountHoverTab>div:last-of-type>div>div:first-of-type>img,
+#accountHoverTab>div:last-of-type>div>div:first-of-type svg {
   margin-right: 6px;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type>div img {
+#accountHoverTab>div:last-of-type>div>div img {
   width: 16px;
   height: 16px;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type>div span {
+#accountHoverTab>div:last-of-type>div>div span {
   font-size: 15px;
   font-weight: 600;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type .friendBtn {
+#accountHoverTab>div:last-of-type>div .friendOptBtn {
   position: relative;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type .friendOptTab {
+#accountHoverTab>div:last-of-type>div .friendOptTab {
   position: absolute;
   bottom: -55px;
   left: 0;
@@ -198,7 +198,7 @@
   box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
   padding: 8px 0;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type .friendOptTab>div {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div {
   height: 36px;
   border-radius: 8px;
   padding: 8px;
@@ -206,13 +206,13 @@
   display: flex;
   align-items: center;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type .friendOptTab>div:hover {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div:hover {
   background-color: var(--secondary-button-background);
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type .friendOptTab>div span {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div span {
   font-weight: 500;
 }
-#profileFriend>div>div:nth-of-type(2)>div .accountHoverTab>div:last-of-type .friendOptTab>div.unfriendBtn i {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div.unfriendBtn i {
   background-image: url("/images/main/mainCenter/unfriend.png");
   background-position: 0 -25px;
   display: inline-block;

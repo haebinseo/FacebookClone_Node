@@ -53,6 +53,10 @@ a {
   }
 }
 
+i {
+  display: inline-block;
+}
+
 input, textarea {
   outline: none;
   
@@ -72,16 +76,6 @@ body {
   font-family: "fontello", Helvetica, Arial, sans-serif; 
   margin: 0;
   // background-color: #F0F2F5;
-
-  &>div:first-of-type  {
-    position: relative;
-
-    &>div {
-      display: flex;
-      align-items: center;
-      height: 60px;
-    }
-  }
 }
 
 .invisible {
@@ -92,4 +86,37 @@ body {
 
 .noScroll {
   overflow-y: hidden;
+}
+
+.custom-scroll {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  scrollbar-width: thin;
+  
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+
+    &:hover {
+      background-color: #E5E8EB;
+    }
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background-color: transparent;
+  }
+  scrollbar-color: transparent transparent;
+  
+  &::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+  }
+
+  &:hover{
+    &::-webkit-scrollbar-thumb {
+      background-color: #CED0D4;
+    }
+    scrollbar-color: #CED0D4 transparent;
+  }
 }

@@ -1,11 +1,18 @@
 const { Photo, Sequelize } = require('../db/models');
 
 /* ===================================  READ  =================================== */
-const fetchPhotosWithUser = async (targetUserId) => {
-  return Photo.findAll({
-    where: { userId: targetUserId },
+const getPhoto = async (photoId) => {
+  return Photo.findOne({ where: { id: photoId } });
+};
+
+const getPhotosWithUser = async ({ userId, offset, limit }) => {
+  const option = {
+    where: { userId },
+    offset,
     order: [['createdAt', 'DESC']],
-  });
+  };
+  if (limit) option.limit = limit;
+  return Photo.findAll(option);
 };
 
 /* ===================================  CREATE  =================================== */
@@ -34,7 +41,7 @@ const deletePhoto = async ({ userId, photoId }) => {
 };
 
 const deletePhotos = async ({ userId, photoIds }) => {
-  const photos = await Photo.fineAll({
+  const photos = await Photo.findAll({
     where: {
       id: { [Sequelize.Op.in]: photoIds },
     },
@@ -50,7 +57,8 @@ const deletePhotos = async ({ userId, photoIds }) => {
 };
 
 module.exports = {
-  fetchPhotosWithUser,
+  getPhoto,
+  getPhotosWithUser,
   createPhotos,
   deletePhoto,
   deletePhotos,

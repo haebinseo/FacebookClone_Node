@@ -115,13 +115,12 @@
 #profilePhoto>div>div:nth-of-type(2)>div>div>div>div:first-of-type:hover {
   opacity: 1;
 }
-#profilePhoto>div>.photoOptTab {
+.photoOptTab {
   position: absolute;
-  cursor: default;
   top: 0;
   left: 0;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type {
+.photoOptTab>.photoOptList {
   position: absolute;
   top: 0;
   left: 0;
@@ -132,7 +131,7 @@
   padding: 8px;
   z-index: 1;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>div {
+.photoOptTab>.photoOptList>div {
   height: 36px;
   display: flex;
   align-items: center;
@@ -141,36 +140,36 @@
   border-radius: 4px;
   cursor: pointer;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>div i {
+.photoOptTab>.photoOptList>div i {
   display: inline-block;
   height: 20px;
   width: 20px;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>div span {
+.photoOptTab>.photoOptList>div span {
   font-size: 15px;
   font-weight: 500;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>div:hover {
+.photoOptTab>.photoOptList>div:hover {
   background-color: var(--hover-overlay);
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>.downloadBtn>a {
+.photoOptTab>.photoOptList>.downloadBtn>a {
   flex: 1 1 0;
   display: flex;
   gap: 12px;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>.downloadBtn>a>i {
+.photoOptTab>.photoOptList>.downloadBtn>a>i {
   background-image: url("/images/profile/photo/olZaBEu0ogf.png");
   background-position: 0 0;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>.setProfilePhotoBtn>i {
+.photoOptTab>.photoOptList>.setProfilePhotoBtn>i {
   background-image: url("/images/profile/photo/Unhg7KUHLnj.png");
   background-position: 0 -1040px;
 }
-#profilePhoto>div>.photoOptTab>div:first-of-type>.removePhotoBtn>i {
+.photoOptTab>.photoOptList>.removePhotoBtn>i {
   background-image: url("/images/profile/photo/5uKTYgLMVNw.png");
   background-position: 0 -466px;
 }
-#profilePhoto>div>.photoOptTab .triangle {
+.photoOptTab .triangle {
   position: absolute;
   top: 0;
   left: 0;

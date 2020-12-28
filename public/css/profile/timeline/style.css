@@ -13,49 +13,54 @@
 #timelineLeft {
   flex: 1 1 360px;
 }
-#timelineLeft>div {
+#timelineLeft>div:nth-of-type(2) {
+  position: sticky;
+}
+#timelineLeft>div:nth-of-type(2)>div {
   display: flex;
   flex-direction: column;
   padding: 12px 16px;
+  gap: 12px;
 }
-#timelineLeft>div>div:first-of-type {
+#timelineLeft>div:nth-of-type(2)>div>div:first-of-type {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-#timelineLeft>div>div:first-of-type>span {
+#timelineLeft>div:nth-of-type(2)>div>div:first-of-type>span {
   font-size: 20px;
   font-weight: bold;
 }
-#timelineLeft>div>div:first-of-type>a {
+#timelineLeft>div:nth-of-type(2)>div>div:first-of-type>a {
   font-size: 17px;
   color: var(--accent);
   cursor: pointer;
 }
-#timelineLeft>div>div:first-of-type>a:hover {
+#timelineLeft>div:nth-of-type(2)>div>div:first-of-type>a:hover {
   text-decoration: underline;
 }
-#timelineLeft>div>div:first-of-type>a:visited {
+#timelineLeft>div:nth-of-type(2)>div>div:first-of-type>a:visited {
   color: var(--accent);
 }
-#timelineLeft>div:first-of-type {
-  gap: 12px;
-}
-#timelineLeft>div:first-of-type>div {
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(2),
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(3) {
   display: flex;
   align-items: center;
 }
-#timelineLeft>div:first-of-type>div>div {
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(2)>div,
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(3)>div {
   font-size: 15px;
 }
-#timelineLeft>div:first-of-type>div>div:first-of-type {
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(2)>div:first-of-type,
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(3)>div:first-of-type {
   flex: 1 1 0;
   font-weight: bold;
 }
-#timelineLeft>div:first-of-type>div>div:last-of-type {
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(2)>div:last-of-type,
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>div:nth-of-type(3)>div:last-of-type {
   flex: 4 1 0;
 }
-#timelineLeft>div:first-of-type>div#accountInfoEditBtn {
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>#accountInfoEditBtn {
   background-color: var(--secondary-button-background);
   border-radius: 6px;
   height: 36px;
@@ -67,10 +72,103 @@
   font-weight: bold;
   cursor: pointer;
 }
-#timelineLeft>div:first-of-type>div#accountInfoEditBtn:hover {
+#timelineLeft>div:nth-of-type(2)>div:first-of-type>#accountInfoEditBtn:hover {
   background-color: #d8dadf;
 }
-#timelineLeft>div:first-of-type #profileEditTab>div {
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div {
+  width: calc(100% / 3);
+  padding: 1px;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div>div {
+  padding-top: 100%;
+  position: relative;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div>div>a {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div>div>a>img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--media-inner-border);
+  object-fit: cover;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div>div>div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background-color: var(--hover-overlay);
+  opacity: 0;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(2)>div:nth-of-type(2)>div>div:hover > div {
+  opacity: 1;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div {
+  width: calc(100% / 3);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div {
+  padding-top: 100%;
+  position: relative;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:first-of-type {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:first-of-type>img {
+  border-radius: 8px;
+  border: 1px solid var(--media-inner-border);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:first-of-type>div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background-color: var(--hover-overlay);
+  opacity: 0;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:first-of-type:hover > div {
+  opacity: 1;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:nth-of-type(2) {
+  position: absolute;
+  bottom: -20px;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:nth-of-type(2)>span {
+  font-size: 13px;
+  font-weight: bold;
+}
+#timelineLeft>div:nth-of-type(2)>div:nth-of-type(3)>div:nth-of-type(2)>div>div>a:nth-of-type(2)>span:hover {
+  text-decoration: underline;
+}
+#timelineRight {
+  flex: 1 1 500px;
+}
+#profileEditTab>div {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -79,7 +177,7 @@
   background-color: var(--overlay-alpha-80);
   z-index: 1;
 }
-#timelineLeft>div:first-of-type #profileEditTab form {
+#profileEditTab form {
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -92,11 +190,11 @@
   border-radius: 8px;
   z-index: 2;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div {
+#profileEditTab form>div {
   display: flex;
   padding: 16px;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:first-of-type {
+#profileEditTab form>div:first-of-type {
   position: relative;
   align-items: center;
   justify-content: center;
@@ -105,7 +203,7 @@
   font-weight: bold;
   border-bottom: 1px solid rgba(0,0,0,0.1);
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:first-of-type>div {
+#profileEditTab form>div:first-of-type>div {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -118,10 +216,10 @@
   justify-content: center;
   cursor: pointer;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:first-of-type>div:hover {
+#profileEditTab form>div:first-of-type>div:hover {
   background-color: #d1d3d8;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:first-of-type>div>div {
+#profileEditTab form>div:first-of-type>div>div {
   background-image: url("/images/main/mainCenter/d4D8oGNn1YF.png");
   background-position-x: 0px;
   background-position-y: -883px;
@@ -129,31 +227,31 @@
   width: 20px;
   filter: invert(0.39) sepia(0.21) saturate(2) saturate(1.095) hue-rotate(174deg) brightness(0.94) contrast(0.86);
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:nth-of-type(2) {
+#profileEditTab form>div:nth-of-type(2) {
   flex-direction: column;
   gap: 24px;
   margin-bottom: 8px;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:nth-of-type(2)>div {
+#profileEditTab form>div:nth-of-type(2)>div {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:nth-of-type(2)>div input {
+#profileEditTab form>div:nth-of-type(2)>div input {
   font-size: 16px;
   border: none;
   border-bottom: 1px solid;
   width: 90%;
   margin: auto;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:last-of-type {
+#profileEditTab form>div:last-of-type {
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
   height: 70px;
   border-top: 1px solid rgba(0,0,0,0.1);
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:last-of-type>button {
+#profileEditTab form>div:last-of-type>button {
   height: 36px;
   border: none;
   border-radius: 6px;
@@ -161,18 +259,11 @@
   font-size: 15px;
   cursor: pointer;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:last-of-type>button:first-of-type {
+#profileEditTab form>div:last-of-type>button:first-of-type {
   width: 50px;
 }
-#timelineLeft>div:first-of-type #profileEditTab form>div:last-of-type>button:last-of-type {
+#profileEditTab form>div:last-of-type>button:last-of-type {
   width: 100px;
   color: #fff;
   background-color: var(--primary-button-background);
-}
-#timelineLeft>div:nth-of-type(2)>div {
-  display: flex;
-  align-items: center;
-}
-#timelineRight {
-  flex: 1 1 500px;
 }

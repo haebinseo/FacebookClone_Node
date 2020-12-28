@@ -70,8 +70,10 @@ db.Comment.hasMany(db.Comment, { as: 'Repliers', foreignKey: 'replyingId' });
 db.Room.hasMany(db.Friend);
 db.Friend.belongsTo(db.Room);
 // Messages - User
-db.User.hasMany(db.Message);
-db.Message.belongsTo(db.User);
+db.User.hasMany(db.Message, { as: 'MessageSent', foreignKey: 'senderId' });
+db.User.hasMany(db.Message, { as: 'MessageReceived', foreignKey: 'receiverId' });
+db.Message.belongsTo(db.User, { as: 'Sender', foreignKey: 'senderId' });
+db.Message.belongsTo(db.User, { as: 'Receiver', foreignKey: 'receiverId' });
 // Messages - Room
 db.Room.hasMany(db.Message);
 db.Message.belongsTo(db.Room);
@@ -79,8 +81,8 @@ db.Message.belongsTo(db.Room);
 db.Message.hasMany(db.Photo);
 db.Photo.belongsTo(db.Message);
 // Alarm - User
-db.User.hasOne(db.Alarm, { as: 'Senders', foreignKey: 'senderId' });
-db.User.hasOne(db.Alarm, { as: 'Receivers', foreignKey: 'receiverId' });
+db.User.hasMany(db.Alarm, { as: 'AlarmSent', foreignKey: 'senderId' });
+db.User.hasMany(db.Alarm, { as: 'AlarmReceived', foreignKey: 'receiverId' });
 db.Alarm.belongsTo(db.User, { as: 'Sender', foreignKey: 'senderId' });
 db.Alarm.belongsTo(db.User, { as: 'Receiver', foreignKey: 'receiverId' });
 

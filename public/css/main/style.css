@@ -28,33 +28,6 @@ main>div:not([id="mainCenter"])>div {
   min-height: inherit;
   height: 0;
 }
-.custom-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-.custom-scroll::-webkit-scrollbar {
-  width: 8px;
-}
-.custom-scroll::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-.custom-scroll::-webkit-scrollbar-track:hover {
-  background-color: #e5e8eb;
-}
-.custom-scroll::-webkit-scrollbar-thumb {
-  border-radius: 15px;
-  background-color: transparent;
-}
-.custom-scroll::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-}
-.custom-scroll:hover {
-  scrollbar-color: #ced0d4 transparent;
-}
-.custom-scroll:hover::-webkit-scrollbar-thumb {
-  background-color: #ced0d4;
-}
 #mainLeft>div ul {
   flex-shrink: 0;
 }
@@ -147,67 +120,11 @@ main>div:not([id="mainCenter"])>div {
   align-items: center;
 }
 #mainCenter>div {
-  max-width: 590px;
+  max-width: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
   padding-top: 25px;
-}
-#mainCenter #storyArea {
-  display: flex;
-  margin-bottom: 25px;
-}
-#mainCenter #storyArea>div {
-  flex-basis: 20%;
-  flex-grow: 1;
-  background-color: var(--secondary-button-background);
-  border-radius: 10px;
-  height: auto;
-}
-#mainCenter #storyArea>div+div {
-  margin-left: 8px;
-}
-#mainCenter #storyArea>div>a>div {
-  position: relative;
-}
-#mainCenter #storyArea>div img[id^="storyBgImg"] {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-}
-#mainCenter #storyArea>div div[id^="storyUserImg"] {
-  position: absolute;
-  top: 0;
-  width: 40px;
-  height: 40px;
-  margin: 12px;
-  background-color: var(--hover-overlay);
-  border-radius: 100%;
-}
-#mainCenter #storyArea>div .storyUserImg_exist {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  border: 4px solid var(--accent);
-}
-#mainCenter #storyArea>div .storyUserImg_existimg {
-  height: 40px;
-}
-#mainCenter #storyArea>div div[id^="storyUserName"] {
-  position: absolute;
-  bottom: 0;
-  font-weight: 600;
-  color: var(--always-white);
-  margin: 8px 12px;
-  font-size: 15px;
-}
-#mainCenter #afterStory {
-  width: 100%;
-  max-width: 500px;
-  align-self: center;
 }
 #mainRight>div #ads>div {
   font-size: 16px;
@@ -328,14 +245,6 @@ main>div:not([id="mainCenter"])>div {
   #mainCenter>div {
     max-width: 680px;
   }
-  #mainCenter>div #afterStory {
-    max-width: 680px;
-  }
-}
-@media (max-width: 1199px) and (min-width: 1100px) {
-  #storyArea>div:last-of-type {
-    display: none;
-  }
 }
 @media (max-width: 1099px) {
   main>div:first-of-type {
@@ -344,11 +253,6 @@ main>div:not([id="mainCenter"])>div {
 }
 @media (max-width: 900px) {
   main>div:last-of-type {
-    display: none;
-  }
-}
-@media (max-width: 599px) {
-  #storyArea>div:last-of-type {
     display: none;
   }
 }

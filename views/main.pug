@@ -153,46 +153,12 @@ block content
     
     #mainCenter
       div
-        // 스토리
-        #storyArea
-          div
-            a
-              div
-                img#storyBgImg1(src="/images/main/mainCenter/test_storyBgImg1.jpg" alt="스토리 이미지 1")
-                #storyUserImg1.storyUserImg_exist
-                  img(src="/images/main/mainCenter/test_storyUserImg1.jpg" alt="스토리 유저 이미지 1")
-                #storyUserName1 유준호 페이지
-          div
-            a
-              div
-                img#storyBgImg2
-                #storyUserImg2
-                #storyUserName2
-          div
-            a
-              div
-                img#storyBgImg3
-                #storyUserImg3
-                #storyUserName3
-          div
-            a
-              div
-                img#storyBgImg4
-                #storyUserImg4
-                #storyUserName4
-          div
-            a
-              div
-                img#storyBgImg5
-                #storyUserImg5
-                #storyUserName5
-        #afterStory
-          include includes/timeline.pug
+        include includes/timeline.pug
 
     #mainRight
       .custom-scroll
         //-  광고
-        #ads
+        //- #ads
           div Sponsored
           a()
             div
@@ -215,7 +181,7 @@ block content
                 img(src="/images/main/mainRight/pYa91jLXA4e.png" alt="")
           ul
             each friend in friends
-              li.contactHoverTabTrigger(data-uid=friend.id)
+              li.contactHoverTabTrigger(data-user-id=friend.id)
                 a(href=`/messenger/${friend.friend.roomId}`)
                   div
                     img(src=friend.profilePhoto)
@@ -234,14 +200,12 @@ block append script
   script(src="/js/includes/timeline.js" type="module")
   script(src="/js/main/main.js" type="module")
   script(src="/socket.io/socket.io.js")
-  script.
+  script(type="module").
+    import { updateAlarmTab, updateMessageCount } from '/js/includes/fbHeader.js';
     const userSocket = io.connect('/user', { forceNew: true, path: '/socket.io' });
 
-    function test(alarm) {
-      console.log(alarm.type);
-    }
-    userSocket.on('msgPosted', test);
-    userSocket.on('likePosted', test);
-    userSocket.on('commentPosted', test);
-    userSocket.on('confirmFriend', test);
-    userSocket.on('friendConfirmed', test);
+    userSocket.on('msgPosted', updateMessageCount);
+    userSocket.on('likePosted', updateAlarmTab);
+    userSocket.on('commentPosted', updateAlarmTab);
+    userSocket.on('confirmFriend', updateAlarmTab);
+    userSocket.on('friendConfirmed', updateAlarmTab);

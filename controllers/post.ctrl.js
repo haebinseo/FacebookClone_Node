@@ -1,5 +1,16 @@
 const { postDAO, userDAO } = require('../models');
 
+async function getPost(req, res, next) {
+  try {
+    const postId = parseInt(req.params.postId, 10);
+    const [post] = (await postDAO.getPosts([postId])).posts;
+    res.json({ postToEdit: post });
+  } catch (error) {
+    // console.error(error);
+    next(error);
+  }
+}
+
 async function createPost(req, res, next) {
   try {
     const args = {
@@ -21,7 +32,7 @@ async function updatePost(req, res, next) {
       content: req.body.content,
       photoIds: req.body.photoIds ? req.body.photoIds.split(',') : undefined,
       userId: req.user.id,
-      postId: req.params.postId,
+      postId: parseInt(req.params.postId, 10),
     };
     await postDAO.updatePost(args);
     res.sendStatus(204);
@@ -35,7 +46,7 @@ async function deletePost(req, res, next) {
   try {
     const args = {
       userId: req.user.id,
-      postId: req.params.postId,
+      postId: parseInt(req.params.postId, 10),
     };
     await postDAO.deletePost(args);
     res.sendStatus(204);
@@ -57,7 +68,7 @@ async function createComment(req, res, next) {
     res.sendStatus(201);
 
     // create alarm
-    const targetUserId = await postDAO.fetchAuthorId(args.postId);
+    const targetUserId = await postDAO.getAuthorId(args.postId);
     if (args.userId === targetUserId || args.depth > 0) return; // 대댓글 시 처리 작성 필요
 
     args = {
@@ -114,7 +125,7 @@ async function createLike(req, res, next) {
     res.sendStatus(201);
 
     // create alarm
-    const targetUserId = await postDAO.fetchAuthorId(args);
+    const targetUserId = await postDAO.getAuthorId(args);
     if (args.userId === targetUserId) return; // user's post or comment
 
     args = {
@@ -146,6 +157,7 @@ async function deleteLike(req, res, next) {
 }
 
 module.exports = {
+  getPost,
   createPost,
   updatePost,
   deletePost,

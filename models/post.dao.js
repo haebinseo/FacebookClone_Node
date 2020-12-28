@@ -1,9 +1,8 @@
-const { hash } = require('bcrypt');
-const { photoDAO } = require('.');
+const photoDAO = require('./photo.dao');
 const { Post, User, Sequelize, Comment, Hashtag, Photo } = require('../db/models');
 
 /* ===================================  READ  =================================== */
-const fetchPosts = async (ids = []) => {
+const getPosts = async (ids = []) => {
   const findOption = {
     include: [
       {
@@ -32,10 +31,15 @@ const fetchPosts = async (ids = []) => {
             as: 'UsersWhoLikeComment',
           },
         ],
-        order: [[Sequelize.literal('bundleCreatedAt, createdAt'), 'ASC']],
+        // order: [[Sequelize.literal('bundleCreatedAt, createdAt'), 'ASC']],
       },
     ],
-    order: [['createdAt', 'DESC']],
+    order: [
+      ['createdAt', 'DESC'],
+      [Comment, 'bundleCreatedAt', 'ASC'],
+      [Comment, 'createdAt', 'ASC'],
+      [Photo, 'createdAt', 'ASC'],
+    ],
   };
   if (ids.length) findOption.where = { id: { [Sequelize.Op.in]: ids } };
 
@@ -64,7 +68,7 @@ const fetchPosts = async (ids = []) => {
   return { posts, likes };
 };
 
-const fetchPostsWithTag = async (tag) => {
+const getPostsWithTag = async (tag) => {
   const hashtag = await Hashtag.findOne({
     where: { title: tag },
     include: [
@@ -79,10 +83,10 @@ const fetchPostsWithTag = async (tag) => {
   if (!hashtag) return { posts, likes };
 
   const postIds = hashtag.posts.map((p) => p.id);
-  return fetchPosts(postIds);
+  return getPosts(postIds);
 };
 
-const fetchPostsWithUser = async (targetUserId) => {
+const getPostsWithUser = async (targetUserId) => {
   const user = await User.findOne({
     where: { id: targetUserId },
     include: [
@@ -97,10 +101,10 @@ const fetchPostsWithUser = async (targetUserId) => {
   if (!user.posts.length) return { posts, likes };
 
   const postIds = user.posts.map((p) => p.id);
-  return fetchPosts(postIds);
+  return getPosts(postIds);
 };
 
-const fetchAuthorId = async ({ target, targetId }) => {
+const getAuthorId = async ({ target, targetId }) => {
   const targetObj = target === 'post' ? Post : Comment;
   const result = await targetObj.findOne({
     where: { id: targetId },
@@ -114,7 +118,7 @@ const fetchAuthorId = async ({ target, targetId }) => {
   return result.userId;
 };
 
-const fetchHashtagCandidates = async (hashtag) => {
+const getHashtagCandidates = async (hashtag) => {
   const hashtags = await Hashtag.findAll({
     where: { title: { [Sequelize.Op.like]: `%${hashtag}%` } },
     order: [['title', 'ASC']],
@@ -193,6 +197,11 @@ const updatePost = async ({ content, photoIds, userId, postId }) => {
   }
 
   post.content = content;
+  const hashtags = content.match(/#[^\s#]*/g);
+  if (hashtags) {
+    const result = await createHashtags(hashtags);
+    await post.addHashtags(result.map((r) => r[0]));
+  }
   await post.setPhotos(photoIds);
   await post.save();
 };
@@ -281,11 +290,11 @@ const deleteComment = async ({ userId, commentId }) => {
 };
 
 module.exports = {
-  fetchPosts,
-  fetchPostsWithTag,
-  fetchPostsWithUser,
-  fetchAuthorId,
-  fetchHashtagCandidates,
+  getPosts,
+  getPostsWithTag,
+  getPostsWithUser,
+  getAuthorId,
+  getHashtagCandidates,
   createPost,
   createComment,
   createLike,

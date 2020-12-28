@@ -1,5 +1,5 @@
 const passport = require('passport');
-const { userDAO } = require('../models');
+const { userDAO, photoDAO } = require('../models');
 const messageDao = require('../models/message.dao');
 
 /* ==============================  AUTHENTICATION  ============================== */
@@ -76,7 +76,8 @@ async function createFriend(req, res, next) {
 
     // create alarm
     args.type = !friend.roomId ? 'confirmFriend' : 'friendConfirmed';
-    const alarm = await userDAO.createAlarm(args);
+    const { id: alarmId } = (await userDAO.createAlarm(args)).toJSON();
+    const alarm = (await userDAO.getAlarm(alarmId)).toJSON();
     const io = req.app.get('io');
     io.of('user').to(args.targetUserId).emit(args.type, alarm);
 
@@ -114,13 +115,29 @@ async function deleteFriend(req, res, next) {
   }
 }
 
+/* =================================  PHOTO  ================================== */
+async function getUserPhotos(req, res, next) {
+  try {
+    const args = {
+      userId: req.user.id,
+      offset: parseInt(req.query.offset, 10),
+      limit: parseInt(req.query.limit, 10),
+    };
+    const photos = await photoDAO.getPhotosWithUser(args);
+    res.json(photos);
+  } catch (error) {
+    // console.error(error);
+    next(error);
+  }
+}
+
 /* ==============================  PROFILE INFO  ============================== */
 async function updateUserProfileInfo(req, res, next) {
   try {
-    const { photoId, name, gender } = req.body;
-    const argument = { userId: req.user.id, photoId, name, gender };
+    const { photoURL, name, gender } = req.body;
+    const args = { userId: req.user.id, photoURL, name, gender };
 
-    await userDAO.updateUserProfile(argument);
+    await userDAO.updateUserProfile(args);
     res.sendStatus(204);
   } catch (error) {
     // console.error(error);
@@ -133,8 +150,8 @@ async function updateAlarms(req, res, next) {
   try {
     const { unreadAlarmIds } = req.body;
     // console.log('unreadAlarmIds', unreadAlarmIds);
-    const argument = { receiverId: req.user.id, alarmIds: unreadAlarmIds };
-    await userDAO.updateAlarms(argument);
+    const args = { receiverId: req.user.id, alarmIds: unreadAlarmIds };
+    await userDAO.updateAlarms(args);
     res.sendStatus(204);
   } catch (error) {
     next(error);
@@ -145,8 +162,8 @@ async function deleteAlarms(req, res, next) {
   try {
     const { alarmIds } = req.body;
     // console.log('unreadAlarmIds', alarmIds);
-    const argument = { receiverId: req.user.id, alarmIds };
-    await userDAO.deleteAlarms(argument);
+    const args = { receiverId: req.user.id, alarmIds };
+    await userDAO.deleteAlarms(args);
     res.sendStatus(204);
   } catch (error) {
     next(error);
@@ -160,6 +177,7 @@ module.exports = {
   isFriend,
   createFriend,
   deleteFriend,
+  getUserPhotos,
   updateUserProfileInfo,
   updateAlarms,
   deleteAlarms,

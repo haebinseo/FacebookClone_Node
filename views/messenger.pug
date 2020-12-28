@@ -47,8 +47,8 @@ block content
         div
           ul
             each room, index in rooms
-              li(data-rid=room.id)
-                div(class= index===currentRoomIdx ? 'currentRoom' : room.messages[0].userId===user.id || room.messages[0].isRead?undefined:"unreadMsg")
+              li(data-room-id=room.id)
+                div(class= index===currentRoomIdx ? 'currentRoom' : room.messages[0].senderId===user.id || room.messages[0].isRead?undefined:"unreadMsg")
                   div
                     img(src=room.user.profilePhoto alt="")
                   div
@@ -99,43 +99,45 @@ block content
                     path(id="Fill-17" d="M18,10 C16.6195,10 15.5,11.119 15.5,12.5 C15.5,13.881 16.6195,15 18,15 C19.381,15 20.5,13.881 20.5,12.5 C20.5,11.119 19.381,10 18,10 Z M16,25 C16,25.552 16.448,26 17,26 L19,26 C19.552,26 20,25.552 20,25 L20,18 C20,17.448 19.552,17 19,17 L17,17 C16.448,17 16,17.448 16,18 L16,25 Z M18,30 C11.3725,30 6,24.6275 6,18 C6,11.3725 11.3725,6 18,6 C24.6275,6 30,11.3725 30,18 C30,24.6275 24.6275,30 18,30 Z" fill="#0099ff")
         div
           #chat
-            div#messages(data-rid=currentRoom.id)
+            div#messages(data-room-id=currentRoom.id)
               -let lastMsgTime = new Date(0);
               each message in messages
-                -const time = new Date(message.createdAt);
-                -const isDeleted =  Boolean(message.deletedAt);
-                -const amPm = ['오전', '오후'];
-                -const hours = time.getHours()%12;
-                -const minutes = '0' + time.getMinutes();
-                -const timeText = `${time.getFullYear()}년 ${time.getMonth()+1}월 ${time.getDate()}일 ${amPm[Math.floor(time.getHours()/12)]} ${hours===0?12:hours}:${minutes.slice(-2)}`;
+                -
+                  const time = new Date(message.createdAt);
+                  const isDeleted =  Boolean(message.deletedAt);
+                  const amPm = ['오전', '오후'];
+                  const hours = time.getHours()%12;
+                  const minutes = `0${time.getMinutes()}`;
+                  const timeText = `${time.getFullYear()}년 ${time.getMonth()+1}월 ${time.getDate()}일 ${amPm[Math.floor(time.getHours()/12)]} ${hours===0?12:hours}:${minutes.slice(-2)}`;
                 if time - lastMsgTime > 86400000
                   -lastMsgTime = time;
                   div.systemMsg
                     div= `${time.getFullYear()%100}. ${time.getMonth()+1}. ${time.getDate()}. ${amPm[Math.floor(time.getHours()/12)]} ${hours===0?12:hours}:${minutes.slice(-2)}`
 
                 //- system message
-                if !message.userId
-                  div.systemMsg(data-mid=message.id)
+                if !message.senderId
+                  div.systemMsg(data-message-id=message.id)
                     div= message.content
                 //- user's message
-                else if message.userId === user.id
-                  if !isDeleted
-                    div.myMsg(title=timeText data-mid=message.id)
-                      div.deleteMsgBtn(data-fid=currentRoom.user.id) ❌
+                else if message.senderId === user.id
+                  if isDeleted
+                    -
+                      const deletedTime = new Date(message.deletedAt);
+                      const deletedHours = deletedTime.getHours()%12;
+                      const deletedMinutes = '0' + deletedTime.getMinutes();
+                      const deletedTimeText = `${deletedTime.getFullYear()}년 ${deletedTime.getMonth()+1}월 ${deletedTime.getDate()}일 ${amPm[Math.floor(deletedTime.getHours()/12)]} ${deletedHours===0?12:deletedHours}:${deletedMinutes.slice(-2)}`;
+                    div.myMsg.deletedMsg(title=`보냄: ${timeText}\n보내기 취소함: ${deletedTimeText}` data-message-id=message.id)
                       div= message.content
                   else
-                    -const deletedTime = new Date(message.deletedAt);
-                    -const deletedHours = deletedTime.getHours()%12;
-                    -const deletedMinutes = '0' + deletedTime.getMinutes();
-                    -const deletedTimeText = `${deletedTime.getFullYear()}년 ${deletedTime.getMonth()+1}월 ${deletedTime.getDate()}일 ${amPm[Math.floor(deletedTime.getHours()/12)]} ${deletedHours===0?12:deletedHours}:${minutes.slice(-2)}`;
-                    div.myMsg.deletedMsg(title=`보냄: ${timeText}\n보내기 취소함: ${deletedTimeText}` data-mid=message.id)
+                    div.myMsg(title=timeText data-message-id=message.id)
+                      div.deleteMsgBtn(data-fid=currentRoom.user.id) ❌
                       div= message.content
                 //- friend's message
                 else
-                  div.friendMsg(title=timeText data-mid=message.id class= isDeleted?'deletedMsg':undefined)
+                  div.friendMsg(title=timeText data-message-id=message.id class= isDeleted?'deletedMsg':undefined)
                     div.friendprofilePhoto(data-friend-img=currentRoom.user.profilePhoto)
-                    div= isDeleted?`${currentRoom.user.name}님이`:"" + `${message.content}`
-            form#messageForm(data-rid=currentRoom.id)
+                    div= isDeleted ? `${currentRoom.user.name}님이` : `${message.content}`
+            form#messageForm(data-room-id=currentRoom.id)
               div
                 svg(height="24" width="24" viewBox="0 0 24 24")
                   g(fill="none" fill-rule="evenodd")
@@ -161,7 +163,6 @@ block content
                           path(d="M13.5,11 C12.1195,11 11,12.119 11,13.5 C11,14.881 12.1195,16 13.5,16 C14.8805,16 16,14.881 16,13.5 C16,12.119 14.8805,11 13.5,11 M26.638,21.467 L21.2375,18.767 C19.199,17.7485 16.801,17.7485 14.7625,18.767 L9.362,21.467 C9.1955,21.55 9,21.429 9,21.243 L9,11 C9,9.8955 9.8955,9 11,9 L25,9 C26.1045,9 27,9.8955 27,11 L27,21.243 C27,21.429 26.8045,21.55 26.638,21.467 M25,7 L11,7 C8.7905,7 7,8.791 7,11 L7,25 C7,27.209 8.7905,29 11,29 L25,29 C27.209,29 29,27.209 29,25 L29,11 C29,8.791 27.209,7 25,7" fill="#0099ff")
                     input#img.invisible(type="file", accept="image/*")
               div
-                input#fidInput(type="hidden" name="friendId" value=currentRoom.user.id)
                 input#msgInput(type="text" name="message" placeholder="메시지를 입력하세요...")
                 svg(height="24px" width="24px" viewBox="0 0 26 26")
                   g(fill="none" fill-rule="evenodd")
@@ -184,20 +185,20 @@ block content
               div.icon--more
 
 block append script
-  script(src="/js/includes/fbHeader.js")
-  script(src="/js/messenger/messenger.js")
+  script(src="/js/includes/fbHeader.js" type="module")
+  script(src="/js/messenger/messenger.js" type="module")
   script(src="/socket.io/socket.io.js")
   script.
     const currentRoom = !{JSON.stringify(currentRoom)};
     const userSocket = io.connect('/user', { forceNew: true, path: '/socket.io' });
 
     userSocket.on('msgPosted', ({ msg, sender }) => {
-      let targetRoom = document.querySelector(`li[data-rid="${msg.roomId}"]`);
+      let targetRoom = document.querySelector(`li[data-room-id="${msg.roomId}"]`);
       if (!targetRoom) {
         // 현재 message 목록에 존재 x
         const listSample = document.querySelector('li.invisible');
         targetRoom = listSample.cloneNode(true);
-        targetRoom.setAttribute('data-rid', msg.roomId);
+        targetRoom.setAttribute('data-room-id', msg.roomId);
         targetRoom.querySelector('img').src = sender.profilePhoto;
         targetRoom.children[0].children[1].children[0].innerText = sender.name;
         targetRoom.classList.remove('invisible');
@@ -207,7 +208,7 @@ block append script
       const msgTimeSpan = targetRoom.querySelector('.msgTime');
 
       // read or unread
-      if (msg.userId !== !{user.id} && currentRoom?.id !== msg.roomId) {
+      if (msg.senderId !== !{user.id} && currentRoom?.id !== msg.roomId) {
         targetRoom.children[0].classList.add('unreadMsg');
       }
       // message content
@@ -219,7 +220,7 @@ block append script
     });
 
     function msgPreviewUpdate(msg) {
-      const targetRoom = document.querySelector(`li[data-rid="${msg.roomId}"]`);
+      const targetRoom = document.querySelector(`li[data-room-id="${msg.roomId}"]`);
       if (!targetRoom) return;
 
       const msgSpan = targetRoom.querySelector('.latestMsg');
@@ -237,16 +238,6 @@ block append script
     //- userSocket.on('commentPosted', );
 
 
-
-
-
-
-
-
-
-
-
-
     if (currentRoom) {
       // user has at lease one message
       const chatSocket = io.connect('/chat', { forceNew: true, path: '/socket.io' });
@@ -254,8 +245,10 @@ block append script
       chatSocket.on('msgPosted', (msg) => {
         const outerDiv = document.createElement('div');
         const innerDiv = document.createElement('div');
-        outerDiv.setAttribute('data-mid', msg.id);
-        if (msg.userId === !{user.id}) {
+        outerDiv.setAttribute('data-message-id', msg.id);
+        if (!msg.senderId) {
+          outerDiv.classList.add('systemMsg');
+        } else if (msg.senderId === !{user.id}) {
           outerDiv.classList.add('myMsg');
           const deleteBtn = document.createElement('div');
           deleteBtn.innerText = '❌';
@@ -270,8 +263,6 @@ block append script
             xhr.send();
           });
           outerDiv.appendChild(deleteBtn);
-        } else if (!msg.userId) {
-          outerDiv.classList.add('systemMsg');
         } else {
           outerDiv.classList.add('friendMsg');
           const friendMsgs = document.querySelectorAll('.friendMsg');
@@ -298,7 +289,7 @@ block append script
       });
 
       chatSocket.on('msgDeleted', (msg) => {
-        const targetMsg = document.querySelector(`[data-mid="${msg.id}"]`);
+        const targetMsg = document.querySelector(`[data-message-id="${msg.id}"]`);
         targetMsg.classList.add('deletedMsg');
         const headMsg = targetMsg.classList.contains('myMsg') ? '' : `${currentRoom.user.name}님이 `;
         targetMsg.lastChild.innerText = headMsg + msg.content;

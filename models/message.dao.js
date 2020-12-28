@@ -2,8 +2,8 @@ const { User, Sequelize, Friend, Room, Message } = require('../db/models');
 
 /* ===================================  READ  =================================== */
 
-const fetchRooms = async (userId) => {
-  // fetch friends
+const getRooms = async (userId) => {
+  // get friends
   let rooms = [];
   const user = await User.findOne({ where: { id: userId } });
   const friends = await user.getFollowings({
@@ -15,7 +15,7 @@ const fetchRooms = async (userId) => {
   });
   if (!friends.length) return { friends, rooms };
 
-  // fetch chatting rooms with the latest message
+  // get chatting rooms with the latest message
   const roomIds = friends.map((f) => f.friend.roomId);
   rooms = await Room.findAll({
     where: { id: { [Sequelize.Op.in]: roomIds } },
@@ -31,36 +31,23 @@ const fetchRooms = async (userId) => {
   return { friends, rooms };
 };
 
-const fetchFriendIdInRoom = async ({ userId, roomId }) => {
-  // const room = await Room.findOne({
-  //   where: { id: roomId },
-  //   include: [
-  //     {
-  //       model: Friend,
-  //     },
-  //   ],
-  // });
-  // const friendInRoom = room.friends.map((f) => f.followingId).filter((uid) => uid !== userId);
-  // if (friendInRoom.length > 1) {
-  //   // user is not in the room
-  //   const err = new Error('Forbidden');
-  //   err.status = 403;
-  //   throw err;
-  // }
-
-  // return friendInRoom[0];
-
+const getFriendIdInRoom = async ({ userId, roomId }) => {
   const room = await Room.findOne({
     where: { id: roomId },
     include: [
       {
         model: Friend,
         where: { followerId: userId },
-        required: true,
+        required: false,
       },
     ],
   });
-  if (room) {
+  if (!room) {
+    // the room doesn't exist
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  } else if (!room.friends.length) {
     // user is not in the room
     const err = new Error('Forbidden');
     err.status = 403;
@@ -70,27 +57,21 @@ const fetchFriendIdInRoom = async ({ userId, roomId }) => {
   return room.friends[0].followingId;
 };
 
-const fetchMessages = async (roomId) => {
-  const messages = await Message.findAll({
+const getMessages = async (roomId) => {
+  return Message.findAll({
     where: { roomId },
     paranoid: false,
     order: [['createdAt', 'ASC']],
   });
+};
 
-  const msgsUnread = messages.filter((msg) => !msg.isRead);
-  await Promise.all(
-    msgsUnread.map((msg) => {
-      msg.isRead = true;
-      return msg.save();
-    }),
-  );
-
-  return messages;
+const getUnreadMessageCount = async (userId) => {
+  return Message.count({ where: { receiverId: userId, isRead: false } });
 };
 
 /* ===================================  CREATE  =================================== */
 
-const createMessage = async ({ userId = null, roomId, content }) => {
+const createMessage = async ({ userId = null, friendId = null, roomId, content }) => {
   const room = await Room.findOne({
     where: { id: roomId },
     include: [
@@ -111,28 +92,32 @@ const createMessage = async ({ userId = null, roomId, content }) => {
     throw err;
   }
 
-  return Message.create({ userId, roomId, content });
+  return Message.create({ senderId: userId, receiverId: friendId, roomId, content });
 };
 
 /* ===================================  UPDATE  =================================== */
 
-const updateMessage = async ({ userId, messageId, roomId, content }) => {
-  const message = await Message.findOne({ where: { id: messageId, roomId } });
-  if (!message || message.userId !== userId) {
-    const err = new Error(message ? 'Forbidden' : 'Not Found');
-    err.status = message ? 403 : 404;
-    throw err;
-  }
+// const updateMessage = async ({ userId, messageId, roomId, content }) => {
+//   const message = await Message.findOne({ where: { id: messageId, roomId } });
+//   if (!message || message.senderId !== userId) {
+//     const err = new Error(message ? 'Forbidden' : 'Not Found');
+//     err.status = message ? 403 : 404;
+//     throw err;
+//   }
 
-  message.content = content;
-  return message.save();
+//   message.content = content;
+//   return message.save();
+// };
+
+const updateMessageReadStatus = async (messagesIds) => {
+  await Message.update({ isRead: true }, { where: { id: messagesIds } });
 };
 
 /* ===================================  DELETE  =================================== */
 
-const deleteMessage = async ({ userId, messageId, roomId }) => {
+const deleteMessage = async ({ userId, roomId, messageId }) => {
   let message = await Message.findOne({ where: { id: messageId, roomId } });
-  if (!message || message.userId !== userId) {
+  if (!message || message.senderId !== userId) {
     const err = new Error(message ? 'Forbidden' : 'Not Found');
     err.status = message ? 403 : 404;
     throw err;
@@ -145,10 +130,12 @@ const deleteMessage = async ({ userId, messageId, roomId }) => {
 };
 
 module.exports = {
-  fetchRooms,
-  fetchFriendIdInRoom,
-  fetchMessages,
+  getRooms,
+  getFriendIdInRoom,
+  getMessages,
+  getUnreadMessageCount,
   createMessage,
-  updateMessage,
+  // updateMessage,
+  updateMessageReadStatus,
   deleteMessage,
 };

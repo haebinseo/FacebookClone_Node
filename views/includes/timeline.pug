@@ -34,50 +34,76 @@
         div 기분/활동
 //- posts
 #postArea
+  -
+    const units = ['분', '시간', '일'];
+    const timeNow = new Date();
   for post in posts
     div.postEffects
-      input.post-user-id(type='hidden' value=post.user.id)
-      input.post-id(type='hidden' value=post.id)
+      //- input.post-user-id(type='hidden' value=post.user.id)
+      //- input.post-id(type='hidden' value=post.id)
       //- post head
-      div.postHeader(data-post-author-id=post.user.id)
+      div.postHeader.accountHoverTabData(data-post-author-id=post.user.id)
         div
-          a(href=`/profile/${post.user.id}`)
-            img.accountHoverTabTrigger(src=post.user.profilePhoto alt="")
+          a.accountHoverTabTrigger(href=`/profile/${post.user.id}`)
+            img(src=post.user.profilePhoto alt="")
         div
-          a(href=`/profile/${post.user.id}`)
-            span.accountHoverTabTrigger= post.user.name
-          -const units = ['분', '시간', '일', '월', '년'];
-          -let elapsedTime = (new Date() - new Date(post.createdAt))/1000;
-          -let timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
-          -let idx; for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
-          -if(idx === 0) { timeArr[0] += 1; idx += 1; }
-          span #{timeArr[idx-1]}#{units[idx-1]}
-        div
-          img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
+          a.accountHoverTabTrigger(href=`/profile/${post.user.id}`)
+            span= post.user.name
+          -
+            const timeCreated = new Date(post.createdAt);
+            const timeArr = [];
+            let timeElapsed = (timeNow - timeCreated) / 1000; // sec
+            timeElapsed /= 60;
+            timeArr.push(Math.floor(timeElapsed % 60)); // min
+            timeElapsed /= 60;
+            timeArr.push(Math.floor(timeElapsed % 24)); // hour
+            timeArr.push(Math.floor(timeElapsed /= 24)); // day
+            let timeText;
+
+            if (timeArr[2] > 6) {
+              // 작성 시간으로 표시
+              timeText = timeNow.getFullYear() === timeCreated.getFullYear() ? '' : `${timeCreated.getFullYear()}년`;
+              timeText += `${timeCreated.getMonth() + 1}월 ${timeCreated.getDate()}일`;
+            } else {
+              // 경과 시간으로 표시
+              timeText = timeArr.reduce((acc, time, idx) => {
+                return time > 0 ? acc = `${time}${units[idx]}` : acc;
+              }, '');
+              if (!timeText) timeText = '1분';
+            }
+          span #{timeText}
+        if post.userId == user.id
+          div.postMoreBtn(data-post-id=post.id)
+            img(src="/images/main/mainCenter/BOCzaD2rwOa.png" alt="")
+            div
 
       //- post main
       div.postMain
-        div= post.content
+        div.postContent= post.content
         div
-          -const photoLen = post.photos.length;
+          - const photoLen = post.photos.length;
           if photoLen > 0
-            div
+            div(class= photoLen===2 ? "twoPhotos" : undefined)
               div
                 div.firstPhotoLine
                   div
                     div
-                      img.postPhoto(src=post.photos[0].url, alt="")
+                      a(href=`/photo/${post.photos[0].id}`)
+                        img.postPhoto(src=post.photos[0].url alt="")
                   if photoLen > 1
                     div
                       div
-                        img.postPhoto(src=post.photos[1].url, alt="")
+                        a(href=`/photo/${post.photos[1].id}`)
+                          img.postPhoto(src=post.photos[1].url alt="")
                 if photoLen > 2
                   div.secondPhotoLine
                     div
-                      img.postPhoto(src=post.photos[2].url, alt="")
+                      a(href=`/photo/${post.photos[2].id}`)
+                        img.postPhoto(src=post.photos[2].url alt="")
                     if photoLen > 3
                       div
-                        img.postPhoto(src=post.photos[3].url, alt="")
+                        a(href=`/photo/${post.photos[3].id}`)
+                          img.postPhoto(src=post.photos[3].url alt="")
                         if photoLen > 4
                           div
                             span= `+${photoLen - 4}장`
@@ -92,7 +118,7 @@
             span 댓글 #{post.comments.length}개
       //- buttons for extra functions(like, comment, share)
       div
-        div.likePostBtn(data-pid=post.id)
+        div.likePostBtn(data-post-id=post.id)
           if likes.posts[post.id].id.includes(user.id)
             span.icon--liked
             div.text-liked 좋아요
@@ -110,15 +136,17 @@
         div
           if post.comments.length
             each comment in post.comments
-              div.commentItem(data-depth=comment.depth data-bundle-created-at=comment.bundleCreatedAt)
-                input.comment-user-id(type='hidden' value=comment.user.id)
+              div.commentItem.accountHoverTabData(data-depth=comment.depth data-comment-author-id=comment.id)
+                //- input.comment-user-id(type='hidden' value=comment.user.id)
                 //- input.comment-post-id(type='hidden' value=post.id)
-                input.comment-id(type='hidden' value=comment.id)
-                img(src=comment.user.profilePhoto, alt="")
+                //- input.comment-id(type='hidden' value=comment.id)
+                a.accountHoverTabTrigger(href=`/profile/${comment.user.id}`)
+                  img(src=comment.user.profilePhoto, alt="")
                 div
                   div
                     div
-                      div= comment.user.name
+                      a.accountHoverTabTrigger(href=`/profile/${comment.user.id}`)
+                        span= comment.user.name
                       div.commentContent= comment.content
                       if likes.comments[comment.id] && likes.comments[comment.id].id.length
                         div(title=likes.comments[comment.id].name.join('\n'))
@@ -129,36 +157,53 @@
                       if comment.user.id === user.id
                         div.commentMoreBtn
                           i
-                          div.commentMoreTab.invisible(data-cid=comment.id)
+                          div.commentMoreTab.invisible(data-comment-id=comment.id data-post-id=comment.postId)
                             div.editCommentBtn 
                               span 수정
                             div.deleteCommentBtn 
                               span 삭제
                   div
                     if likes.comments[comment.id] && likes.comments[comment.id].id.includes(user.id)
-                      span.likeCommentBtn.text-liked(data-cid=comment.id) 좋아요
+                      span.likeCommentBtn.text-liked(data-comment-id=comment.id data-post-id=comment.postId) 좋아요
                     else
-                      span.likeCommentBtn(data-cid=comment.id) 좋아요
+                      span.likeCommentBtn(data-comment-id=comment.id data-post-id=comment.postId) 좋아요
                     |  · 
-                    span.replyBtn(data-depth=comment.depth data-bundle-created-at=comment.bundleCreatedAt) 답글 달기
+                    span.replyBtn(data-replying-id=comment.id) 답글 달기
                     |  · 
-                    -elapsedTime = (new Date() - new Date(comment.createdAt))/1000;
-                    -timeArr = [ elapsedTime/60, elapsedTime/3600, elapsedTime/86400, elapsedTime/2592000, elapsedTime/31536000 ].map(t => Math.floor(t));
-                    -for(idx = 0; idx < 5; idx++) { if (timeArr[idx] === 0) break; }
-                    -if(idx === 0) { timeArr[0] += 1; idx += 1; }
-                    span #{timeArr[idx-1]}#{units[idx-1]}
+                    -
+                      const timeCreated = new Date(comment.createdAt);
+                      const timeArr = [];
+                      let timeElapsed = (timeNow - timeCreated) / 1000; // sec
+                      timeElapsed /= 60;
+                      timeArr.push(Math.floor(timeElapsed % 60)); // min
+                      timeElapsed /= 60;
+                      timeArr.push(Math.floor(timeElapsed % 24)); // hour
+                      timeArr.push(Math.floor(timeElapsed /= 24)); // day
+                      let timeText;
+
+                      if (timeArr[2] > 6) {
+                        // 작성 시간으로 표시
+                        timeText = timeNow.getFullYear() === timeCreated.getFullYear() ? '' : `${timeCreated.getFullYear()}년`;
+                        timeText += `${timeCreated.getMonth() + 1}월 ${timeCreated.getDate()}일`;
+                      } else {
+                        // 경과 시간으로 표시
+                        timeText = timeArr.reduce((acc, time, idx) => {
+                          return time > 0 ? acc = `${time}${units[idx]}` : acc;
+                        }, '');
+                        if (!timeText) timeText = '1분';
+                      }
+                    span #{timeText}
+
         .newCommentTab
-          form(action="/comment" method="post")
+          form.commentForm(action="/comment" method="post")
             label
               img(src=user.profilePhoto alt="")
               div
                 div
-                  input.commentContent(type="text", name="content" placeholder="댓글을 입력하세요..." required)
-            input(type='hidden' name="pid" value=post.id)
-            input(type="hidden" name="depth" value=0)
-            input(type="hidden" name="bundleCreatedAt" value=null)
+                  input(type="text" name="content" placeholder="댓글을 입력하세요..." required)
+            input(type='hidden' name="postId" value=post.id)
 
-.accountHoverTab.invisible
+#accountHoverTab.invisible
   div
     div
       a
@@ -166,22 +211,19 @@
     div 
       a
         span
-  div(data-uid)
+  div(data-user-id)
     //- myself
-    //- if user.id === post.user.id
     div#myAHTab.invisible
       div.editProfileBtn
         img(src="/images/main/mainCenter/editProfile.png", alt="")
         span 프로필 편집
-    //- else if post.user.id in followings
-      //- friend
-      if followings[post.user.id].accepted
+    //- friend
     div#friendAHTab.invisible
       div
         svg.a8c37x1j.ms05siws.hwsy1cff.b7h9ocf4.eltiug27(viewbox="0 0 28 28" alt="" height="18" width="18")
           path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
         span 메세지 보내기
-      div.friendBtn(title="친구")
+      div.friendOptBtn(title="친구")
         img(src="/images/main/mainCenter/friend.png", alt="친구")
         .friendOptTab.invisible(title="")
           div.unfriendBtn
@@ -189,10 +231,9 @@
             span 친구 끊기
       div
         img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
-      //- following
-      //- else
+    //- following
     div#friendAddedAHTab.invisible
-      div.friendRequestedBtn
+      div.friendRequestedBtn.unfriendBtn
         img(src="/images/main/mainCenter/addFriend.png", alt="친추")
         span 친구 요청됨
       div(title="메세지 보내기")
@@ -200,9 +241,8 @@
           path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
       div
         img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
-    //- else if post.user.id in followers
+    //- followed
     div#confirmAHTab.invisible
-      //- followed
       div.acceptFriendBtn
         img(src="/images/main/mainCenter/friend.png", alt="친구")
         span 응답하기
@@ -211,6 +251,7 @@
           path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
       div
         img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+    //- default
     div#defaultAHTab
       div.addFriendBtn
         img(src="/images/main/mainCenter/addFriend.png", alt="친추")
@@ -220,3 +261,37 @@
           path(d="M14 2.042c6.76 0 12 4.952 12 11.64S20.76 25.322 14 25.322a13.091 13.091 0 0 1-3.474-.461.956 .956 0 0 0-.641.047L7.5 25.959a.961.961 0 0 1-1.348-.849l-.065-2.134a.957.957 0 0 0-.322-.684A11.389 11.389 0 0 1 2 13.682C2 6.994 7.24 2.042 14 2.042ZM6.794 17.086a.57.57 0 0 0 .827.758l3.786-2.874a.722.722 0 0 1 .868 0l2.8 2.1a1.8 1.8 0 0 0 2.6-.481l3.525-5.592a.57.57 0 0 0-.827-.758l-3.786 2.874a.722.722 0 0 1-.868 0l-2.8-2.1a1.8 1.8 0 0 0-2.6.481Z")
       div
         img(src="/images/main/mainCenter/BOCzaD2rwOa.png", alt="더보기")
+
+#postMoreTab.invisible
+  div.postMoreList(data-post-id)
+    div.editPostBtn
+      i
+      span 게시물 수정
+    div.removePostBtn
+      i
+      span 게시물 삭제
+  div.triangle
+
+#editPostTab.invisible
+  div
+  form(action="/post" data-post-id)
+    div 게시물 수정
+      div#editPostCloseBtn
+        i
+        input#editPostResetBtn.invisible(type="reset")
+    div
+      div
+        img(src=user.profilePhoto, alt="로그인 유저 이미지")
+        span #{user.name}
+      div.custom-scroll
+        textarea.postContent(name="content", row=2 placeholder=`${user.name}님, 무슨 생각을 하고 계신가요?`)
+        div.photoPreviewArea
+        input.photoIds(type='hidden' name='photoIds')
+    div
+      div
+        span 게시물에 추가
+        label
+          input.photos.invisible(type="file" accept="image/*" multiple)
+          div(title="사진")
+            i.icon--photo
+      button#editBtn(type="submit") 저장

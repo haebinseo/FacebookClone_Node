@@ -3,21 +3,24 @@ document.getElementById('messenger')?.remove();
 
 // 다른 사용자와 채팅
 document.querySelectorAll('li').forEach((list) => {
-  list.addEventListener('click', function () {
-    const addr = `/messenger/${this.dataset.rid}`;
+  list.addEventListener('click', (e) => {
+    const { currentTarget } = e;
+    const addr = `/messenger/${currentTarget.dataset.roomId}`;
     if (window.location.href !== addr) window.location.href = addr;
   });
 });
 
 // 현재 채팅방 정보란 토글
-document.getElementById('roomInfo')?.addEventListener('click', function () {
-  this.children[0].classList.toggle('roomInfoActive');
+document.getElementById('roomInfo')?.addEventListener('click', (e) => {
+  const { currentTarget } = e;
+  currentTarget.children[0].classList.toggle('roomInfoActive');
   document.getElementById('roomOptions')?.classList.toggle('invisible');
 });
 
 // 채팅란 클릭시 input focus
-document.getElementById('messages')?.addEventListener('click', function () {
-  this.parentNode.querySelector('#msgInput').focus();
+document.getElementById('messages')?.addEventListener('click', (e) => {
+  const { currentTarget } = e;
+  currentTarget.parentNode.querySelector('#msgInput').focus();
 });
 
 // 마지막 상대방 채팅 옆에 프로필 이미지 띄우기
@@ -30,11 +33,11 @@ if (friendMsgs.length) {
 }
 
 // 메시지 작성 이벤트
-document.getElementById('messageForm')?.addEventListener('submit', function (e) {
+document.getElementById('messageForm')?.addEventListener('submit', (e) => {
   e.preventDefault();
-  const roomId = this.dataset.rid;
-  // const friendId = this.querySelector('#fidInput');
-  const inputElem = this.querySelector('#msgInput');
+  const { currentTarget } = e;
+  const { roomId } = currentTarget.dataset;
+  const inputElem = currentTarget.querySelector('#msgInput');
   if (inputElem.value) {
     const xhr = new XMLHttpRequest();
     xhr.onload = () => {
@@ -60,16 +63,15 @@ document.getElementById('messageForm')?.addEventListener('submit', function (e) 
 
 // 메시지 삭제 버튼 이벤트 등록
 document.querySelectorAll('.deleteMsgBtn').forEach((btn) => {
-  btn.addEventListener('click', function () {
-    const { mid } = this.parentNode.dataset;
-    const { rid } = this.parentNode.parentNode.dataset;
-    // const { fid } = this.dataset;
+  btn.addEventListener('click', (e) => {
+    const { currentTarget } = e;
+    const { messageId } = currentTarget.parentNode.dataset;
+    const { roomId } = currentTarget.parentNode.parentNode.dataset;
     const xhr = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status !== 204) console.error(xhr.responseText);
     };
-    // xhr.open('DELETE', `/message/${rid}/${mid}?fid=${fid}`);
-    xhr.open('DELETE', `/message/${mid}/room/${rid}`);
+    xhr.open('DELETE', `/message/${messageId}/room/${roomId}`);
     xhr.send();
   });
 });

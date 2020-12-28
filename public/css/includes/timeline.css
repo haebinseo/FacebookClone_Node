@@ -96,13 +96,28 @@
   font-weight: 400;
   font-size: 13px;
 }
-#postArea>div>div.postHeader>div:nth-of-type(3) {
+#postArea>div>div.postHeader>div.postMoreBtn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+#postArea>div>div.postHeader>div.postMoreBtn>div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--hover-overlay);
+  opacity: 0;
+}
+#postArea>div>div.postHeader>div.postMoreBtn:hover > div {
+  opacity: 1;
 }
 #postArea>div>div.postMain {
   display: flex;
@@ -120,6 +135,9 @@
 #postArea>div>div.postMain>div:nth-of-type(2)>div {
   position: relative;
   padding-top: 100%;
+}
+#postArea>div>div.postMain>div:nth-of-type(2)>div.twoPhotos {
+  padding-top: 50%;
 }
 #postArea>div>div.postMain>div:nth-of-type(2)>div>div {
   position: absolute;
@@ -142,15 +160,18 @@
   padding-top: 100%;
   position: relative;
 }
-#postArea>div>div.postMain>div:nth-of-type(2)>div>div>.firstPhotoLine>div>div>img {
+#postArea>div>div.postMain>div:nth-of-type(2)>div>div>.firstPhotoLine>div>div>a {
   position: absolute;
   top: 0;
+  width: 100%;
+  height: 100%;
+}
+#postArea>div>div.postMain>div:nth-of-type(2)>div>div>.firstPhotoLine>div>div>a>img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-top: 1px solid var(--shadow-1);
   border-bottom: 1px solid var(--shadow-1);
-  cursor: pointer;
 }
 #postArea>div>div.postMain>div:nth-of-type(2)>div>div>.secondPhotoLine {
   flex: 1 1 0;
@@ -162,15 +183,18 @@
   height: 100%;
   position: relative;
 }
-#postArea>div>div.postMain>div:nth-of-type(2)>div>div>.secondPhotoLine>div>img {
+#postArea>div>div.postMain>div:nth-of-type(2)>div>div>.secondPhotoLine>div>a {
   position: absolute;
   top: 0;
+  width: 100%;
+  height: 100%;
+}
+#postArea>div>div.postMain>div:nth-of-type(2)>div>div>.secondPhotoLine>div>a>img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-top: 1px solid var(--shadow-1);
   border-bottom: 1px solid var(--shadow-1);
-  cursor: pointer;
 }
 #postArea>div>div.postMain>div:nth-of-type(2)>div>div>.secondPhotoLine>div>div {
   position: absolute;
@@ -251,11 +275,19 @@
   display: flex;
   padding-top: 4px;
 }
-#postArea>div>div:last-of-type .commentItem>img {
+#postArea>div>div:last-of-type .commentItem[data-depth='1'] {
+  padding-left: 50px;
+}
+#postArea>div>div:last-of-type .commentItem>a {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   margin-right: 8px;
+  overflow: hidden;
+}
+#postArea>div>div:last-of-type .commentItem>a>img {
+  width: 100%;
+  height: 100%;
 }
 #postArea>div>div:last-of-type .commentItem>div {
   display: flex;
@@ -278,14 +310,14 @@
   word-break: break-word;
   width: fit-content;
 }
-#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:first-of-type {
+#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>a>span {
   font-size: 13px;
   font-weight: bold;
 }
-#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(2) {
+#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(1) {
   font-size: 15px;
 }
-#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(3) {
+#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(2) {
   position: absolute;
   bottom: -11px;
   right: 2px;
@@ -298,7 +330,7 @@
   font-size: 13px;
   color: var(--secondary-text);
 }
-#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(3) img {
+#postArea>div>div:last-of-type .commentItem>div>div:first-of-type>div:first-of-type>div:nth-of-type(2) img {
   width: 16px;
   margin-right: 6px;
 }
@@ -406,7 +438,7 @@
 #postArea>div>div .text-liked {
   color: var(--accent);
 }
-.accountHoverTab {
+#accountHoverTab {
   position: absolute;
   top: 0;
   left: 0;
@@ -418,34 +450,34 @@
   border-radius: 8px;
   box-shadow: 0 0 8px 0 #d3d3d3;
 }
-.accountHoverTab>div:first-of-type {
+#accountHoverTab>div:first-of-type {
   display: flex;
   align-items: center;
 }
-.accountHoverTab>div:first-of-type>div:first-of-type {
+#accountHoverTab>div:first-of-type>div:first-of-type {
   width: 96px;
   height: 96px;
   border-radius: 50%;
   overflow: hidden;
 }
-.accountHoverTab>div:first-of-type>div:first-of-type>a>img {
+#accountHoverTab>div:first-of-type>div:first-of-type>a>img {
   width: 96px;
   height: 96px;
 }
-.accountHoverTab>div:first-of-type>div:last-of-type {
+#accountHoverTab>div:first-of-type>div:last-of-type {
   flex-grow: 1;
 }
-.accountHoverTab>div:first-of-type>div:last-of-type>a>span {
+#accountHoverTab>div:first-of-type>div:last-of-type>a>span {
   padding: 0 16px;
   font-size: 20px;
   font-weight: 700;
 }
-.accountHoverTab>div:last-of-type>div {
+#accountHoverTab>div:last-of-type>div {
   display: flex;
   padding: 6px 0;
   gap: 0 8px;
 }
-.accountHoverTab>div:last-of-type>div>div {
+#accountHoverTab>div:last-of-type>div>div {
   width: 48px;
   height: 36px;
   display: flex;
@@ -455,25 +487,25 @@
   border-radius: 8px;
   cursor: pointer;
 }
-.accountHoverTab>div:last-of-type>div>div:first-of-type {
+#accountHoverTab>div:last-of-type>div>div:first-of-type {
   flex-grow: 1;
 }
-.accountHoverTab>div:last-of-type>div>div:first-of-type>img,
-.accountHoverTab>div:last-of-type>div>div:first-of-type svg {
+#accountHoverTab>div:last-of-type>div>div:first-of-type>img,
+#accountHoverTab>div:last-of-type>div>div:first-of-type svg {
   margin-right: 6px;
 }
-.accountHoverTab>div:last-of-type>div>div img {
+#accountHoverTab>div:last-of-type>div>div img {
   width: 16px;
   height: 16px;
 }
-.accountHoverTab>div:last-of-type>div>div span {
+#accountHoverTab>div:last-of-type>div>div span {
   font-size: 15px;
   font-weight: 600;
 }
-.accountHoverTab>div:last-of-type>div .friendBtn {
+#accountHoverTab>div:last-of-type>div .friendOptBtn {
   position: relative;
 }
-.accountHoverTab>div:last-of-type>div .friendOptTab {
+#accountHoverTab>div:last-of-type>div .friendOptTab {
   position: absolute;
   bottom: -55px;
   left: 0;
@@ -483,7 +515,7 @@
   box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
   padding: 8px 0;
 }
-.accountHoverTab>div:last-of-type>div .friendOptTab>div {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div {
   height: 36px;
   border-radius: 8px;
   padding: 8px;
@@ -491,17 +523,286 @@
   display: flex;
   align-items: center;
 }
-.accountHoverTab>div:last-of-type>div .friendOptTab>div:hover {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div:hover {
   background-color: var(--secondary-button-background);
 }
-.accountHoverTab>div:last-of-type>div .friendOptTab>div span {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div span {
   font-weight: 500;
 }
-.accountHoverTab>div:last-of-type>div .friendOptTab>div.unfriendBtn i {
+#accountHoverTab>div:last-of-type>div .friendOptTab>div.unfriendBtn i {
   background-image: url("/images/main/mainCenter/unfriend.png");
   background-position: 0 -25px;
   display: inline-block;
   height: 20px;
   width: 20px;
   margin-right: 12px;
+}
+#postMoreTab {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#postMoreTab>.postMoreList {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 344px;
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 8px;
+  z-index: 1;
+}
+#postMoreTab>.postMoreList>div {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#postMoreTab>.postMoreList>div i {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+}
+#postMoreTab>.postMoreList>div span {
+  font-size: 15px;
+  font-weight: 500;
+}
+#postMoreTab>.postMoreList>div:hover {
+  background-color: var(--hover-overlay);
+}
+#postMoreTab>.postMoreList>.editPostBtn>i {
+  background-image: url("/images/includes/timeline/GIV2f3qkEll.png");
+  background-position: 0 -592px;
+}
+#postMoreTab>.postMoreList>.removePostBtn>i {
+  background-image: url("/images/includes/timeline/GIV2f3qkEll.png");
+  background-position: 0 -739px;
+}
+#postMoreTab .triangle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border: 6px solid;
+  border-color: #fff #fff transparent transparent;
+  z-index: 1;
+}
+#editPostTab>div {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--overlay-alpha-80);
+  z-index: 1;
+}
+#editPostTab form {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 500px;
+  min-height: 488px;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  box-shadow: 0 0 28px 1px rgba(0,0,0,0.25);
+  border-radius: 8px;
+  z-index: 2;
+}
+#editPostTab form>div {
+  display: flex;
+  padding: 16px 16px;
+}
+#editPostTab form>div:first-of-type {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+#editPostTab form>div:first-of-type>div {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
+  background-color: var(--secondary-button-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+#editPostTab form>div:first-of-type>div:hover {
+  background-color: #d1d3d8;
+}
+#editPostTab form>div:first-of-type>div>i {
+  display: inline-block;
+  background-image: url("/images/main/mainCenter/d4D8oGNn1YF.png");
+  background-position-x: 0px;
+  background-position-y: -883px;
+  height: 20px;
+  width: 20px;
+  filter: invert(0.39) sepia(0.21) saturate(2) saturate(1.095) hue-rotate(174deg) brightness(0.94) contrast(0.86);
+}
+#editPostTab form>div:nth-of-type(2) {
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 4px;
+  padding: 16px 8px;
+}
+#editPostTab form>div:nth-of-type(2)>div:first-of-type {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  height: 56px;
+  padding: 0 8px;
+}
+#editPostTab form>div:nth-of-type(2)>div:first-of-type>img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2) {
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>textarea {
+  flex-shrink: 0;
+  font-size: 24px;
+  border: none;
+  resize: none;
+  overflow-y: visible;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview {
+  flex: 1 0 200px;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview>div {
+  padding-top: 100%;
+  position: relative;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview>div>img {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--divider);
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview>div>div {
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 0 0 1px var(--shadow-1);
+  transform: scale(0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview>div>div>i {
+  display: inline-block;
+  background-image: url("/images/main/mainCenter/d4D8oGNn1YF.png");
+  background-position: 0 -883px;
+  filter: var(--filter-secondary-icon);
+  width: 20px;
+  height: 20px;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview>div>div>div {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--hover-overlay);
+  opacity: 0;
+}
+#editPostTab form>div:nth-of-type(2)>div:nth-of-type(2)>.photoPreviewArea>.photoPreview>div>div:hover > div {
+  opacity: 1;
+}
+#editPostTab form>div:last-of-type {
+  flex-direction: column;
+  justify-content: space-between;
+  height: 141px;
+}
+#editPostTab form>div:last-of-type>div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+}
+#editPostTab form>div:last-of-type>div span {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 0 8px;
+}
+#editPostTab form>div:last-of-type>div>label {
+  cursor: pointer;
+}
+#editPostTab form>div:last-of-type>div>label>div {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#editPostTab form>div:last-of-type>div>label>div:hover {
+  background-color: var(--hover-overlay);
+}
+#editPostTab form>div:last-of-type>div>label>div>i {
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+}
+#editPostTab form>div:last-of-type>div>label>div .icon--photo {
+  background-image: url("/images/main/mainCenter/C6EldyzVPp5.png");
+  background-position-x: 0px;
+  background-position-y: -208px;
+}
+#editPostTab form>div:last-of-type button {
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  height: 35px;
+  background-color: var(--primary-button-background);
+  cursor: pointer;
+}
+#editPostTab form>div:last-of-type button:hover {
+  background-color: #0076e4;
+}
+#editPostTab form>div:last-of-type button[disabled] {
+  background-color: var(--disabled-button-background);
+  color: #a9a9a9;
+  cursor: default;
 }

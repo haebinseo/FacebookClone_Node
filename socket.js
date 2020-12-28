@@ -6,7 +6,8 @@ module.exports = (server, app, sessionMiddleware) => {
   app.set('io', io);
   const user = io.of('/user');
   const chat = io.of('/chat');
-  io.use((socket, next) => sessionMiddleware(socket.request, socket.request.res, next));
+  // [socket.io 3.0.4] No more implicit connection to the default namespace
+  user.use((socket, next) => sessionMiddleware(socket.request, socket.request.res, next));
 
   user.on('connection', (socket) => {
     // console.log('user 네임스페이스에 연결');
@@ -23,7 +24,7 @@ module.exports = (server, app, sessionMiddleware) => {
     const {
       headers: { referer },
     } = socket.request;
-    const roomId = referer.split('/')[referer.split('/').length - 1].replace(/\?.+/, '');
+    const roomId = +referer.split('/')[referer.split('/').length - 1].replace(/\?.+/, '');
     socket.join(roomId);
     socket.on('disconnect', () => {
       // console.log('chat 네임스페이스 접속 해제');

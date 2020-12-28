@@ -28,7 +28,7 @@ function fillPhotoOptTabData() {
   const a = photoOptTab.querySelector('a');
 
   a.href = photoSelected.parentNode.children[0].src;
-  photoOptList.setAttribute('data-pid', photoSelected.dataset.pid);
+  photoOptList.setAttribute('data-photo-id', photoSelected.dataset.photoId);
 }
 
 function translatePhotoOptTab() {
@@ -72,20 +72,21 @@ function translatePhotoOptTab() {
 // photoOptBtn click event
 const photoOptBtns = document.querySelectorAll('.photoOptBtn');
 photoOptBtns.forEach((btn) => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    const { currentTarget } = e;
     const photoSelected = document.querySelector('.photoSelected');
     if (photoSelected) {
       // a photo button is already clicked
-      if (photoSelected === btn) {
+      if (photoSelected.isSameNode(currentTarget)) {
         // same button is clicked twice
-        btn.classList.remove('photoSelected');
+        currentTarget.classList.remove('photoSelected');
         photoOptTab.classList.add('invisible');
         return;
       }
       photoSelected.classList.remove('photoSelected');
     }
 
-    btn.classList.add('photoSelected');
+    currentTarget.classList.add('photoSelected');
     photoOptTab.classList.remove('invisible');
     fillPhotoOptTabData();
     translatePhotoOptTab();
@@ -99,46 +100,48 @@ if (photoOptTab) {
 }
 
 // hide photoOptTab when outside of button and tab is clicked
-function deselectPhoto() {
+function deselectPhotoOptBtn() {
   const photoSelected = document.querySelector('.photoSelected');
   photoSelected?.classList.remove('photoSelected');
   photoOptTab.classList.add('invisible');
 }
 if (photoOptTab) {
   document.querySelector('body').addEventListener('click', (e) => {
+    // photoOptTab이 비활성화시 종료
+    if (photoOptTab.classList.contains('invisible')) return;
+
     let elem = e.target;
     while (!(elem.classList.contains('photoOptBtn') || elem.classList.contains('photoOptTab'))) {
       elem = elem.parentNode;
       if (elem.nodeName === 'BODY') {
         elem = null;
-        deselectPhoto();
+        deselectPhotoOptBtn();
         return;
       }
-    }
-
-    if (elem.classList.contains('photoOptBtn') && !elem.classList.contains('photoSelected')) {
-      deselectPhoto();
     }
   });
 }
 
 if (photoOptTab) {
+  // 사진 옵션의 프로필 사진 등록 이벤트 추가
   // add profile photo change event handler
   document.querySelector('.setProfilePhotoBtn').addEventListener('click', () => {
-    const { uid: userId, pid: photoId } = photoOptList.dataset;
+    const photoSelected = document.querySelector('.photoSelected');
+    const photoURL = photoSelected.parentNode.children[0].src;
 
     const xhr = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status === 204) window.location.reload();
       else console.error(xhr.responseText);
     };
-    xhr.open('PATCH', `/profile/${userId}/profilePhoto/${photoId}`);
-    xhr.send();
+    xhr.open('PATCH', `/user/info`);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({ photoURL }));
   });
 
   // add photo remove event handler
   document.querySelector('.removePhotoBtn').addEventListener('click', () => {
-    const { pid: photoId } = photoOptList.dataset;
+    const { photoId } = photoOptList.dataset;
 
     const xhr = new XMLHttpRequest();
     xhr.onload = () => {

@@ -42,7 +42,7 @@ contactHoverTabTriggers.forEach((trigger) => {
     e.currentTarget.classList.add('contactSelected');
     // copy data from the trigger
     contactHoverTab.querySelectorAll('a').forEach((a) => {
-      a.href = `/profile/${e.currentTarget.dataset.uid}`;
+      a.href = `/profile/${e.currentTarget.dataset.userId}`;
     });
     contactHoverTab.querySelector('img').src = e.currentTarget.querySelector('img').src;
     contactHoverTab.querySelector('span').innerText = e.currentTarget.querySelector(

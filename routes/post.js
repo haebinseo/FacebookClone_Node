@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { isLoggedIn } = require('./middleware');
 const {
+  getPost,
   createPost,
   updatePost,
   deletePost,
@@ -11,6 +12,7 @@ const {
   deleteLike,
 } = require('../controllers/post.ctrl');
 
+router.get('/:postId', isLoggedIn, getPost);
 router.post('/', isLoggedIn, createPost);
 router.patch('/:postId', isLoggedIn, updatePost);
 router.delete('/:postId', isLoggedIn, deletePost);

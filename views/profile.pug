@@ -12,39 +12,19 @@ block content
       div
         div
           img(src=targetUser.profilePhoto, alt="")
-        div#profilePhotoUpdateBtn
-          i
-        //- 프로필 이미지 업데이트 창
-        div#profilePhotoUpdateTab.invisible
-          div
-          form(action="/profile/profilePhoto", method="post" enctype="multipart/form-data")
-            div 프로필 사진 업데이트
-              div#profilePhotoUpdateCloseBtn
-                div
-            div.custom-scroll
-              div
-                div
-                  span 업로드한 사진
-                  label + 사진 업로드
-                    input#newImg.invisible(type="file", accept="image/*")
-                    div
-                div
-              div
-                div 
-                  span 프로필 사진
-                div
-                  div.profilePhotoCandidate
-                    img(src=user.profilePhoto, alt="")
+        if targetUser.id === user.id
+          div#profilePhotoUpdateBtn
+            i
     div
       h1= targetUser.name
     div
       span 소개 추가
-  div#divider
+  div.divider
     div
   div#profileMenu
     div
       div
-        a(href= selected==='timeline' ? undefined : `/profile/${user.id}`)
+        a(href= selected==='timeline' ? undefined : `/profile/${targetUser.id}`)
           div(class= selected==='timeline' ? 'selected' : undefined)
             span 타임라인
         a
@@ -77,6 +57,40 @@ block content
         div
           i
 
+  //- 프로필 이미지 업데이트 창
+  if targetUser.id === user.id
+    div#profilePhotoUpdateTab.invisible
+      div
+      form
+        div 프로필 사진 업데이트
+          div#profilePhotoUpdateCloseBtn
+            div
+        div.custom-scroll
+          div
+            div
+              span 업로드한 사진
+              label + 사진 업로드
+                input#addPhotoOnUpdateTab.invisible(type="file", accept="image/*" multiple)
+                div
+            div.profilePhotoCandidate
+              div.invisible
+                div
+                  img
+                  div
+        div
+          button#updateBtn(type="submit" disabled) 저장
+
+
 block append script
-  script(src="/js/includes/fbHeader.js")
-  script(src="/js/profile/profile.js")
+  script(src="/js/includes/fbHeader.js" type="module")
+  script(src="/js/profile/profile.js" type="module")
+  script(src="/socket.io/socket.io.js")
+  script(type="module").
+    import { updateAlarmTab, updateMessageCount } from '/js/includes/fbHeader.js';
+    const userSocket = io.connect('/user', { forceNew: true, path: '/socket.io' });
+
+    userSocket.on('msgPosted', updateMessageCount);
+    userSocket.on('likePosted', updateAlarmTab);
+    userSocket.on('commentPosted', updateAlarmTab);
+    userSocket.on('confirmFriend', updateAlarmTab);
+    userSocket.on('friendConfirmed', updateAlarmTab);

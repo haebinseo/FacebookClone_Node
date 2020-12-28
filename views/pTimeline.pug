@@ -8,48 +8,69 @@ block append content
   div#main
     div#timeline
       div#timelineLeft
-        div.postEffects
-          div 
-            span 정보
-          div
-            div 이메일
-            div= user.email
-          div
-            div 성별
-            div= user.gender
-          div#accountInfoEditBtn 정보수정
-          //- 정보 수정창
-          div#profileEditTab.invisible
+        div.buffer
+        div.content
+          div.postEffects
+            div 
+              span 정보
             div
-            form(action="/profile/profileInfo", method="post" enctype="multipart/form-data")
-              div 상세 정보 수정
-                div#profileEditCloseBtn
+              div 이메일
+              div= targetUser.email
+            div
+              div 성별
+              div= targetUser.gender
+            if targetUser.id === user.id
+              div#accountInfoEditBtn 정보수정
+          
+          div.postEffects
+            div
+              span 사진
+              a(href=`/profile/${targetUser.id}/photo`) 모두 보기
+            div
+              each photo in photos
+                div
                   div
-              div
-                div
-                  div 이메일
-                  input(type='text' name='email' placeholder=user.email)
-                div
-                  div 성별
-                  input(type='text' name='gender' placeholder=user.gender)
-              div
-                button#profileEditCancelBtn.cancelBtn(type="button") 취소
-                button#profileEditPostBtn.postBtn(type="submit") 저장
-        
-        div.postEffects
-          div
-            span 사진
-            a() 모두 보기
-          div
-        div.postEffects
-          div
-            span 친구
-            a() 모두 보기
-          div
+                    div
+                    a(href=`/photo/${photo.id}`)
+                      img(src=photo.url, alt="")
+
+          div.postEffects
+            div
+              span 친구
+              a(href=`/profile/${targetUser.id}/friend`) 모두 보기
+            div
+              each friend in friends
+                div.accountHoverTabData(data-friend-id=friend.id)
+                  div
+                    a.accountHoverTabTrigger(href=`/profile/${friend.id}`)
+                      img(src=friend.profilePhoto, alt="")
+                      div
+                    a.accountHoverTabTrigger(href=`/profile/${friend.id}`)
+                      span= friend.name
+
       
       div#timelineRight
         include includes/timeline.pug
+  
+  //- 정보 수정창
+  if targetUser.id === user.id
+    div#profileEditTab.invisible
+      div
+      form
+        div 상세 정보 수정
+          div#profileEditCloseBtn
+            div
+        div
+          div
+            div 이메일
+            input(type='email' name='email' value=user.email required)
+          div
+            div 성별
+            input(type='text' name='gender' value=user.gender required)
+        div
+          //- button#profileEditCancelBtn.cancelBtn(type="button") 취소
+          button#profileEditPostBtn.postBtn(type="submit") 저장
 
 block append script
   script(src="/js/includes/timeline.js")
-  script(src="/js/profile/timeline.js")
+  script(src="/js/profile/pTimeline.js")

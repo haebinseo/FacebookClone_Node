@@ -3,6 +3,7 @@ const { isLoggedIn, isNotLoggedIn } = require('./middleware');
 const {
   showHomePage,
   showLoginPage,
+  showPhotoDetail,
   showMessenger,
   showMessengerWithRoomId,
   showProfile,
@@ -12,6 +13,8 @@ const {
 
 router.get('/', isLoggedIn, showHomePage);
 router.get('/login', isNotLoggedIn, showLoginPage);
+
+router.get('/photo/:photoId', isLoggedIn, showPhotoDetail);
 
 router.get('/messenger', isLoggedIn, showMessenger);
 router.get('/messenger/:roomId', isLoggedIn, showMessengerWithRoomId);

@@ -130,85 +130,84 @@
         }
       }
     }
+  }
+}
 
-    &>.photoOptTab {
-      position: absolute;
-      cursor: default;
-      top: 0;
-      left: 0;
+.photoOptTab {
+  position: absolute;
+  top: 0;
+  left: 0;
 
-      &>div:first-of-type  {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 344px;
-        box-shadow: 0 12px 28px 0 var(--shadow-2),0 2px 4px 0 var(--shadow-1);
-        border-radius: 8px;
-        background-color: white;
-        padding: 8px;
-        z-index: 1;
+  &>.photoOptList {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 344px;
+    box-shadow: 0 12px 28px 0 var(--shadow-2),0 2px 4px 0 var(--shadow-1);
+    border-radius: 8px;
+    background-color: white;
+    padding: 8px;
+    z-index: 1;
 
-        &>div {
-          height: 36px;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 8px;
-          border-radius: 4px;
-          cursor: pointer;
+    &>div {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
 
-          i {
-            display: inline-block;
-            height: 20px;
-            width: 20px;
-          }
-
-          span {
-            font-size: 15px;
-            font-weight: 500;
-          }
-
-          &:hover {
-            background-color: var(--hover-overlay);
-          }
-        }
-
-        &>.downloadBtn>a {
-          flex: 1 1 0;
-          display: flex;
-          gap: 12px;
-          
-          &>i {
-            background-image: url(/images/profile/photo/olZaBEu0ogf.png);
-            background-position: 0 0;
-          }
-        }
-
-        &>.setProfilePhotoBtn {
-          &>i {
-            background-image: url(/images/profile/photo/Unhg7KUHLnj.png);
-            background-position: 0 -1040px;
-          }
-        }
-
-        &>.removePhotoBtn {
-          &>i {
-            background-image: url(/images/profile/photo/5uKTYgLMVNw.png);
-            background-position: 0 -466px;
-          }
-        }
+      i {
+        display: inline-block;
+        height: 20px;
+        width: 20px;
       }
-      
-      .triangle {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
-        border: 6px solid;
-        border-color: white  white  transparent  transparent;
-        z-index: 1;
+
+      span {
+        font-size: 15px;
+        font-weight: 500;
+      }
+
+      &:hover {
+        background-color: var(--hover-overlay);
       }
     }
+
+    &>.downloadBtn>a {
+      flex: 1 1 0;
+      display: flex;
+      gap: 12px;
+      
+      &>i {
+        background-image: url(/images/profile/photo/olZaBEu0ogf.png);
+        background-position: 0 0;
+      }
+    }
+
+    &>.setProfilePhotoBtn {
+      &>i {
+        background-image: url(/images/profile/photo/Unhg7KUHLnj.png);
+        background-position: 0 -1040px;
+      }
+    }
+
+    &>.removePhotoBtn {
+      &>i {
+        background-image: url(/images/profile/photo/5uKTYgLMVNw.png);
+        background-position: 0 -466px;
+      }
+    }
+  }
+  
+  .triangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border: 6px solid;
+    border-color: white  white  transparent  transparent;
+    z-index: 1;
   }
 }
