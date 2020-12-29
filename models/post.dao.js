@@ -189,7 +189,14 @@ const createLike = async ({ userId, target, targetId }) => {
 
 /* ===================================  UPDATE  =================================== */
 const updatePost = async ({ content, photoIds, userId, postId }) => {
-  const post = await Post.findOne({ where: { id: postId } });
+  const post = await Post.findOne({
+    where: { id: postId },
+    include: [
+      {
+        model: Photo,
+      },
+    ],
+  });
   if (!post || post.userId !== userId) {
     const err = new Error(post ? 'Forbidden' : 'Not Found');
     err.status = post ? 403 : 404;
@@ -202,6 +209,12 @@ const updatePost = async ({ content, photoIds, userId, postId }) => {
     const result = await createHashtags(hashtags);
     await post.addHashtags(result.map((r) => r[0]));
   }
+  // delete photos excepted from the post
+  const photoIdsOriginal = post.photos.map((photo) => photo.id);
+  const photoIdsToDelete = photoIdsOriginal.filter(
+    (photoIdOriginal) => !photoIds.includes(photoIdOriginal),
+  );
+  await photoDAO.deletePhotos({ userId, photoIds: photoIdsToDelete });
   await post.setPhotos(photoIds);
   await post.save();
 };

@@ -84,30 +84,36 @@ document.getElementById('account')?.addEventListener('click', () => {
 });
 
 // hide the accountTab, createTab, alarmTab, hashtagTab when outside of button and tab is clicked
-// 해당 창(생성, 계정, 알림, 해시태그) 외의 영역 클릭시 창 숨기기
+// 해당 창(생성, 계정, 알림, 해시태그) 외의 영역 클릭 및 esc 입력시 창 숨기기
 const targetIds = [
   { btn: 'account', tab: 'accountTab' },
   { btn: 'create', tab: 'createTab' },
   { btn: 'alarm', tab: 'alarmTab' },
   { btn: 'hashtagForm', tab: 'hashtagTab' },
 ];
-document.querySelector('body').addEventListener('click', (e) => {
+function hideTabs(e) {
   for (let i = 0; i < targetIds.length; i += 1) {
     const tab = document.getElementById(targetIds[i].tab);
     if (tab && !tab.classList.contains('invisible')) {
-      let elem = e.target;
-      while (!(elem.id === targetIds[i].btn || elem.id === targetIds[i].tab)) {
-        elem = elem.parentNode;
-        if (elem.nodeName === 'BODY') {
-          elem = null;
-          tab.classList.add('invisible');
-          if (targetIds[i].tab === 'alarmTab') removeUnread();
-          return;
+      if (e.type === 'click') {
+        let elem = e.target;
+        while (!(elem.id === targetIds[i].btn || elem.id === targetIds[i].tab)) {
+          elem = elem.parentNode;
+          if (elem.nodeName === 'BODY') {
+            elem = null;
+            tab.classList.add('invisible');
+            if (targetIds[i].tab === 'alarmTab') removeUnread();
+            return;
+          }
         }
+      } else if (e.code === 'Escape') {
+        tab.classList.add('invisible');
       }
     }
   }
-});
+}
+document.querySelector('body').addEventListener('click', hideTabs);
+document.addEventListener('keyup', hideTabs);
 
 // alarmTab confirm/deleteFriendBtn click event
 // 알림 창에서 친구 신청 수락 및 거절 이벤트 처리
@@ -148,26 +154,6 @@ const createTab = document.getElementById('createTab');
 const newPostTab = document.getElementById('newPostTab');
 const newPostContent = newPostTab.querySelector('textarea.postContent');
 
-// make newPostTab visible/invisible
-// 게시글 작성창 보이기/숨기기
-function displayNewPostTab() {
-  createTab.classList.add('invisible');
-  document.querySelector('body').classList.add('noScroll');
-  newPostTab.classList.remove('invisible');
-  newPostContent.focus();
-}
-function hideNewPostTab() {
-  document.querySelector('body').classList.remove('noScroll');
-  newPostTab.classList.add('invisible');
-  newPostTab.querySelector('#newPostResetBtn').click(); // reset the form
-  newPostContent.style.fontSize = '24px';
-  const previews = newPostTab.querySelectorAll('.photoPreview');
-  previews.forEach((p) => p.remove());
-}
-document.getElementById('createPostBtn').addEventListener('click', displayNewPostTab);
-document.getElementById('newPostCloseBtn').addEventListener('click', hideNewPostTab);
-document.querySelector('#newPostTab>div').addEventListener('click', hideNewPostTab);
-
 // 게시글 작성 textarea auto resizing
 function textareaResizeHandler(e) {
   const targetStyle = e.target.style;
@@ -184,7 +170,7 @@ newPostContent.addEventListener('keydown', textareaResizeHandler);
 newPostContent.addEventListener('keyup', textareaResizeHandler);
 
 // 게시글 게시 버튼 활성화 적용
-function checkAndUpdatePostBtn(e) {
+function checkAndUpdatePostBtn() {
   const photoIds = newPostTab.querySelector('.photoIds');
   const postBtn = newPostTab.querySelector('#postBtn');
   if (newPostContent.value.length || photoIds.value.length) postBtn.disabled = false;
@@ -193,6 +179,15 @@ function checkAndUpdatePostBtn(e) {
 newPostContent.addEventListener('input', checkAndUpdatePostBtn);
 
 // 게시글 이미지 upload 취소
+function deletePhoto(photoId) {
+  const xhr = new XMLHttpRequest();
+  xhr.onload = () => {
+    if (xhr.status !== 204) console.error(xhr.responseText);
+  };
+  xhr.open('DELETE', `/photo/${photoId}`);
+  xhr.send();
+}
+
 function photoRemoveEventHandler(e) {
   let elem = e.target;
   while (!elem.classList.contains('photoPreview')) {
@@ -203,20 +198,43 @@ function photoRemoveEventHandler(e) {
     }
   }
   // except the photo id from the array fo photoIds
+  const photoIdToRemove = elem.dataset.photoId;
   const photoIdsInput = newPostTab.querySelector('.photoIds');
   const photoIds = photoIdsInput.value.split(',');
   // console.log('typeof elem.dataset.pid', typeof elem.dataset.pid);
-  photoIdsInput.value = photoIds.filter((id) => id !== elem.dataset.photoId).join();
+  photoIdsInput.value = photoIds.filter((id) => id !== photoIdToRemove).join();
   // remove the photo preview
   elem.remove();
+  // delete the photo from the database
+  deletePhoto(photoIdToRemove);
   // check the activation condition of the post button
   checkAndUpdatePostBtn();
 }
-const photoRemoveBtns = newPostTab.querySelectorAll('.photoRemoveBtn');
-photoRemoveBtns.forEach((btn) => btn.addEventListener('click', photoRemoveEventHandler));
 
 // 게시글 이미지 upload
-newPostTab.querySelector('input.photos').addEventListener('change', (e) => {
+function updatePhotoPreviews(photoIds, urls) {
+  // add new photoIds to Input for photoIds
+  const photoIdsInput = newPostTab.querySelector('.photoIds');
+  photoIdsInput.value += photoIdsInput.value === '' ? photoIds.join() : `,${photoIds.join()}`;
+  // add previews for new photos
+  const photoPreviewArea = newPostTab.querySelector('.photoPreviewArea');
+  for (let i = 0; i < urls.length; i += 1) {
+    const preview = document.createElement('div');
+    preview.classList.add('photoPreview');
+    preview.setAttribute('data-photo-id', photoIds[i]);
+    preview.innerHTML = `
+    <div>
+      <img src="${urls[i]}" alt="미리보기">
+      <div class="photoRemoveBtn">
+        <i></i>
+        <div></div>
+      </div>
+    </div>`;
+    photoPreviewArea.appendChild(preview);
+    preview.querySelector('.photoRemoveBtn').addEventListener('click', photoRemoveEventHandler);
+  }
+}
+function photoUploadEventHandler(e) {
   const formData = new FormData();
   const { files } = e.target;
   // console.log(files);
@@ -228,27 +246,7 @@ newPostTab.querySelector('input.photos').addEventListener('change', (e) => {
   xhr.onload = () => {
     if (xhr.status === 201) {
       const { photoIds, urls } = JSON.parse(xhr.responseText);
-      // add new photoIds to Input for photoIds
-      const photoIdsInput = newPostTab.querySelector('.photoIds');
-      photoIdsInput.value += photoIdsInput.value === '' ? photoIds.join() : `,${photoIds.join()}`;
-      // add previews for new photos
-      const photoPreviewArea = newPostTab.querySelector('.photoPreviewArea');
-      for (let i = 0; i < urls.length; i += 1) {
-        const preview = document.createElement('div');
-        preview.classList.add('photoPreview');
-        preview.setAttribute('data-photo-id', photoIds[i]);
-        preview.innerHTML = `
-        <div>
-          <img src="${urls[i]}" alt="미리보기">
-          <div class="photoRemoveBtn">
-            <i></i>
-            <div></div>
-          </div>
-        </div>`;
-        photoPreviewArea.appendChild(preview);
-        preview.querySelector('.photoRemoveBtn').addEventListener('click', photoRemoveEventHandler);
-      }
-
+      updatePhotoPreviews(photoIds, urls);
       // check the activation condition of the post button
       checkAndUpdatePostBtn();
     } else {
@@ -257,6 +255,33 @@ newPostTab.querySelector('input.photos').addEventListener('change', (e) => {
   };
   xhr.open('POST', '/photo');
   xhr.send(formData);
+}
+newPostTab.querySelector('input.photos').addEventListener('change', photoUploadEventHandler);
+
+// make newPostTab visible/invisible
+// 게시글 작성창 보이기/숨기기
+function displayNewPostTab() {
+  createTab.classList.add('invisible');
+  document.querySelector('body').classList.add('noScrollByHeader');
+  newPostTab.classList.remove('invisible');
+  newPostContent.focus();
+}
+function hideNewPostTab() {
+  document.querySelector('body').classList.remove('noScrollByHeader');
+  newPostTab.classList.add('invisible');
+  newPostTab.querySelector('#newPostResetBtn').click(); // reset the form
+  newPostContent.style.fontSize = '24px';
+  const previews = newPostTab.querySelectorAll('.photoPreview');
+  previews.forEach((p) => {
+    deletePhoto(p.dataset.photoId); // delete photo from database
+    p.remove(); // delete preview element
+  });
+}
+document.getElementById('createPostBtn').addEventListener('click', displayNewPostTab);
+document.getElementById('newPostCloseBtn').addEventListener('click', hideNewPostTab);
+document.querySelector('#newPostTab>div').addEventListener('click', hideNewPostTab);
+document.addEventListener('keyup', (e) => {
+  if (!newPostTab.classList.contains('invisible') && e.code === 'Escape') hideNewPostTab();
 });
 
 // post a new post
@@ -298,7 +323,7 @@ function updateAlarmCount() {
   }
 }
 
-export function updateAlarmTab(alarm) {
+function updateAlarmTab(alarm) {
   const alarmTab = document.getElementById('alarmTab');
   const noAlarm = document.getElementById('noAlarm');
   if (noAlarm) noAlarm.remove();
@@ -350,7 +375,7 @@ export function updateAlarmTab(alarm) {
   alarmTab.children[1].insertAdjacentElement('afterbegin', alarmDiv);
 }
 
-export function updateMessageCount() {
+function updateMessageCount() {
   const unreadMessageCount = document.getElementById('unreadMessageCount');
 
   if (unreadMessageCount.classList.contains('invisible')) {
@@ -360,3 +385,5 @@ export function updateMessageCount() {
     unreadMessageCount.innerText = 1 + parseInt(unreadMessageCount.innerText, 10);
   }
 }
+
+export { displayNewPostTab, photoUploadEventHandler, updateAlarmTab, updateMessageCount };

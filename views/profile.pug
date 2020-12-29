@@ -70,7 +70,7 @@ block content
             div
               span 업로드한 사진
               label + 사진 업로드
-                input#addPhotoOnUpdateTab.invisible(type="file", accept="image/*" multiple)
+                input.uploadPhoto.invisible(type="file", accept="image/*" multiple)
                 div
             div.profilePhotoCandidate
               div.invisible
@@ -85,8 +85,10 @@ block append script
   script(src="/js/includes/fbHeader.js" type="module")
   script(src="/js/profile/profile.js" type="module")
   script(src="/socket.io/socket.io.js")
+  //- script.
   script(type="module").
-    import { updateAlarmTab, updateMessageCount } from '/js/includes/fbHeader.js';
+    import { displayNewPostTab, photoUploadEventHandler, updateAlarmTab, updateMessageCount } from '/js/includes/fbHeader.js';
+    import { hideProfilePhotoUpdateTab } from '/js/profile/profile.js'
     const userSocket = io.connect('/user', { forceNew: true, path: '/socket.io' });
 
     userSocket.on('msgPosted', updateMessageCount);
@@ -94,3 +96,22 @@ block append script
     userSocket.on('commentPosted', updateAlarmTab);
     userSocket.on('confirmFriend', updateAlarmTab);
     userSocket.on('friendConfirmed', updateAlarmTab);
+
+    // 사진 업로드 이벤트 핸들러
+    // new photos uploading event handler
+    const uploadPhotos = document.querySelectorAll('.uploadPhoto');
+    uploadPhotos.forEach((uploadPhoto) => {
+      uploadPhoto.addEventListener('change', (e) => {
+        let elem = e.target;
+        while (elem.id !== 'profilePhotoUpdateTab') {
+          elem = elem.parentNode;
+          if (elem.nodeName === 'BODY') {
+            elem = null;
+            break;
+          }
+        }
+        if (elem) hideProfilePhotoUpdateTab();
+        displayNewPostTab();
+        photoUploadEventHandler(e);
+      });
+    })

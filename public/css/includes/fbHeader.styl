@@ -1,3 +1,7 @@
+.noScrollByHeader {
+  overflow-y: hidden;
+}
+
 #header {
   position: relative;
 
@@ -14,7 +18,7 @@
   top: 0;
   width: 112px;
   padding: 0 16px;
-  z-index: 2;
+  z-index: 4;
 
   &>a {
     margin-right: 8px;
@@ -120,7 +124,7 @@
   right: 0;
   top: 0;
   padding-right: 6px;
-  z-index: 2;
+  z-index: 4;
 
   &>div {
     width: 40px;
@@ -223,7 +227,7 @@
   background-color: white;
   border-radius: 8px;
   width: 204px;
-  z-index: 1;
+  z-index: 4;
 
   li {
     border-radius: 8px;
@@ -253,7 +257,7 @@
     height 100vh;
     width: 100vw;
     background-color: var(--overlay-alpha-80);
-    z-index: 1;
+    z-index: 3;
   }
 
   form {
@@ -269,7 +273,7 @@
     box-shadow: 0 0 28px 1px rgba(0,0,0,.25);
     // box-shadow: 0 12px 28px 0 rgba(0,0,0,.1);
     border-radius: 8px; 
-    z-index: 2;
+    z-index: 4;
 
     &>div {
       display: flex;
@@ -503,7 +507,7 @@
   display: flex;
   flex-direction: column;
   padding: 8px 8px;
-  z-index: 1;
+  z-index: 4;
 
   &>div:first-of-type  {
     display: flex;
@@ -596,7 +600,7 @@
   flex-direction: column;
   padding: 8px 8px;
   overflow-y: auto;
-  z-index: 1;
+  z-index: 4;
 
   &>div:first-of-type  {
     display: flex;
@@ -668,7 +672,7 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              z-index: 1;
+              // z-index: 1;
             }
 
             .confirmFriendBtn {
@@ -730,7 +734,7 @@
   flex-direction: column;
   padding: 8px 8px;
   cursor: default;
-  z-index: 1;
+  z-index: 4;
 
   #myProfile {
     display: flex;

@@ -5,9 +5,16 @@ document.getElementById('accountInfoEditBtn')?.addEventListener('click', () => {
   document.querySelector('body').classList.add('noScroll');
   profileEditTab.classList.remove('invisible');
 });
-document.getElementById('profileEditCloseBtn')?.addEventListener('click', () => {
+function hideProfileEditTab() {
   document.querySelector('body').classList.remove('noScroll');
   profileEditTab.classList.add('invisible');
+}
+document.getElementById('profileEditCloseBtn')?.addEventListener('click', hideProfileEditTab);
+document.querySelector('#profileEditTab>div').addEventListener('click', hideProfileEditTab);
+document.addEventListener('keyup', (e) => {
+  if (!profileEditTab.classList.contains('invisible') && e.code === 'Escape') {
+    hideProfileEditTab();
+  }
 });
 
 // 정보 수정 이벤트 핸들러
@@ -59,7 +66,10 @@ document.addEventListener('scroll', () => {
     buffer.style.height = `${contentY - bufferY}px`;
     prevDirection *= -1;
 
-    timelineLeftContent.style = `top: ${window.innerHeight - contentH - contentMargin}px;`;
+    timelineLeftContent.style = `top: ${Math.min(
+      window.innerHeight - contentH - contentMargin,
+      fixedHeaderOffset + contentMargin,
+    )}px;`;
   }
   // update scrolledY
   prevScrolledY = scrolledY;

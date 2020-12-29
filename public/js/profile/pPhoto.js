@@ -1,21 +1,3 @@
-// add photo event handler
-document.getElementById('addPhoto')?.addEventListener('change', (e) => {
-  const formData = new FormData();
-  const { files } = e.target;
-
-  for (let i = 0; i < files.length; i += 1) {
-    formData.append('photos', files[i], files[i].name);
-  }
-
-  const xhr = new XMLHttpRequest();
-  xhr.onload = () => {
-    if (xhr.status === 201) window.location.reload();
-    else console.error(xhr.responseText);
-  };
-  xhr.open('POST', '/photo');
-  xhr.send(formData);
-});
-
 // event handlers and functions related to photoOptTab
 const photoOptTab = document.querySelector('.photoOptTab');
 const photoOptList = photoOptTab?.querySelector('.photoOptList');
@@ -118,6 +100,11 @@ if (photoOptTab) {
         deselectPhotoOptBtn();
         return;
       }
+    }
+  });
+  document.addEventListener('keyup', (e) => {
+    if (!photoOptTab.classList.contains('invisible') && e.code === 'Escape') {
+      deselectPhotoOptBtn();
     }
   });
 }

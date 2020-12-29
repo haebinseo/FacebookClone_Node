@@ -71,7 +71,7 @@ profilePhotoUpdateBtn?.addEventListener('click', () => {
   document.querySelector('body').classList.add('noScroll');
   profilePhotoUpdateTab.classList.remove('invisible');
 });
-document.getElementById('profilePhotoUpdateCloseBtn')?.addEventListener('click', () => {
+function hideProfilePhotoUpdateTab() {
   document.querySelector('body').classList.remove('noScroll');
   profilePhotoUpdateTab.classList.add('invisible');
   // 초기화
@@ -82,31 +82,17 @@ document.getElementById('profilePhotoUpdateCloseBtn')?.addEventListener('click',
     // update button 비활성화
     document.getElementById('updateBtn').disabled = true;
   }
-});
-
-// 프로필 이미지 업데이트 창에서 사진 업로드 이벤트 핸들러
-// new photos uploading event handler
-document.getElementById('addPhotoOnUpdateTab')?.addEventListener('change', (e) => {
-  const formData = new FormData();
-  const { files } = e.target;
-
-  for (let i = 0; i < files.length; i += 1) {
-    formData.append('photos', files[i], files[i].name);
+}
+document
+  .getElementById('profilePhotoUpdateCloseBtn')
+  ?.addEventListener('click', hideProfilePhotoUpdateTab);
+document
+  .querySelector('#profilePhotoUpdateTab>div')
+  .addEventListener('click', hideProfilePhotoUpdateTab);
+document.addEventListener('keyup', (e) => {
+  if (!profilePhotoUpdateTab.classList.contains('invisible') && e.code === 'Escape') {
+    hideProfilePhotoUpdateTab();
   }
-
-  const xhr = new XMLHttpRequest();
-  xhr.onload = () => {
-    if (xhr.status === 201) {
-      if (document.querySelector('.morePhotoBtn')) fetchPhotosUploaded();
-      else fetchPhotosUploaded(false); // limit: false
-      // window.location.reload();
-      // profilePhotoUpdateBtn.click();
-    } else {
-      console.error(xhr.responseText);
-    }
-  };
-  xhr.open('POST', '/photo');
-  xhr.send(formData);
 });
 
 // 프로필 이미지 업데이트 이벤트 핸들러
@@ -127,3 +113,5 @@ profilePhotoUpdateTab?.querySelector('form').addEventListener('submit', (e) => {
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({ photoURL }));
 });
+
+export { hideProfilePhotoUpdateTab };

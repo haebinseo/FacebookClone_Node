@@ -129,7 +129,6 @@
   border-radius: 8px;
   background-color: #fff;
   padding: 8px;
-  z-index: 1;
 }
 .photoOptTab>.photoOptList>div {
   height: 36px;
@@ -177,5 +176,4 @@
   height: 0;
   border: 6px solid;
   border-color: #fff #fff transparent transparent;
-  z-index: 1;
 }

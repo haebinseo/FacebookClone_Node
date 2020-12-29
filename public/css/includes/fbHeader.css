@@ -1,3 +1,6 @@
+.noScrollByHeader {
+  overflow-y: hidden;
+}
 #header {
   position: relative;
 }
@@ -12,7 +15,7 @@
   top: 0;
   width: 112px;
   padding: 0 16px;
-  z-index: 2;
+  z-index: 4;
 }
 #headerLeft>a {
   margin-right: 8px;
@@ -99,7 +102,7 @@
   right: 0;
   top: 0;
   padding-right: 6px;
-  z-index: 2;
+  z-index: 4;
 }
 #headerRight>div {
   width: 40px;
@@ -188,7 +191,7 @@
   background-color: #fff;
   border-radius: 8px;
   width: 204px;
-  z-index: 1;
+  z-index: 4;
 }
 #hashtagTab li {
   border-radius: 8px;
@@ -212,7 +215,7 @@
   height: 100vh;
   width: 100vw;
   background-color: var(--overlay-alpha-80);
-  z-index: 1;
+  z-index: 3;
 }
 #newPostTab form {
   display: flex;
@@ -226,7 +229,7 @@
   background-color: #fff;
   box-shadow: 0 0 28px 1px rgba(0,0,0,0.25);
   border-radius: 8px;
-  z-index: 2;
+  z-index: 4;
 }
 #newPostTab form>div {
   display: flex;
@@ -430,7 +433,7 @@
   display: flex;
   flex-direction: column;
   padding: 8px 8px;
-  z-index: 1;
+  z-index: 4;
 }
 #createTab>div:first-of-type {
   display: flex;
@@ -509,7 +512,7 @@
   flex-direction: column;
   padding: 8px 8px;
   overflow-y: auto;
-  z-index: 1;
+  z-index: 4;
 }
 #alarmTab>div:first-of-type {
   display: flex;
@@ -573,7 +576,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
 }
 #alarmTab>div:nth-of-type(2)>.alarm>div:nth-of-type(2)>div .confirmFriendBtn {
   background-color: var(--primary-button-background);
@@ -619,7 +621,7 @@
   flex-direction: column;
   padding: 8px 8px;
   cursor: default;
-  z-index: 1;
+  z-index: 4;
 }
 #accountTab #myProfile {
   display: flex;

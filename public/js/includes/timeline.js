@@ -545,6 +545,15 @@ function checkAndUpdatePostBtn(e) {
 postContentToEdit?.addEventListener('input', checkAndUpdatePostBtn);
 
 // 게시글 이미지 upload 취소
+function deletePhoto(photoId) {
+  const xhr = new XMLHttpRequest();
+  xhr.onload = () => {
+    if (xhr.status !== 204) console.error(xhr.responseText);
+  };
+  xhr.open('DELETE', `/photo/${photoId}`);
+  xhr.send();
+}
+
 function photoRemoveEventHandler(e) {
   let elem = e.target;
   while (!elem.classList.contains('photoPreview')) {
@@ -555,17 +564,20 @@ function photoRemoveEventHandler(e) {
     }
   }
   // except the photo id from the array fo photoIds
+  const photoIdToRemove = elem.dataset.photoId;
   const photoIdsInput = editPostTab.querySelector('.photoIds');
   const photoIds = photoIdsInput.value.split(',');
+  const photoIdsOriginalInput = editPostTab.querySelector('.photoIdsOriginal');
+  const photoIdsOriginal = photoIdsOriginalInput.value.split(',');
   // console.log('typeof elem.dataset.pid', typeof elem.dataset.pid);
-  photoIdsInput.value = photoIds.filter((id) => id !== elem.dataset.photoId).join();
+  photoIdsInput.value = photoIds.filter((id) => id !== photoIdToRemove).join();
   // remove the photo preview
   elem.remove();
+  // delete the photo which is not included in the post
+  if (!photoIdsOriginal.includes(photoIdToRemove)) deletePhoto(photoIdToRemove);
   // check the activation condition of the post button
   checkAndUpdatePostBtn();
 }
-const photoRemoveBtns = editPostTab?.querySelectorAll('.photoRemoveBtn');
-photoRemoveBtns?.forEach((btn) => btn.addEventListener('click', photoRemoveEventHandler));
 
 // 게시글 이미지 upload
 editPostTab?.querySelector('.photos').addEventListener('change', (e) => {
@@ -642,7 +654,9 @@ function fillEditPostTabData(post) {
 
   // photo ids
   const photoIdsInput = editPostTab.querySelector('.photoIds');
+  const photoIdsOriginalInput = editPostTab.querySelector('.photoIdsOriginal');
   photoIdsInput.value = post.photos.map((p) => p.id).join();
+  photoIdsOriginalInput.value = photoIdsInput.value;
   // photo previews
   const photoPreviewArea = editPostTab.querySelector('.photoPreviewArea');
   for (let i = 0; i < post.photos.length; i += 1) {
@@ -674,12 +688,25 @@ function hideEditPostTab() {
   editPostTab.classList.add('invisible');
   editPostTab.querySelector('#editPostResetBtn').click(); // reset the form
   postContentToEdit.style.fontSize = '24px';
+  // delete previews
   const previews = editPostTab.querySelectorAll('.photoPreview');
-  previews.forEach((p) => p.remove());
+  const photoIdsOriginalInput = editPostTab.querySelector('.photoIdsOriginal');
+  const photoIdsOriginal = photoIdsOriginalInput.value.split(',');
+  previews.forEach((p) => {
+    const photoIdToRemove = p.dataset.photoId;
+    // delete the photo which is not included in the post
+    if (!photoIdsOriginal.includes(photoIdToRemove)) deletePhoto(photoIdToRemove);
+    p.remove();
+  });
 }
 
 document.getElementById('editPostCloseBtn')?.addEventListener('click', hideEditPostTab);
 document.querySelector('#editPostTab>div')?.addEventListener('click', hideEditPostTab);
+document.addEventListener('keyup', (e) => {
+  if (editPostTab && !editPostTab.classList.contains('invisible') && e.code === 'Escape') {
+    hideEditPostTab();
+  }
+});
 postMoreTab?.querySelector('.editPostBtn').addEventListener('click', () => {
   // fetch the post to edit
   const { postId } = postMoreList.dataset;
